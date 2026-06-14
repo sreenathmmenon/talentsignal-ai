@@ -9,6 +9,7 @@ from talentsignal.features import build_evidence
 from talentsignal.jd_parser import load_job_spec
 from talentsignal.risk_audit import risk_flags
 from talentsignal.scoring import score_candidate
+from talentsignal.explanation_audit import audit_packets
 
 
 def test_job_spec_loads() -> None:
@@ -223,3 +224,9 @@ def test_stale_unresponsive_candidate_scores_lower_than_active_peer() -> None:
     stale_score = score_candidate(build_evidence(stale), spec)
     assert active_score.final_score > stale_score.final_score
     assert active_score.top10_eligible
+
+
+def test_explanation_audit_accepts_existing_packets_if_present() -> None:
+    path = Path("outputs/evidence_packets.jsonl")
+    if path.exists():
+        assert audit_packets(path) == []

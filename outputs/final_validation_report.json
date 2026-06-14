@@ -1,0 +1,13 @@
+{
+  "submission": "outputs/final_submission.csv",
+  "row_count": 100,
+  "sha256": "fc20f28872c4e3eb27d224e994d7d37b335a0fac0173c901f7e9153bd9a10d4a",
+  "internal_error_count": 0,
+  "internal_errors": [],
+  "official_validator_returncode": 0,
+  "official_validator_stdout": "Submission is valid.",
+  "official_validator_stderr": "",
+  "explanation_warning_count": 0,
+  "explanation_warnings": [],
+  "elapsed_seconds": 1.604
+}

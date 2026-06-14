@@ -18,9 +18,9 @@ def generate_reasoning(ev: CandidateEvidence, score: ScoreBreakdown, rank: int) 
     if ev.career_production_terms:
         strengths.append(f"production signals such as {_join_terms(ev.career_production_terms)}")
     if ev.vector_terms:
-        strengths.append(f"vector/search tooling ({_join_terms(ev.vector_terms)})")
+        strengths.append(f"vector tooling ({_join_terms(ev.vector_terms)})")
     if ev.eval_terms:
-        strengths.append(f"ranking evaluation terms ({_join_terms(ev.eval_terms)})")
+        strengths.append(f"evaluation terms ({_join_terms(ev.eval_terms)})")
     if ev.product_company_count:
         strengths.append("product-company background")
     if ev.open_to_work and ev.response_rate >= 0.5:
@@ -41,4 +41,3 @@ def generate_reasoning(ev: CandidateEvidence, score: ScoreBreakdown, rank: int) 
     if concerns:
         return first + " Concern: " + "; ".join(concerns[:2]) + "."
     return first
-

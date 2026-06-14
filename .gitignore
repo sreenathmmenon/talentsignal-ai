@@ -12,3 +12,6 @@ venv/
 \[PUB\] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl.gz
 **/candidates.jsonl
 **/candidates.jsonl.gz
+
+# Temporary reproduction outputs.
+outputs/repro_*

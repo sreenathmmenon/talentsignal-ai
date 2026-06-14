@@ -1,0 +1,47 @@
+team_name: "talentsignal-ai"
+
+primary_contact:
+  name: "Sreenath"
+  email: "sreenathmmmenon@gmail.com"
+  phone: "PORTAL_ONLY_TO_BE_FILLED_BY_SREENATH"
+
+team_members:
+  - name: "Sreenath"
+    email: "sreenathmmmenon@gmail.com"
+    role: "Solo builder"
+
+github_repo: "https://github.com/sreenathmmenon/talentsignal-ai"
+
+sandbox_link: "https://github.com/sreenathmmenon/talentsignal-ai#demo"
+
+reproduce_command: "python3 rank.py --candidates '[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl' --out outputs/final_submission.csv"
+
+compute:
+  platform: "Local macOS development machine"
+  cpu_cores: 8
+  ram_gb: 16
+  python_version: "3.11"
+  os: "macOS"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  pre_computation_required: false
+  pre_computation_time_minutes: 0
+
+ai_tools_used:
+  - "Codex"
+  - "ChatGPT"
+
+ai_usage_summary: |
+  Used AI assistance for planning, code generation support, review, and documentation.
+  The final ranking command is deterministic, local, CPU-only, and makes no hosted LLM/API calls.
+
+methodology_summary: |
+  Evidence-based deterministic ranker for the Redrob Senior AI Engineer JD. The system converts the JD into a scorecard, extracts source-separated evidence from profile/career/skills/Redrob signals, scores candidates across technical fit, career fit, seniority, logistics, behavior, and trust, applies risk penalties for keyword-stuffing and weak evidence, then writes grounded top-100 reasoning. The final command is CPU-only, offline, standard-library Python, and completes well inside the 5-minute limit.
+
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true
+
