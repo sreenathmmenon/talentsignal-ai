@@ -52,6 +52,7 @@ Local files and challenge materials:
 Planning documents created from this brief:
 
 - `PROJECT_COMPLETION_RULE.md`: project-wide rule for when work can be called complete.
+- `PROJECT_ITERATION_RULE.md`: deadline/no-submission/current-checkpoint rule for continued iteration.
 - `PROJECT_AUTHORSHIP_RULE.md`: project-wide authorship and no-coauthor rule.
 - `CODEX- June-14-2026.md`: Codex strategy document.
 - `WORLD_CLASS_EXECUTION_PLAN.md`: full build plan, architecture, and step-by-step execution path.

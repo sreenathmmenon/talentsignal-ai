@@ -9,6 +9,7 @@ Mission: build a world-class, agentic hiring-intelligence product and a first-pr
 ## Execution Principles
 
 - Follow `PROJECT_COMPLETION_RULE.md`: no task, story, feature, or milestone is complete unless it works correctly end to end, is production-grade for scope, tested, validated, reviewed, and has no known unresolved critical issue.
+- Follow `PROJECT_ITERATION_RULE.md`: the current validated package is a checkpoint, not an instruction to stop iterating or submit.
 - Win the Redrob challenge first; broader product ambition must not dilute top-10 ranking quality.
 - Build a product-shaped system, not a one-off script.
 - Use agentic thinking in architecture: JD Strategist, Evidence Miner, Talent Graph Builder, Match Judge, Risk Auditor, Explanation Writer, Recruiter Cockpit.
