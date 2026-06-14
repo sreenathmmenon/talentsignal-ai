@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pycache_compile/
+.venv/
+venv/
+.env
+.DS_Store
+
+# Large/raw challenge data should not be committed.
+\[PUB\] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl
+\[PUB\] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl.gz
+**/candidates.jsonl
+**/candidates.jsonl.gz

@@ -1,0 +1,171 @@
+# Dataset Profile
+
+Total candidates: 100000
+
+## Top Titles
+- Business Analyst: 5833
+- HR Manager: 5830
+- Mechanical Engineer: 5791
+- Accountant: 5764
+- Project Manager: 5754
+- Customer Support: 5750
+- Operations Manager: 5744
+- Content Writer: 5727
+- Sales Executive: 5713
+- Civil Engineer: 5702
+- Graphic Designer: 5689
+- Marketing Manager: 5524
+- Software Engineer: 3450
+- Full Stack Developer: 2873
+- Cloud Engineer: 2836
+- Java Developer: 2809
+- .NET Developer: 2788
+- DevOps Engineer: 2787
+- Mobile Developer: 2757
+- Frontend Engineer: 2738
+- QA Engineer: 2682
+- Analytics Engineer: 764
+- Data Engineer: 744
+- Data Analyst: 728
+- Backend Engineer: 704
+- Senior Data Engineer: 687
+- Senior Software Engineer: 653
+- ML Engineer: 167
+- AI Research Engineer: 153
+- Data Scientist: 145
+
+## Top Countries
+- India: 75113
+- USA: 9978
+- Australia: 2579
+- Canada: 2506
+- UK: 2472
+- Germany: 2469
+- Singapore: 2453
+- UAE: 2430
+
+## Top Locations
+- Bhubaneswar, Odisha: 4321
+- Noida, Uttar Pradesh: 4283
+- Hyderabad, Telangana: 4283
+- Jaipur, Rajasthan: 4268
+- Bangalore, Karnataka: 4238
+- Kolkata, West Bengal: 4230
+- Indore, Madhya Pradesh: 4198
+- Pune, Maharashtra: 4186
+- Chennai, Tamil Nadu: 4164
+- Delhi, Delhi: 4161
+- Trivandrum, Kerala: 4151
+- Ahmedabad, Gujarat: 4143
+- Chandigarh, Chandigarh: 4128
+- Coimbatore, Tamil Nadu: 4113
+- Vizag, Andhra Pradesh: 4093
+- Kochi, Kerala: 4073
+- Mumbai, Maharashtra: 4043
+- Gurgaon, Haryana: 4037
+- Sydney: 2579
+- San Francisco: 2536
+- Austin: 2531
+- New York: 2518
+- Toronto: 2506
+- London: 2472
+- Berlin: 2469
+- Singapore: 2453
+- Dubai: 2430
+- Seattle: 2393
+
+## Top Industries
+- IT Services: 29881
+- Software: 22417
+- Manufacturing: 22305
+- Conglomerate: 7571
+- Paper Products: 7467
+- Fintech: 2808
+- Food Delivery: 2514
+- E-commerce: 1529
+- Consulting: 1274
+- EdTech: 610
+- SaaS: 328
+- AI/ML: 278
+- AdTech: 172
+- Transportation: 162
+- Insurance Tech: 155
+- Gaming: 149
+- HealthTech: 147
+- HealthTech AI: 68
+- Conversational AI: 62
+- AI Services: 42
+- Voice AI: 31
+- Internet: 22
+- Media: 6
+- Consumer Electronics: 2
+
+## Top Companies
+- Infosys: 23722
+- Wipro: 23682
+- Pied Piper: 23614
+- Initech: 23590
+- Wayne Enterprises: 23556
+- Acme Corp: 23546
+- Stark Industries: 23524
+- Hooli: 23509
+- TCS: 23483
+- Globex Inc: 23471
+- Dunder Mifflin: 23416
+- Swiggy: 3019
+- Razorpay: 2926
+- CRED: 2908
+- Capgemini: 2895
+- HCL: 2894
+- Zomato: 2883
+- Flipkart: 2882
+- Mindtree: 2879
+- Accenture: 2871
+- Cognizant: 2863
+- Tech Mahindra: 2837
+- Mphasis: 2822
+- Meesho: 384
+- Nykaa: 378
+- InMobi: 376
+- BYJU'S: 355
+- PolicyBazaar: 355
+- Ola: 353
+- Zoho: 352
+
+## Top Skills
+- HTML: 12246
+- Databricks: 12244
+- Redux: 12222
+- Terraform: 12187
+- Angular: 12173
+- Figma: 12157
+- Salesforce CRM: 12157
+- Vue.js: 12142
+- Sales: 12138
+- Accounting: 12136
+- Agile: 12135
+- Kafka: 12114
+- Excel: 12109
+- BigQuery: 12108
+- CI/CD: 12108
+- Project Management: 12106
+- Airflow: 12105
+- AWS: 12104
+- Flask: 12104
+- Scrum: 12083
+- Illustrator: 12072
+- Kubernetes: 12071
+- ETL: 12068
+- CSS: 12065
+- Docker: 12062
+
+## Signal Percentiles
+- profile_completeness_score: p10=32.8, p50=56.8, p90=80.4, min=25.0, max=99.9
+- recruiter_response_rate: p10=0.14, p50=0.44, p90=0.73, min=0.02, max=0.95
+- avg_response_time_hours: p10=31.6, p50=129.9, p90=240.4, min=2.1, max=280.0
+- notice_period_days: p10=30.0, p50=90.0, p90=150.0, min=0.0, max=150.0
+- github_activity_score: p10=-1.0, p50=-1.0, p90=40.4, min=-1.0, max=96.9
+- search_appearance_30d: p10=20.0, p50=105.0, p90=226.0, min=0.0, max=1490.0
+- saved_by_recruiters_30d: p10=1.0, p50=7.0, p90=15.0, min=0.0, max=80.0
+- interview_completion_rate: p10=0.38, p50=0.62, p90=0.85, min=0.3, max=1.0
+- offer_acceptance_rate: p10=-1.0, p50=-1.0, p90=0.63, min=-1.0, max=0.93

@@ -1,0 +1,52 @@
+id: redrob_senior_ai_engineer
+title: Senior AI Engineer - Founding Team
+company: Redrob AI
+category: ai_ml_search_ranking
+experience:
+  preferred_min_years: 5
+  preferred_max_years: 9
+  strongest_min_years: 6
+  strongest_max_years: 8
+locations:
+  preferred:
+    - Pune
+    - Noida
+    - Delhi
+    - Gurgaon
+    - Mumbai
+    - Hyderabad
+    - Bangalore
+  country_preferred: India
+must_have:
+  - production ml systems
+  - embeddings retrieval ranking search recommendation
+  - vector or hybrid search infrastructure
+  - python
+  - ranking evaluation ndcg mrr map ab testing
+  - product engineering shipping
+nice_to_have:
+  - llm fine tuning lora qlora peft
+  - learning to rank
+  - hr tech recruiting marketplace
+  - distributed systems inference optimization
+  - open source papers talks
+disqualifiers:
+  - pure research without production deployment
+  - shallow langchain or openai api demos only
+  - no recent production coding
+  - service only career without product evidence
+  - computer vision speech robotics without nlp search retrieval relevance
+weights:
+  technical_evidence: 0.34
+  career_fit: 0.22
+  seniority: 0.10
+  logistics: 0.10
+  behavioral: 0.17
+  trust: 0.07
+final_ranking_constraints:
+  runtime_minutes: 5
+  memory_gb: 16
+  cpu_only: true
+  network: false
+  hosted_llm_apis: false
+

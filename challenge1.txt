@@ -1,0 +1,36 @@
+TRACK 1 — HACKATHON
+For: Developers, AI/ML Engineers, Data Scientists
+
+The challenge: Build an intelligent AI-powered candidate ranking system that goes beyond keyword filters and actually surfaces the right people for a role.
+
+-----
+Develop a robust, workable Proof of Concept that doesn't just filter, but intelligently ranks candidates.
+
+Your system should act as the ultimate AI recruiter, capable of:
+
+Deep Job Understanding: Interpreting complex, nuanced job descriptions.
+
+Contextual Relevance: Seeing beyond keywords to understand semantic fit.
+
+Signal Integration: Leveraging all data: profile attributes, career metadata, and crucial activity/behavioral signals.
+
+The Output: Delivering a lightning-fast, highly accurate, and expertly ranked shortlist of the best-fit candidates.
+
+No fixed architecture→unleash your innovation→Bring the best of your creativity.
+-----
+
+
+
+📦You will receive:
+A large candidate dataset
+A job description
+Complete freedom over architecture — any stack, any approach
+⚖️You will be judged on:
+Quality of your ranking output
+Clarity of your methodology and reasoning
+Whether your system is explainable
+📤What to submit:
+A working GitHub repository with your complete code
+A ranked candidate output file in the provided format
+A methodology document explaining your approach and technical choices
+

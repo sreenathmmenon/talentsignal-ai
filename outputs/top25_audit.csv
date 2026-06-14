@@ -1,0 +1,26 @@
+rank,candidate_id,score,title,years,location,top10_eligible,confidence,risk_flags,career_retrieval_terms,career_production_terms,audit_decision,audit_notes
+1,CAND_0079387,0.922118,AI Engineer,6.9,"Trivandrum, Kerala",True,1.0,,bm25|ranking|recommendation|retrieval|search|semantic search,drift|monitoring|pipeline|production,keep,passes automated audit checks
+2,CAND_0018499,0.913336,Senior Machine Learning Engineer,7.2,"Noida, Uttar Pradesh",True,1.0,,bm25|matching|ranker|ranking|retrieval|search,deployed|latency|pipeline,keep,passes automated audit checks
+3,CAND_0027801,0.878118,NLP Engineer,7.4,"Hyderabad, Telangana",True,1.0,,bm25|recommendation|retrieval|search|semantic search,drift|monitoring|pipeline|production,keep,passes automated audit checks
+4,CAND_0011687,0.877119,Senior NLP Engineer,7.8,"Indore, Madhya Pradesh",True,1.0,,matching|ranking|recommendation|recommendations|retrieval,deployed|latency|owned|pipeline,keep,passes automated audit checks
+5,CAND_0027691,0.876615,NLP Engineer,6.5,"Pune, Maharashtra",True,1.0,,bm25|ranking|retrieval|search|semantic search,drift|monitoring|owned|pipeline|production,keep,passes automated audit checks
+6,CAND_0006567,0.873842,Senior AI Engineer,7.9,"Noida, Uttar Pradesh",True,1.0,,matching|personalization|ranking|search,drift|monitoring|owned|pipeline|shipped,keep,passes automated audit checks
+7,CAND_0081846,0.873126,Lead AI Engineer,6.7,"Jaipur, Rajasthan",True,1.0,,bm25|ranker|ranking|retrieval|search|semantic search,drift|index refresh|latency|monitoring|owned|pipeline|refresh|scale,keep,passes automated audit checks
+8,CAND_0028793,0.870763,Search Engineer,7.2,"Trivandrum, Kerala",True,1.0,,bm25|ranking|retrieval|search|semantic search,owned|pipeline|shipped,keep,passes automated audit checks
+9,CAND_0046525,0.864419,Senior Machine Learning Engineer,6.1,"Pune, Maharashtra",True,1.0,,bm25|ranker|ranking|retrieval|search,latency|pipeline,keep,passes automated audit checks
+10,CAND_0069905,0.864158,Applied ML Engineer,6.6,"Bhubaneswar, Odisha",True,1.0,,bm25|recommendation|retrieval|search|semantic search,pipeline,keep,passes automated audit checks
+11,CAND_0008425,0.863481,Senior NLP Engineer,7.8,"Kolkata, West Bengal",True,1.0,,bm25|matching|ranking|recommendation|recommendations|retrieval|search|semantic search,deployed|drift|index refresh|latency|monitoring|owned|pipeline|refresh|scale,keep,passes automated audit checks
+12,CAND_0060054,0.862548,AI Engineer,6.4,"Jaipur, Rajasthan",True,0.9,,bm25|ranking|recommendation|retrieval|search|semantic search,owned|pipeline|shipped,keep,passes automated audit checks
+13,CAND_0039383,0.862451,Applied ML Engineer,7.1,"Gurgaon, Haryana",True,1.0,,bm25|ranking|retrieval|search|semantic search,owned|shipped,keep,passes automated audit checks
+14,CAND_0000031,0.859461,Recommendation Systems Engineer,6.0,"Hyderabad, Telangana",True,1.0,,ranking|recommendation|search,owned|pipeline|shipped,keep,passes automated audit checks
+15,CAND_0068811,0.855533,Applied ML Engineer,8.0,"Pune, Maharashtra",True,0.9,,ranking|recommendation|search,drift|monitoring|owned|pipeline|production,keep,passes automated audit checks
+16,CAND_0057563,0.852437,NLP Engineer,6.8,"Indore, Madhya Pradesh",True,0.9,,bm25|ranking|recommendation|retrieval|search|semantic search,owned|pipeline,keep,passes automated audit checks
+17,CAND_0076251,0.850109,Search Engineer,7.6,"Bhubaneswar, Odisha",True,1.0,,bm25|retrieval|search|semantic search,drift|monitoring|pipeline|production,keep,passes automated audit checks
+18,CAND_0064326,0.842717,Search Engineer,7.6,"Gurgaon, Haryana",True,1.0,,ranking|search,owned|pipeline|shipped,keep,passes automated audit checks
+19,CAND_0007412,0.841199,Applied ML Engineer,7.4,"Noida, Uttar Pradesh",True,1.0,,ranking|recommendation|search,owned|pipeline|shipped,keep,passes automated audit checks
+20,CAND_0044222,0.839873,AI Engineer,7.7,"Vizag, Andhra Pradesh",True,1.0,,bm25|ranking|retrieval|search|semantic search,owned|shipped,keep,passes automated audit checks
+21,CAND_0041610,0.839473,Recommendation Systems Engineer,6.7,"Indore, Madhya Pradesh",True,1.0,,ranking|recommendation|search,drift|monitoring|owned|pipeline|production,keep,passes automated audit checks
+22,CAND_0017960,0.834701,Recommendation Systems Engineer,7.7,"Bangalore, Karnataka",True,1.0,,ranking|recommendation|search,owned|pipeline|shipped,keep,passes automated audit checks
+23,CAND_0046064,0.832936,Senior NLP Engineer,8.9,"Coimbatore, Tamil Nadu",True,1.0,,bm25|matching|ranker|ranking|recommendation|recommendations|retrieval|search,deployed|latency|owned|pipeline,keep,passes automated audit checks
+24,CAND_0071974,0.831491,Senior AI Engineer,7.8,"Vizag, Andhra Pradesh",True,1.0,,matching|ranking|recommendation|recommendations|retrieval,deployed|latency|owned|pipeline|production|shipped,keep,passes automated audit checks
+25,CAND_0005649,0.830032,Senior Data Scientist,7.4,"Delhi, Delhi",True,1.0,,bm25|ranking|recommendation|retrieval|search|semantic search,drift|monitoring|owned|pipeline|production|shipped,keep,passes automated audit checks
