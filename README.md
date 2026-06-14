@@ -12,7 +12,9 @@ It turns a job description into a structured scorecard, extracts evidence from c
 
 ## Current Status
 
-Epics 1-12 are implemented for the current challenge-submission scope:
+The repository is a validated checkpoint, not the final finished product. The backend/ranker and local submission package are validated; the UI is currently a static demo and still needs production-grade iteration.
+
+Implemented checkpoint:
 
 - Challenge command-center docs.
 - Redrob Senior AI Engineer scorecard.
@@ -22,7 +24,7 @@ Epics 1-12 are implemented for the current challenge-submission scope:
 - Risk audit and top-10 eligibility.
 - Explanation audit.
 - Top-25 audit and candidate comparison tools.
-- Static recruiter cockpit demo.
+- Static recruiter cockpit demo checkpoint.
 - Methodology, metadata, interview defense, and final validation reports.
 
 ## Requirements
@@ -112,6 +114,8 @@ python3 app.py \
 
 Open `demo/recruiter_cockpit.html` in a browser. It shows ranked candidates, score factors, evidence terms, risk flags, and reasoning.
 
+UI status: this is a smoke-tested static demo, not the final world-class interactive UI. The next UI iteration should add JD input/selection, candidate upload, run action, table filtering/sorting, expandable candidate evidence, factor visualizations, risk review, and CSV download.
+
 ## Docker Reproduction
 
 The Dockerfile is intentionally minimal and uses the standard-library ranker.
@@ -145,4 +149,3 @@ The raw `candidates.jsonl` is ignored by git because it is large. For external r
 - `AGENTIC_AI_TALENT_INTELLIGENCE_RESEARCH.md`
 - `methodology.md`
 - `docs/final_completion_evidence.md`
-

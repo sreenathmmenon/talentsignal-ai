@@ -15,6 +15,8 @@ The current state is:
 - reproducible,
 - ready for further iteration.
 
+It is not a final "complete product" state. In particular, the current UI is a static checkpoint demo, not the final production-grade recruiter cockpit.
+
 ## Completion Standard Still Applies
 
 `PROJECT_COMPLETION_RULE.md` remains the controlling rule.
@@ -25,6 +27,7 @@ Any future story, feature, audit, UI, backend change, ranker change, documentati
 
 Before final submission, continue improving:
 
+- production-grade interactive UI/demo,
 - raw-profile manual audit quality,
 - top-10 and top-50 ranking quality,
 - scoring weights and trap handling,
@@ -45,4 +48,3 @@ Only freeze the final submission when:
 - the top candidates are manually audited,
 - the demo/docs/metadata are current,
 - the completion rule is satisfied again after the final changes.
-

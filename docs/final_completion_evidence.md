@@ -2,7 +2,7 @@
 
 Date: June 14, 2026
 
-Scope: Epics 1-12 current project/submission package.
+Scope: Epics 1-12 current local submission package checkpoint.
 
 Completion standard: `PROJECT_COMPLETION_RULE.md`.
 
@@ -96,7 +96,16 @@ Result: printed rank, score, factor scores, eligibility, evidence, risk flags, a
 
 ## Completion Status
 
-The repository is complete for the current local submission package and passes the implemented end-to-end gates.
+The repository is validated for the current local submission package and passes the implemented backend/ranker/reproducibility gates.
+
+This is not the final project completion under `PROJECT_COMPLETION_RULE.md` because the UI/demo is currently a static recruiter cockpit, not a fully production-grade, end-to-end, world-class interactive product UI. The correct status is:
+
+- Backend/ranker: validated checkpoint.
+- CSV generation and validation: validated checkpoint.
+- Evidence/risk/audit pipeline: validated checkpoint.
+- Static demo: smoke-tested checkpoint.
+- Full production-grade UI: not complete yet.
+- Final challenge submission: not submitted and not frozen.
 
 One user-owned portal field remains outside local execution:
 
@@ -104,3 +113,19 @@ One user-owned portal field remains outside local execution:
 
 The hosted sandbox URL is represented by the GitHub README demo/Docker instructions. If the portal strictly requires a hosted URL rather than a repo/Docker recipe, Sreenath must deploy the static demo or app to a chosen host and update `submission_metadata.yaml`.
 
+## UI Completion Gap
+
+The current `demo/recruiter_cockpit.html` verifies that evidence packets can be rendered, but it is not enough for the "wow/product-grade UI" standard. To call UI complete, we still need:
+
+- interactive JD input or selection,
+- candidate sample upload,
+- run-ranking action from the UI,
+- ranked candidate table with sorting/filtering,
+- expandable evidence packets,
+- factor-score visualization,
+- risk flag display,
+- CSV download from the UI,
+- responsive layout testing,
+- browser smoke tests,
+- visual inspection across desktop and mobile,
+- documentation for demo deployment.
