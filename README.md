@@ -12,7 +12,7 @@ It turns a job description into a structured scorecard, extracts evidence from c
 
 ## Current Status
 
-The repository is a validated checkpoint, not the final finished product. The backend/ranker and local submission package are validated; the UI is currently a static demo and still needs production-grade iteration.
+The repository is a validated checkpoint, not the final frozen submission. The backend/ranker, local submission package, REST API, and live recruiter cockpit are validated against the provided candidate data. We will keep iterating until final submission freeze.
 
 Implemented checkpoint:
 
@@ -24,7 +24,7 @@ Implemented checkpoint:
 - Risk audit and top-10 eligibility.
 - Explanation audit.
 - Top-25 audit and candidate comparison tools.
-- Static recruiter cockpit demo checkpoint.
+- Live REST-backed recruiter cockpit checkpoint.
 - Methodology, metadata, interview defense, and final validation reports.
 
 ## Requirements
@@ -59,7 +59,7 @@ This also writes:
 Run tests:
 
 ```bash
-python3 -m pytest tests/test_baseline_pipeline.py -q
+python3 -m pytest tests/test_baseline_pipeline.py tests/test_app_rest.py -q
 ```
 
 Run official challenge validator:
@@ -83,6 +83,15 @@ Run explanation audit:
 python3 scripts/audit_explanations.py --evidence-packets outputs/evidence_packets.jsonl --strict
 ```
 
+Run live UI browser validation:
+
+```bash
+python3 app.py --host 127.0.0.1 --port 8765
+npx playwright test tests/ui-live.spec.js --reporter=line
+```
+
+The Playwright suite drives the browser UI against the local REST API and the real challenge candidate JSONL. It verifies ranking execution, ranked rows, candidate evidence details, filtering, sorting, CSV download, and desktop/mobile screenshots.
+
 ## Audit And Review
 
 Generate top-25 audit:
@@ -101,20 +110,17 @@ python3 scripts/compare_candidates.py CAND_0079387 CAND_0018499 \
   --evidence-packets outputs/evidence_packets.jsonl
 ```
 
-## Demo
+## Live Recruiter Cockpit
 
-Generate a static recruiter cockpit:
+Start the local product UI:
 
 ```bash
-python3 app.py \
-  --evidence-packets outputs/evidence_packets.jsonl \
-  --submission outputs/final_submission.csv \
-  --out demo/recruiter_cockpit.html
+python3 app.py --host 127.0.0.1 --port 8765
 ```
 
-Open `demo/recruiter_cockpit.html` in a browser. It shows ranked candidates, score factors, evidence terms, risk flags, and reasoning.
+Open `http://127.0.0.1:8765/` in a browser.
 
-UI status: this is a smoke-tested static demo, not the final world-class interactive UI. The next UI iteration should add JD input/selection, candidate upload, run action, table filtering/sorting, expandable candidate evidence, factor visualizations, risk review, and CSV download.
+The UI calls `/api/rank`, runs the actual backend ranker on the selected candidate JSONL and JD scorecard, renders ranked candidates, shows score factors and grounded evidence, exposes risk flags, supports search/sort/risk filtering, and downloads generated CSV/evidence/risk artifacts from `/download/...`.
 
 ## Docker Reproduction
 
@@ -130,13 +136,13 @@ The raw `candidates.jsonl` is ignored by git because it is large. For external r
 ## Project Structure
 
 - `rank.py`: final ranking command.
-- `app.py`: static recruiter cockpit generator.
+- `app.py`: live REST API and recruiter cockpit UI.
 - `src/talentsignal/`: core package.
 - `job_specs/`: machine-readable JD scorecards.
 - `scripts/`: profiling, audit, validation, comparison.
 - `docs/`: challenge brief, methodology support, audit evidence, interview prep.
 - `outputs/`: generated submission/audit artifacts.
-- `tests/`: focused pipeline tests.
+- `tests/`: focused pipeline, REST, and Playwright UI tests.
 
 ## Important Docs
 

@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "test:ui": "playwright test tests/ui-live.spec.js --reporter=line"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
+  }
+}

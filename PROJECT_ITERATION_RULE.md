@@ -13,9 +13,10 @@ The current state is:
 - locally validated,
 - pushed to GitHub,
 - reproducible,
+- live REST-backed UI checkpoint validated by Playwright against real challenge data,
 - ready for further iteration.
 
-It is not a final "complete product" state. In particular, the current UI is a static checkpoint demo, not the final production-grade recruiter cockpit.
+It is not a final frozen submission state. The current UI is no longer a static checkpoint; it is a live recruiter cockpit served by `app.py` with `/api/rank` and `/download/...`. Continue iterating for final product polish, hosted deployment, broader manual review, and final freeze.
 
 ## Completion Standard Still Applies
 
@@ -27,7 +28,8 @@ Any future story, feature, audit, UI, backend change, ranker change, documentati
 
 Before final submission, continue improving:
 
-- production-grade interactive UI/demo,
+- production-grade interactive UI/demo polish,
+- hosted deployment or recorded demo path,
 - raw-profile manual audit quality,
 - top-10 and top-50 ranking quality,
 - scoring weights and trap handling,

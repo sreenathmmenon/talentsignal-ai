@@ -14,10 +14,12 @@ Completion standard: `PROJECT_COMPLETION_RULE.md`.
 - Evidence packets: `outputs/evidence_packets.jsonl`
 - Risk report: `outputs/risk_report.csv`
 - Risk summary: `outputs/risk_summary.json`
+- Live UI outputs: `outputs/ui/ui_submission.csv`, `outputs/ui/ui_factor_scores.csv`, `outputs/ui/ui_evidence_packets.jsonl`, `outputs/ui/ui_risk_report.csv`
 - Explanation audit: `outputs/explanation_audit.json`
 - Final validation report: `outputs/final_validation_report.json`
 - Top-25 audit: `outputs/top25_audit.csv`, `outputs/top25_audit.md`
-- Demo: `demo/recruiter_cockpit.html`
+- Recruiter cockpit: `app.py` serving `/`, `/api/status`, `/api/rank`, and `/download/<filename>`
+- UI screenshots: `outputs/ui_playwright_desktop.png`, `outputs/ui_playwright_mobile.png`
 - Methodology: `methodology.md`
 - Metadata: `submission_metadata.yaml`
 - Interview defense: `docs/interview_defense.md`
@@ -29,14 +31,14 @@ Completion standard: `PROJECT_COMPLETION_RULE.md`.
 Unit tests:
 
 ```text
-python3 -m pytest tests/test_baseline_pipeline.py -q
-5 passed in 0.01s
+python3 -m pytest tests/test_baseline_pipeline.py tests/test_app_rest.py -q
+6 passed in 18.57s
 ```
 
 Compile check:
 
 ```text
-PYTHONPYCACHEPREFIX=.pycache_compile python3 -m compileall -q src scripts rank.py app.py
+PYTHONPYCACHEPREFIX=.pycache_compile python3 -m compileall -q src scripts rank.py app.py tests
 ```
 
 Result: passed.
@@ -67,6 +69,24 @@ Full validation:
 }
 ```
 
+Live UI browser validation:
+
+```text
+python3 app.py --host 127.0.0.1 --port 8765
+npx playwright test tests/ui-live.spec.js --reporter=line
+2 passed (36.2s)
+```
+
+Coverage from the browser tests:
+
+- real browser loads the recruiter cockpit,
+- UI calls the live `/api/rank` backend,
+- backend ranks the real challenge candidate JSONL,
+- 25 ranked rows render,
+- candidate details include factor scores, grounded evidence, and risk flags,
+- search, sort, reset, and CSV download work,
+- desktop and mobile screenshots are generated.
+
 Clean reproduction:
 
 - `outputs/repro_submission.csv` has the same SHA256 as `outputs/final_submission.csv`.
@@ -79,13 +99,6 @@ Audit checks:
 - Top-25 automated audit non-keep count: 0.
 - Top-100 risk flags under current risk policy: 0.
 
-Demo smoke:
-
-```text
-python3 app.py --evidence-packets outputs/evidence_packets.jsonl --submission outputs/final_submission.csv --out demo/recruiter_cockpit.html
-Wrote demo/recruiter_cockpit.html with 25 candidates
-```
-
 Candidate comparison smoke:
 
 ```text
@@ -96,36 +109,31 @@ Result: printed rank, score, factor scores, eligibility, evidence, risk flags, a
 
 ## Completion Status
 
-The repository is validated for the current local submission package and passes the implemented backend/ranker/reproducibility gates.
+The repository is validated for the current local submission package and passes the implemented backend/ranker/reproducibility, REST API, and live UI browser gates.
 
-This is not the final project completion under `PROJECT_COMPLETION_RULE.md` because the UI/demo is currently a static recruiter cockpit, not a fully production-grade, end-to-end, world-class interactive product UI. The correct status is:
+This is not the final frozen challenge submission under `PROJECT_COMPLETION_RULE.md` because portal submission, hosted deployment choice, and final pre-submit freeze are still intentionally open. The correct status is:
 
 - Backend/ranker: validated checkpoint.
 - CSV generation and validation: validated checkpoint.
 - Evidence/risk/audit pipeline: validated checkpoint.
-- Static demo: smoke-tested checkpoint.
-- Full production-grade UI: not complete yet.
+- REST API: validated checkpoint.
+- Live recruiter cockpit UI: Playwright-tested checkpoint against real data.
 - Final challenge submission: not submitted and not frozen.
 
 One user-owned portal field remains outside local execution:
 
 - `primary_contact.phone` must be filled by Sreenath before official portal upload.
 
-The hosted sandbox URL is represented by the GitHub README demo/Docker instructions. If the portal strictly requires a hosted URL rather than a repo/Docker recipe, Sreenath must deploy the static demo or app to a chosen host and update `submission_metadata.yaml`.
+The hosted sandbox URL is represented by the GitHub README local app/Docker instructions. If the portal strictly requires a hosted URL rather than a repo/Docker recipe, Sreenath must deploy the app to a chosen host and update `submission_metadata.yaml`.
 
-## UI Completion Gap
+## Remaining Product Iteration Gap
 
-The current `demo/recruiter_cockpit.html` verifies that evidence packets can be rendered, but it is not enough for the "wow/product-grade UI" standard. To call UI complete, we still need:
+The current live cockpit is no longer static or hardcoded; it runs the backend ranker from the UI against real candidate data. To reach final first-prize polish before freeze, continue iterating on:
 
-- interactive JD input or selection,
-- candidate sample upload,
-- run-ranking action from the UI,
-- ranked candidate table with sorting/filtering,
-- expandable evidence packets,
-- factor-score visualization,
-- risk flag display,
-- CSV download from the UI,
-- responsive layout testing,
-- browser smoke tests,
-- visual inspection across desktop and mobile,
-- documentation for demo deployment.
+- hosted deployment or recording flow,
+- richer JD creation/editing beyond file-path input,
+- uploaded candidate files from browser form data,
+- deeper recruiter review actions,
+- stronger visual polish and design QA loops,
+- larger manual audit of top candidates,
+- final submission freeze checklist.
