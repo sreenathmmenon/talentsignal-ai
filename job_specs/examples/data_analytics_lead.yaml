@@ -1,0 +1,36 @@
+id: data_analytics_lead
+title: Data Analytics Lead
+company: Example Marketplace
+category: data_analytics
+experience:
+  preferred_min_years: 5
+  preferred_max_years: 10
+  strongest_min_years: 6
+  strongest_max_years: 9
+locations:
+  preferred:
+    - Bangalore
+    - Mumbai
+    - Gurgaon
+  country_preferred: India
+must_have:
+  - SQL and metrics
+  - experimentation and causal thinking
+  - dashboarding and stakeholder decisions
+  - data quality ownership
+nice_to_have:
+  - marketplace analytics
+  - pricing or growth analytics
+  - experimentation platforms
+disqualifiers:
+  - dashboard-only work without decision impact
+  - tool keywords without metrics ownership
+  - no business stakeholder evidence
+weights:
+  technical_evidence: 0.26
+  career_fit: 0.28
+  seniority: 0.12
+  logistics: 0.10
+  behavioral: 0.16
+  trust: 0.08
+

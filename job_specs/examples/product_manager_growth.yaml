@@ -1,0 +1,36 @@
+id: product_manager_growth
+title: Senior Product Manager - Growth
+company: Example Consumer App
+category: product_management
+experience:
+  preferred_min_years: 5
+  preferred_max_years: 10
+  strongest_min_years: 6
+  strongest_max_years: 9
+locations:
+  preferred:
+    - Bangalore
+    - Mumbai
+    - Delhi
+  country_preferred: India
+must_have:
+  - product discovery and launches
+  - growth experiments and metrics
+  - roadmap tradeoffs
+  - cross-functional leadership
+nice_to_have:
+  - consumer marketplace
+  - referral or activation loops
+  - analytics depth
+disqualifiers:
+  - project coordination only
+  - no shipped product evidence
+  - weak metric ownership
+weights:
+  technical_evidence: 0.20
+  career_fit: 0.32
+  seniority: 0.12
+  logistics: 0.10
+  behavioral: 0.18
+  trust: 0.08
+

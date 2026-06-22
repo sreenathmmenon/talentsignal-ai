@@ -1,0 +1,1181 @@
+{
+  "candidates": "[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl",
+  "top_n": 25,
+  "jobs": [
+    {
+      "job_spec": "job_specs/redrob_senior_ai_engineer.yaml",
+      "job_id": "redrob_senior_ai_engineer",
+      "title": "Senior AI Engineer - Founding Team",
+      "category": "ai_ml_search_ranking",
+      "category_label": "AI/ML search, ranking, retrieval",
+      "elapsed_seconds": 27.038,
+      "top_n": 25,
+      "eligible_top10": 10,
+      "risk_flagged_top_n": 0,
+      "top_titles": [
+        [
+          "Recommendation Systems Engineer",
+          7
+        ],
+        [
+          "Applied ML Engineer",
+          4
+        ],
+        [
+          "AI Engineer",
+          3
+        ],
+        [
+          "Search Engineer",
+          3
+        ],
+        [
+          "NLP Engineer",
+          3
+        ],
+        [
+          "Senior Machine Learning Engineer",
+          2
+        ],
+        [
+          "Senior AI Engineer",
+          1
+        ],
+        [
+          "Lead AI Engineer",
+          1
+        ]
+      ],
+      "top_countries": [
+        [
+          "India",
+          25
+        ]
+      ],
+      "top_candidates": [
+        {
+          "candidate_id": "CAND_0018499",
+          "rank": 1,
+          "score": "0.951517",
+          "title": "Senior Machine Learning Engineer",
+          "years": 7.2,
+          "location": "Noida, Uttar Pradesh",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Machine Learning Engineer with 7.2 years in Noida, Uttar Pradesh; career evidence for bm25, matching, ranker; production signals such as deployed, latency, pipeline; vector tooling (bge, embedding, embeddings)."
+        },
+        {
+          "candidate_id": "CAND_0079387",
+          "rank": 2,
+          "score": "0.948517",
+          "title": "AI Engineer",
+          "years": 6.9,
+          "location": "Trivandrum, Kerala",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "AI Engineer with 6.9 years in Trivandrum, Kerala; career evidence for bm25, ranking, recommendation; production signals such as drift, monitoring, pipeline; vector tooling (bge, elasticsearch, embedding)."
+        },
+        {
+          "candidate_id": "CAND_0006567",
+          "rank": 3,
+          "score": "0.941925",
+          "title": "Senior AI Engineer",
+          "years": 7.9,
+          "location": "Noida, Uttar Pradesh",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior AI Engineer with 7.9 years in Noida, Uttar Pradesh; career evidence for matching, personalization, ranking; production signals such as drift, monitoring, owned; vector tooling (ann, vector)."
+        },
+        {
+          "candidate_id": "CAND_0069905",
+          "rank": 4,
+          "score": "0.934704",
+          "title": "Applied ML Engineer",
+          "years": 6.6,
+          "location": "Bhubaneswar, Odisha",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Applied ML Engineer with 6.6 years in Bhubaneswar, Odisha; career evidence for bm25, recommendation, retrieval; production signals such as pipeline; vector tooling (bge, elasticsearch, embedding)."
+        },
+        {
+          "candidate_id": "CAND_0000031",
+          "rank": 5,
+          "score": "0.925850",
+          "title": "Recommendation Systems Engineer",
+          "years": 6.0,
+          "location": "Hyderabad, Telangana",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Recommendation Systems Engineer with 6.0 years in Hyderabad, Telangana; career evidence for ranking, recommendation, search; production signals such as owned, pipeline, shipped; vector tooling (embedding, embeddings, faiss)."
+        },
+        {
+          "candidate_id": "CAND_0068811",
+          "rank": 6,
+          "score": "0.921982",
+          "title": "Applied ML Engineer",
+          "years": 8.0,
+          "location": "Pune, Maharashtra",
+          "country": "India",
+          "confidence": 0.9,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Applied ML Engineer with 8.0 years in Pune, Maharashtra; career evidence for ranking, recommendation, search; production signals such as drift, monitoring, owned; vector tooling (embedding, embeddings, opensearch)."
+        },
+        {
+          "candidate_id": "CAND_0017960",
+          "rank": 7,
+          "score": "0.919916",
+          "title": "Recommendation Systems Engineer",
+          "years": 7.7,
+          "location": "Bangalore, Karnataka",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Recommendation Systems Engineer with 7.7 years in Bangalore, Karnataka; career evidence for ranking, recommendation, search; production signals such as owned, pipeline, shipped; vector tooling (embedding, embeddings, faiss)."
+        },
+        {
+          "candidate_id": "CAND_0064326",
+          "rank": 8,
+          "score": "0.919047",
+          "title": "Search Engineer",
+          "years": 7.6,
+          "location": "Gurgaon, Haryana",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Search Engineer with 7.6 years in Gurgaon, Haryana; career evidence for ranking, search; production signals such as owned, pipeline, shipped; vector tooling (embedding, embeddings, milvus)."
+        },
+        {
+          "candidate_id": "CAND_0041610",
+          "rank": 9,
+          "score": "0.917885",
+          "title": "Recommendation Systems Engineer",
+          "years": 6.7,
+          "location": "Indore, Madhya Pradesh",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Recommendation Systems Engineer with 6.7 years in Indore, Madhya Pradesh; career evidence for ranking, recommendation, search; production signals such as drift, monitoring, owned; vector tooling (elasticsearch, embedding, embeddings)."
+        },
+        {
+          "candidate_id": "CAND_0039383",
+          "rank": 10,
+          "score": "0.917694",
+          "title": "Applied ML Engineer",
+          "years": 7.1,
+          "location": "Gurgaon, Haryana",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Applied ML Engineer with 7.1 years in Gurgaon, Haryana; career evidence for bm25, ranking, retrieval; production signals such as owned, shipped; vector tooling (bge, elasticsearch, faiss)."
+        }
+      ]
+    },
+    {
+      "job_spec": "job_specs/examples/backend_platform_engineer.yaml",
+      "job_id": "backend_platform_engineer",
+      "title": "Senior Backend Platform Engineer",
+      "category": "backend_engineering",
+      "category_label": "Backend/platform engineering",
+      "elapsed_seconds": 21.367,
+      "top_n": 25,
+      "eligible_top10": 10,
+      "risk_flagged_top_n": 0,
+      "top_titles": [
+        [
+          "Cloud Engineer",
+          4
+        ],
+        [
+          "Software Engineer",
+          4
+        ],
+        [
+          "DevOps Engineer",
+          3
+        ],
+        [
+          "Frontend Engineer",
+          3
+        ],
+        [
+          "Junior ML Engineer",
+          3
+        ],
+        [
+          "ML Engineer",
+          2
+        ],
+        [
+          "Machine Learning Engineer",
+          1
+        ],
+        [
+          "Senior Machine Learning Engineer",
+          1
+        ]
+      ],
+      "top_countries": [
+        [
+          "India",
+          25
+        ]
+      ],
+      "top_candidates": [
+        {
+          "candidate_id": "CAND_0060113",
+          "rank": 1,
+          "score": "0.920303",
+          "title": "DevOps Engineer",
+          "years": 8.8,
+          "location": "Bangalore, Karnataka",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "DevOps Engineer with 8.8 years in Bangalore, Karnataka; career evidence for distributed systems and APIs, database design and reliability, production ownership; production signals such as monitoring, owned, pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0006418",
+          "rank": 2,
+          "score": "0.916500",
+          "title": "Machine Learning Engineer",
+          "years": 5.7,
+          "location": "Gurgaon, Haryana",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Machine Learning Engineer with 5.7 years in Gurgaon, Haryana; career evidence for distributed systems and APIs, database design and reliability, production ownership; production signals such as drift, monitoring, owned; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0018499",
+          "rank": 3,
+          "score": "0.906291",
+          "title": "Senior Machine Learning Engineer",
+          "years": 7.2,
+          "location": "Noida, Uttar Pradesh",
+          "country": "India",
+          "confidence": 0.9125,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Machine Learning Engineer with 7.2 years in Noida, Uttar Pradesh; career evidence for distributed systems and APIs, database design and reliability, observability and incident response; production signals such as deployed, latency, pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0052195",
+          "rank": 4,
+          "score": "0.904398",
+          "title": "Computer Vision Engineer",
+          "years": 6.3,
+          "location": "Kolkata, West Bengal",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Computer Vision Engineer with 6.3 years in Kolkata, West Bengal; career evidence for distributed systems and APIs, database design and reliability, production ownership; production signals such as pipeline, production; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0079387",
+          "rank": 5,
+          "score": "0.903590",
+          "title": "AI Engineer",
+          "years": 6.9,
+          "location": "Trivandrum, Kerala",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "AI Engineer with 6.9 years in Trivandrum, Kerala; career evidence for distributed systems and APIs, database design and reliability, production ownership; production signals such as drift, monitoring, pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0060932",
+          "rank": 6,
+          "score": "0.901223",
+          "title": "DevOps Engineer",
+          "years": 7.8,
+          "location": "Pune, Maharashtra",
+          "country": "India",
+          "confidence": 0.9,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "DevOps Engineer with 7.8 years in Pune, Maharashtra; career evidence for distributed systems and APIs, database design and reliability, production ownership; production signals such as monitoring, owned, pipeline; product-company background. Concern: 150-day notice period."
+        },
+        {
+          "candidate_id": "CAND_0064888",
+          "rank": 7,
+          "score": "0.900669",
+          "title": "ML Engineer",
+          "years": 5.8,
+          "location": "Vizag, Andhra Pradesh",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "ML Engineer with 5.8 years in Vizag, Andhra Pradesh; career evidence for distributed systems and APIs, database design and reliability, production ownership; production signals such as pipeline, production; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0060835",
+          "rank": 8,
+          "score": "0.900370",
+          "title": "Senior Software Engineer (ML)",
+          "years": 6.6,
+          "location": "Bangalore, Karnataka",
+          "country": "India",
+          "confidence": 0.9,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Software Engineer (ML) with 6.6 years in Bangalore, Karnataka; career evidence for distributed systems and APIs, database design and reliability, production ownership; production signals such as production; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0008295",
+          "rank": 9,
+          "score": "0.899728",
+          "title": "AI Research Engineer",
+          "years": 6.5,
+          "location": "Pune, Maharashtra",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "AI Research Engineer with 6.5 years in Pune, Maharashtra; career evidence for distributed systems and APIs, database design and reliability, production ownership; production signals such as pipeline, production; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0010149",
+          "rank": 10,
+          "score": "0.896478",
+          "title": "ML Engineer",
+          "years": 6.9,
+          "location": "Bangalore, Karnataka",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "ML Engineer with 6.9 years in Bangalore, Karnataka; career evidence for distributed systems and APIs, database design and reliability, production ownership; production signals such as pipeline, production; product-company background."
+        }
+      ]
+    },
+    {
+      "job_spec": "job_specs/examples/data_analytics_lead.yaml",
+      "job_id": "data_analytics_lead",
+      "title": "Data Analytics Lead",
+      "category": "data_analytics",
+      "category_label": "Data analytics and decision science",
+      "elapsed_seconds": 21.445,
+      "top_n": 25,
+      "eligible_top10": 10,
+      "risk_flagged_top_n": 0,
+      "top_titles": [
+        [
+          "Data Analyst",
+          7
+        ],
+        [
+          "Data Engineer",
+          6
+        ],
+        [
+          "Senior Data Engineer",
+          5
+        ],
+        [
+          "Analytics Engineer",
+          2
+        ],
+        [
+          "Data Scientist",
+          2
+        ],
+        [
+          "AI Research Engineer",
+          1
+        ],
+        [
+          "Computer Vision Engineer",
+          1
+        ],
+        [
+          "Staff Machine Learning Engineer",
+          1
+        ]
+      ],
+      "top_countries": [
+        [
+          "India",
+          25
+        ]
+      ],
+      "top_candidates": [
+        {
+          "candidate_id": "CAND_0080653",
+          "rank": 1,
+          "score": "0.912493",
+          "title": "Senior Data Engineer",
+          "years": 5.4,
+          "location": "Mumbai, Maharashtra",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Data Engineer with 5.4 years in Mumbai, Maharashtra; career evidence for SQL and metrics, experimentation and causal thinking, dashboarding and stakeholder decisions; production signals such as owned; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0061969",
+          "rank": 2,
+          "score": "0.905604",
+          "title": "Senior Data Engineer",
+          "years": 6.7,
+          "location": "Pune, Maharashtra",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Data Engineer with 6.7 years in Pune, Maharashtra; career evidence for SQL and metrics, experimentation and causal thinking, dashboarding and stakeholder decisions; production signals such as shipped; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0029213",
+          "rank": 3,
+          "score": "0.903240",
+          "title": "Analytics Engineer",
+          "years": 7.0,
+          "location": "Hyderabad, Telangana",
+          "country": "India",
+          "confidence": 0.9,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Analytics Engineer with 7.0 years in Hyderabad, Telangana; career evidence for SQL and metrics, experimentation and causal thinking, dashboarding and stakeholder decisions; production signals such as drift, owned, pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0011327",
+          "rank": 4,
+          "score": "0.896282",
+          "title": "AI Research Engineer",
+          "years": 6.3,
+          "location": "Gurgaon, Haryana",
+          "country": "India",
+          "confidence": 0.85,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "AI Research Engineer with 6.3 years in Gurgaon, Haryana; career evidence for SQL and metrics, experimentation and causal thinking, dashboarding and stakeholder decisions; production signals such as pipeline, production; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0015462",
+          "rank": 5,
+          "score": "0.896244",
+          "title": "Data Analyst",
+          "years": 5.5,
+          "location": "Chandigarh, Chandigarh",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Data Analyst with 5.5 years in Chandigarh, Chandigarh; career evidence for SQL and metrics, experimentation and causal thinking, dashboarding and stakeholder decisions; production signals such as pipeline, real-time; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0012789",
+          "rank": 6,
+          "score": "0.894714",
+          "title": "Data Engineer",
+          "years": 6.6,
+          "location": "Kolkata, West Bengal",
+          "country": "India",
+          "confidence": 0.9,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Data Engineer with 6.6 years in Kolkata, West Bengal; career evidence for SQL and metrics, experimentation and causal thinking, dashboarding and stakeholder decisions; production signals such as pipeline, real-time; product-company background. Concern: 120-day notice period."
+        },
+        {
+          "candidate_id": "CAND_0022479",
+          "rank": 7,
+          "score": "0.891619",
+          "title": "Analytics Engineer",
+          "years": 7.9,
+          "location": "Mumbai, Maharashtra",
+          "country": "India",
+          "confidence": 0.9,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Analytics Engineer with 7.9 years in Mumbai, Maharashtra; career evidence for SQL and metrics, experimentation and causal thinking, dashboarding and stakeholder decisions; production signals such as owned; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0049668",
+          "rank": 8,
+          "score": "0.890956",
+          "title": "Data Analyst",
+          "years": 6.7,
+          "location": "Gurgaon, Haryana",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Data Analyst with 6.7 years in Gurgaon, Haryana; career evidence for SQL and metrics, experimentation and causal thinking, dashboarding and stakeholder decisions; production signals such as pipeline, real-time, shipped; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0094572",
+          "rank": 9,
+          "score": "0.888438",
+          "title": "Data Analyst",
+          "years": 6.6,
+          "location": "Gurgaon, Haryana",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Data Analyst with 6.6 years in Gurgaon, Haryana; career evidence for SQL and metrics, experimentation and causal thinking, dashboarding and stakeholder decisions; production signals such as drift, owned, pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0052195",
+          "rank": 10,
+          "score": "0.886792",
+          "title": "Computer Vision Engineer",
+          "years": 6.3,
+          "location": "Kolkata, West Bengal",
+          "country": "India",
+          "confidence": 0.85,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Computer Vision Engineer with 6.3 years in Kolkata, West Bengal; career evidence for SQL and metrics, experimentation and causal thinking, dashboarding and stakeholder decisions; production signals such as pipeline, production; product-company background."
+        }
+      ]
+    },
+    {
+      "job_spec": "job_specs/examples/enterprise_account_executive.yaml",
+      "job_id": "enterprise_account_executive",
+      "title": "Enterprise Account Executive",
+      "category": "sales_gtm",
+      "category_label": "Sales and GTM",
+      "elapsed_seconds": 21.55,
+      "top_n": 25,
+      "eligible_top10": 10,
+      "risk_flagged_top_n": 0,
+      "top_titles": [
+        [
+          "Mobile Developer",
+          4
+        ],
+        [
+          "Software Engineer",
+          3
+        ],
+        [
+          "Frontend Engineer",
+          3
+        ],
+        [
+          ".NET Developer",
+          3
+        ],
+        [
+          "Java Developer",
+          2
+        ],
+        [
+          "Full Stack Developer",
+          2
+        ],
+        [
+          "Cloud Engineer",
+          2
+        ],
+        [
+          "QA Engineer",
+          2
+        ]
+      ],
+      "top_countries": [
+        [
+          "India",
+          25
+        ]
+      ],
+      "top_candidates": [
+        {
+          "candidate_id": "CAND_0047539",
+          "rank": 1,
+          "score": "0.811074",
+          "title": "Mobile Developer",
+          "years": 5.9,
+          "location": "Gurgaon, Haryana",
+          "country": "India",
+          "confidence": 0.75,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Mobile Developer with 5.9 years in Gurgaon, Haryana; career evidence for enterprise quota carrying sales, pipeline generation, CRM discipline; production signals such as monitoring, owned, pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0029149",
+          "rank": 2,
+          "score": "0.808784",
+          "title": "Java Developer",
+          "years": 8.4,
+          "location": "Vizag, Andhra Pradesh",
+          "country": "India",
+          "confidence": 0.85,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Java Developer with 8.4 years in Vizag, Andhra Pradesh; career evidence for enterprise quota carrying sales, pipeline generation, CRM discipline; production signals such as monitoring, owned, pipeline; product-company background. Concern: stale recent activity."
+        },
+        {
+          "candidate_id": "CAND_0026848",
+          "rank": 3,
+          "score": "0.807704",
+          "title": "Mobile Developer",
+          "years": 5.5,
+          "location": "Ahmedabad, Gujarat",
+          "country": "India",
+          "confidence": 0.85,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Mobile Developer with 5.5 years in Ahmedabad, Gujarat; career evidence for enterprise quota carrying sales, pipeline generation, CRM discipline; production signals such as monitoring, owned, pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0020979",
+          "rank": 4,
+          "score": "0.806821",
+          "title": "Software Engineer",
+          "years": 7.7,
+          "location": "Bangalore, Karnataka",
+          "country": "India",
+          "confidence": 0.85,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Software Engineer with 7.7 years in Bangalore, Karnataka; career evidence for enterprise quota carrying sales, pipeline generation, CRM discipline; production signals such as monitoring, owned, pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0026960",
+          "rank": 5,
+          "score": "0.806608",
+          "title": "Frontend Engineer",
+          "years": 9.8,
+          "location": "Mumbai, Maharashtra",
+          "country": "India",
+          "confidence": 0.85,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Frontend Engineer with 9.8 years in Mumbai, Maharashtra; career evidence for enterprise quota carrying sales, pipeline generation, CRM discipline; production signals such as monitoring, owned, pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0004030",
+          "rank": 6,
+          "score": "0.804757",
+          "title": ".NET Developer",
+          "years": 8.4,
+          "location": "Delhi, Delhi",
+          "country": "India",
+          "confidence": 0.75,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": ".NET Developer with 8.4 years in Delhi, Delhi; career evidence for enterprise quota carrying sales, pipeline generation, CRM discipline; production signals such as monitoring, owned, pipeline; product-company background. Concern: 120-day notice period."
+        },
+        {
+          "candidate_id": "CAND_0037413",
+          "rank": 7,
+          "score": "0.803970",
+          "title": "Full Stack Developer",
+          "years": 7.7,
+          "location": "Trivandrum, Kerala",
+          "country": "India",
+          "confidence": 0.75,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Full Stack Developer with 7.7 years in Trivandrum, Kerala; career evidence for enterprise quota carrying sales, pipeline generation, CRM discipline; production signals such as monitoring, owned, pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0021522",
+          "rank": 8,
+          "score": "0.801770",
+          "title": "Cloud Engineer",
+          "years": 8.0,
+          "location": "Delhi, Delhi",
+          "country": "India",
+          "confidence": 0.75,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Cloud Engineer with 8.0 years in Delhi, Delhi; career evidence for enterprise quota carrying sales, pipeline generation, CRM discipline; production signals such as monitoring, owned, pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0000255",
+          "rank": 9,
+          "score": "0.799861",
+          "title": "Cloud Engineer",
+          "years": 8.0,
+          "location": "Mumbai, Maharashtra",
+          "country": "India",
+          "confidence": 0.75,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Cloud Engineer with 8.0 years in Mumbai, Maharashtra; career evidence for enterprise quota carrying sales, pipeline generation, CRM discipline; production signals such as monitoring, owned, pipeline; product-company background. Concern: 150-day notice period."
+        },
+        {
+          "candidate_id": "CAND_0015733",
+          "rank": 10,
+          "score": "0.798546",
+          "title": "Accountant",
+          "years": 8.4,
+          "location": "Mumbai, Maharashtra",
+          "country": "India",
+          "confidence": 0.9,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Accountant with 8.4 years in Mumbai, Maharashtra; career evidence for enterprise quota carrying sales, pipeline generation, CRM discipline; production signals such as owned, production. Concern: stale recent activity."
+        }
+      ]
+    },
+    {
+      "job_spec": "job_specs/examples/product_designer_systems.yaml",
+      "job_id": "product_designer_systems",
+      "title": "Senior Product Designer - Design Systems",
+      "category": "design_product",
+      "category_label": "Product design",
+      "elapsed_seconds": 21.433,
+      "top_n": 25,
+      "eligible_top10": 10,
+      "risk_flagged_top_n": 0,
+      "top_titles": [
+        [
+          "Recommendation Systems Engineer",
+          5
+        ],
+        [
+          "Senior Data Scientist",
+          4
+        ],
+        [
+          "Senior Data Engineer",
+          3
+        ],
+        [
+          "Senior AI Engineer",
+          2
+        ],
+        [
+          "Senior Applied Scientist",
+          2
+        ],
+        [
+          "Senior Machine Learning Engineer",
+          2
+        ],
+        [
+          "Senior Software Engineer (ML)",
+          2
+        ],
+        [
+          "AI Research Engineer",
+          2
+        ]
+      ],
+      "top_countries": [
+        [
+          "India",
+          25
+        ]
+      ],
+      "top_candidates": [
+        {
+          "candidate_id": "CAND_0006567",
+          "rank": 1,
+          "score": "0.904763",
+          "title": "Senior AI Engineer",
+          "years": 7.9,
+          "location": "Noida, Uttar Pradesh",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior AI Engineer with 7.9 years in Noida, Uttar Pradesh; career evidence for product design portfolio, design systems, interaction design; production signals such as drift, monitoring, owned; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0030468",
+          "rank": 2,
+          "score": "0.884288",
+          "title": "Senior Applied Scientist",
+          "years": 5.4,
+          "location": "Indore, Madhya Pradesh",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Applied Scientist with 5.4 years in Indore, Madhya Pradesh; career evidence for product design portfolio, design systems, interaction design; production signals such as drift, index refresh, latency; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0018499",
+          "rank": 3,
+          "score": "0.882578",
+          "title": "Senior Machine Learning Engineer",
+          "years": 7.2,
+          "location": "Noida, Uttar Pradesh",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Machine Learning Engineer with 7.2 years in Noida, Uttar Pradesh; career evidence for product design portfolio, design systems, interaction design; production signals such as deployed, latency, pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0018549",
+          "rank": 4,
+          "score": "0.873021",
+          "title": "Recommendation Systems Engineer",
+          "years": 6.8,
+          "location": "Coimbatore, Tamil Nadu",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Recommendation Systems Engineer with 6.8 years in Coimbatore, Tamil Nadu; career evidence for product design portfolio, design systems, interaction design; production signals such as owned, pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0029367",
+          "rank": 5,
+          "score": "0.870963",
+          "title": "Senior Data Scientist",
+          "years": 5.7,
+          "location": "Bangalore, Karnataka",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Data Scientist with 5.7 years in Bangalore, Karnataka; career evidence for product design portfolio, design systems, interaction design; production signals such as pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0061969",
+          "rank": 6,
+          "score": "0.869625",
+          "title": "Senior Data Engineer",
+          "years": 6.7,
+          "location": "Pune, Maharashtra",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Data Engineer with 6.7 years in Pune, Maharashtra; career evidence for product design portfolio, design systems, interaction design; production signals such as shipped; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0041610",
+          "rank": 7,
+          "score": "0.868658",
+          "title": "Recommendation Systems Engineer",
+          "years": 6.7,
+          "location": "Indore, Madhya Pradesh",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Recommendation Systems Engineer with 6.7 years in Indore, Madhya Pradesh; career evidence for product design portfolio, design systems, interaction design; production signals such as drift, monitoring, owned; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0046525",
+          "rank": 8,
+          "score": "0.865680",
+          "title": "Senior Machine Learning Engineer",
+          "years": 6.1,
+          "location": "Pune, Maharashtra",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Machine Learning Engineer with 6.1 years in Pune, Maharashtra; career evidence for product design portfolio, design systems, interaction design; production signals such as latency, pipeline; active hireability with 0.88 recruiter response rate."
+        },
+        {
+          "candidate_id": "CAND_0082086",
+          "rank": 9,
+          "score": "0.862776",
+          "title": "Senior Software Engineer (ML)",
+          "years": 6.0,
+          "location": "Delhi, Delhi",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Software Engineer (ML) with 6.0 years in Delhi, Delhi; career evidence for product design portfolio, design systems, interaction design; production signals such as pipeline; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0093912",
+          "rank": 10,
+          "score": "0.862608",
+          "title": "Senior Data Scientist",
+          "years": 5.3,
+          "location": "Chandigarh, Chandigarh",
+          "country": "India",
+          "confidence": 1.0,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Data Scientist with 5.3 years in Chandigarh, Chandigarh; career evidence for product design portfolio, design systems, interaction design; production signals such as owned, pipeline; product-company background."
+        }
+      ]
+    },
+    {
+      "job_spec": "job_specs/examples/product_manager_growth.yaml",
+      "job_id": "product_manager_growth",
+      "title": "Senior Product Manager - Growth",
+      "category": "product_management",
+      "category_label": "Product management",
+      "elapsed_seconds": 21.352,
+      "top_n": 25,
+      "eligible_top10": 10,
+      "risk_flagged_top_n": 0,
+      "top_titles": [
+        [
+          "Senior Software Engineer (ML)",
+          4
+        ],
+        [
+          "Senior Data Engineer",
+          3
+        ],
+        [
+          "Senior Applied Scientist",
+          3
+        ],
+        [
+          "Senior Data Scientist",
+          3
+        ],
+        [
+          "Senior Software Engineer",
+          3
+        ],
+        [
+          "Senior AI Engineer",
+          2
+        ],
+        [
+          "Senior NLP Engineer",
+          2
+        ],
+        [
+          "Senior Machine Learning Engineer",
+          2
+        ]
+      ],
+      "top_countries": [
+        [
+          "India",
+          25
+        ]
+      ],
+      "top_candidates": [
+        {
+          "candidate_id": "CAND_0006567",
+          "rank": 1,
+          "score": "0.830363",
+          "title": "Senior AI Engineer",
+          "years": 7.9,
+          "location": "Noida, Uttar Pradesh",
+          "country": "India",
+          "confidence": 0.8625,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior AI Engineer with 7.9 years in Noida, Uttar Pradesh; career evidence for product discovery and launches, growth experiments and metrics, cross-functional leadership; production signals such as drift, monitoring, owned; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0008425",
+          "rank": 2,
+          "score": "0.827550",
+          "title": "Senior NLP Engineer",
+          "years": 7.8,
+          "location": "Kolkata, West Bengal",
+          "country": "India",
+          "confidence": 0.9125,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior NLP Engineer with 7.8 years in Kolkata, West Bengal; career evidence for product discovery and launches, growth experiments and metrics, cross-functional leadership; production signals such as deployed, drift, index refresh; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0080653",
+          "rank": 3,
+          "score": "0.814145",
+          "title": "Senior Data Engineer",
+          "years": 5.4,
+          "location": "Mumbai, Maharashtra",
+          "country": "India",
+          "confidence": 0.8625,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Data Engineer with 5.4 years in Mumbai, Maharashtra; career evidence for product discovery and launches, growth experiments and metrics, cross-functional leadership; production signals such as owned; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0061969",
+          "rank": 4,
+          "score": "0.807694",
+          "title": "Senior Data Engineer",
+          "years": 6.7,
+          "location": "Pune, Maharashtra",
+          "country": "India",
+          "confidence": 0.8625,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Data Engineer with 6.7 years in Pune, Maharashtra; career evidence for product discovery and launches, growth experiments and metrics, cross-functional leadership; production signals such as shipped; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0060835",
+          "rank": 5,
+          "score": "0.805445",
+          "title": "Senior Software Engineer (ML)",
+          "years": 6.6,
+          "location": "Bangalore, Karnataka",
+          "country": "India",
+          "confidence": 0.675,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Software Engineer (ML) with 6.6 years in Bangalore, Karnataka; career evidence for product discovery and launches, growth experiments and metrics; production signals such as production; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0046525",
+          "rank": 6,
+          "score": "0.797882",
+          "title": "Senior Machine Learning Engineer",
+          "years": 6.1,
+          "location": "Pune, Maharashtra",
+          "country": "India",
+          "confidence": 0.9125,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Machine Learning Engineer with 6.1 years in Pune, Maharashtra; career evidence for product discovery and launches, growth experiments and metrics, cross-functional leadership; production signals such as latency, pipeline; active hireability with 0.88 recruiter response rate."
+        },
+        {
+          "candidate_id": "CAND_0086022",
+          "rank": 7,
+          "score": "0.797358",
+          "title": "Senior Applied Scientist",
+          "years": 5.3,
+          "location": "Kolkata, West Bengal",
+          "country": "India",
+          "confidence": 0.9125,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Applied Scientist with 5.3 years in Kolkata, West Bengal; career evidence for product discovery and launches, growth experiments and metrics, cross-functional leadership; production signals such as latency, pipeline; active hireability with 0.55 recruiter response rate."
+        },
+        {
+          "candidate_id": "CAND_0042029",
+          "rank": 8,
+          "score": "0.796329",
+          "title": "Senior Data Scientist",
+          "years": 6.5,
+          "location": "Delhi, Delhi",
+          "country": "India",
+          "confidence": 0.7625,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Data Scientist with 6.5 years in Delhi, Delhi; career evidence for product discovery and launches, growth experiments and metrics, cross-functional leadership; production signals such as owned, pipeline, shipped; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0030468",
+          "rank": 9,
+          "score": "0.795881",
+          "title": "Senior Applied Scientist",
+          "years": 5.4,
+          "location": "Indore, Madhya Pradesh",
+          "country": "India",
+          "confidence": 0.8625,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Applied Scientist with 5.4 years in Indore, Madhya Pradesh; career evidence for product discovery and launches, growth experiments and metrics, cross-functional leadership; production signals such as drift, index refresh, latency; product-company background."
+        },
+        {
+          "candidate_id": "CAND_0000859",
+          "rank": 10,
+          "score": "0.790718",
+          "title": "Senior Software Engineer",
+          "years": 5.9,
+          "location": "Delhi, Delhi",
+          "country": "India",
+          "confidence": 0.8625,
+          "top10_eligible": true,
+          "risk_flags": [],
+          "reasoning": "Senior Software Engineer with 5.9 years in Delhi, Delhi; career evidence for product discovery and launches, growth experiments and metrics, cross-functional leadership; production signals such as owned; product-company background."
+        }
+      ]
+    }
+  ],
+  "overlap": [
+    {
+      "left": "redrob_senior_ai_engineer",
+      "right": "backend_platform_engineer",
+      "overlap_count": 2
+    },
+    {
+      "left": "redrob_senior_ai_engineer",
+      "right": "data_analytics_lead",
+      "overlap_count": 0
+    },
+    {
+      "left": "redrob_senior_ai_engineer",
+      "right": "enterprise_account_executive",
+      "overlap_count": 0
+    },
+    {
+      "left": "redrob_senior_ai_engineer",
+      "right": "product_designer_systems",
+      "overlap_count": 3
+    },
+    {
+      "left": "redrob_senior_ai_engineer",
+      "right": "product_manager_growth",
+      "overlap_count": 1
+    },
+    {
+      "left": "backend_platform_engineer",
+      "right": "data_analytics_lead",
+      "overlap_count": 1
+    },
+    {
+      "left": "backend_platform_engineer",
+      "right": "enterprise_account_executive",
+      "overlap_count": 0
+    },
+    {
+      "left": "backend_platform_engineer",
+      "right": "product_designer_systems",
+      "overlap_count": 1
+    },
+    {
+      "left": "backend_platform_engineer",
+      "right": "product_manager_growth",
+      "overlap_count": 1
+    },
+    {
+      "left": "data_analytics_lead",
+      "right": "enterprise_account_executive",
+      "overlap_count": 0
+    },
+    {
+      "left": "data_analytics_lead",
+      "right": "product_designer_systems",
+      "overlap_count": 1
+    },
+    {
+      "left": "data_analytics_lead",
+      "right": "product_manager_growth",
+      "overlap_count": 2
+    },
+    {
+      "left": "enterprise_account_executive",
+      "right": "product_designer_systems",
+      "overlap_count": 0
+    },
+    {
+      "left": "enterprise_account_executive",
+      "right": "product_manager_growth",
+      "overlap_count": 0
+    },
+    {
+      "left": "product_designer_systems",
+      "right": "product_manager_growth",
+      "overlap_count": 4
+    }
+  ]
+}

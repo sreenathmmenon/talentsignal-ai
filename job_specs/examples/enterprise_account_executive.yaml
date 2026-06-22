@@ -1,0 +1,36 @@
+id: enterprise_account_executive
+title: Enterprise Account Executive
+company: Example B2B SaaS
+category: sales_gtm
+experience:
+  preferred_min_years: 4
+  preferred_max_years: 9
+  strongest_min_years: 5
+  strongest_max_years: 8
+locations:
+  preferred:
+    - Mumbai
+    - Bangalore
+    - Delhi
+  country_preferred: India
+must_have:
+  - enterprise quota carrying sales
+  - pipeline generation
+  - CRM discipline
+  - SaaS or technology buyer motion
+nice_to_have:
+  - HR tech or recruiting software
+  - large deal negotiation
+  - outbound prospecting
+disqualifiers:
+  - lead generation only
+  - no quota ownership
+  - wrong segment motion
+weights:
+  technical_evidence: 0.18
+  career_fit: 0.34
+  seniority: 0.12
+  logistics: 0.10
+  behavioral: 0.18
+  trust: 0.08
+

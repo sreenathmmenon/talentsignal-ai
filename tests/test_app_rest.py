@@ -28,13 +28,13 @@ def start_server() -> tuple[ThreadingHTTPServer, str]:
     return server, f"http://127.0.0.1:{port}"
 
 
-def request_json(url: str, payload: dict | None = None) -> dict:
+def request_json(url: str, payload: dict | None = None, timeout: int = 60) -> dict:
     if payload is None:
         with urllib.request.urlopen(url, timeout=30) as response:
             return json.loads(response.read().decode("utf-8"))
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"}, method="POST")
-    with urllib.request.urlopen(req, timeout=60) as response:
+    with urllib.request.urlopen(req, timeout=timeout) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
@@ -50,11 +50,17 @@ def test_status_and_rank_api_with_real_sample_file() -> None:
                 "job_spec": "job_specs/redrob_senior_ai_engineer.yaml",
                 "top_n": 5,
             },
+            timeout=240,
         )
         assert len(result["rows"]) == 5
         assert result["summary"]["top10_eligible_count"] == 5
         assert Path(result["files"]["submission"]).exists()
         assert result["rows"][0]["candidate_id"].startswith("CAND_")
+        assert result["job"]["category_label"]
+        assert result["v2"]["analysis_rows"] >= 5
+        assert result["v2"]["top_compare"]["left_rank"] == 1
+        assert result["v2"]["boundary_review"]["windows"]
+        assert result["v2"]["interview_kits"][0]["questions"]
     finally:
         server.shutdown()
         server.server_close()

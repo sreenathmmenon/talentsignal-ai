@@ -1,0 +1,36 @@
+id: backend_platform_engineer
+title: Senior Backend Platform Engineer
+company: Example SaaS
+category: backend_engineering
+experience:
+  preferred_min_years: 4
+  preferred_max_years: 9
+  strongest_min_years: 5
+  strongest_max_years: 8
+locations:
+  preferred:
+    - Bangalore
+    - Hyderabad
+    - Pune
+  country_preferred: India
+must_have:
+  - distributed systems and APIs
+  - database design and reliability
+  - production ownership
+  - observability and incident response
+nice_to_have:
+  - Kubernetes
+  - event driven architecture
+  - performance optimization
+disqualifiers:
+  - only frontend implementation
+  - no production ownership
+  - framework keywords without system design evidence
+weights:
+  technical_evidence: 0.30
+  career_fit: 0.24
+  seniority: 0.12
+  logistics: 0.10
+  behavioral: 0.16
+  trust: 0.08
+

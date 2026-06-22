@@ -11,6 +11,17 @@ def clamp(value: float, lo: float = 0.0, hi: float = 1.0) -> float:
     return max(lo, min(hi, value))
 
 
+def _term_coverage(text: str, terms: tuple[str, ...]) -> float:
+    if not terms:
+        return 0.0
+    matched = 0
+    for term in terms:
+        words = [word for word in term.lower().replace("/", " ").replace("-", " ").split() if len(word) >= 3]
+        if words and any(word in text for word in words):
+            matched += 1
+    return matched / len(terms)
+
+
 @dataclass
 class ScoreBreakdown:
     candidate_id: str
@@ -28,23 +39,49 @@ class ScoreBreakdown:
 
 
 def score_candidate(ev: CandidateEvidence, job: JobSpec) -> ScoreBreakdown:
+    ai_search_role = job.category == "ai_ml_search_ranking"
+    must_have_coverage = _term_coverage(ev.all_text, job.must_have)
+    nice_to_have_coverage = _term_coverage(ev.all_text, job.nice_to_have)
+    career_must_have_coverage = _term_coverage(ev.career_text, job.must_have)
+    career_nice_to_have_coverage = _term_coverage(ev.career_text, job.nice_to_have)
+    title_coverage = _term_coverage(ev.title_norm, (job.title,))
+    disqualifier_coverage = _term_coverage(ev.all_text, job.disqualifiers)
     technical = 0.0
-    technical += min(0.28, 0.07 * len(ev.career_retrieval_terms))
-    technical += min(0.18, 0.045 * len(ev.vector_terms))
-    technical += min(0.16, 0.04 * len(ev.eval_terms))
-    technical += min(0.18, 0.045 * len(ev.career_production_terms))
-    technical += min(0.12, 0.015 * len(ev.ml_terms))
+    if ai_search_role:
+        technical += min(0.28, 0.07 * len(ev.career_retrieval_terms))
+        technical += min(0.18, 0.045 * len(ev.vector_terms))
+        technical += min(0.16, 0.04 * len(ev.eval_terms))
+        technical += min(0.18, 0.045 * len(ev.career_production_terms))
+        technical += min(0.12, 0.015 * len(ev.ml_terms))
+        technical += 0.12 * must_have_coverage
+        technical += 0.04 * nice_to_have_coverage
+    else:
+        technical += 0.48 * must_have_coverage
+        technical += 0.24 * career_must_have_coverage
+        technical += 0.12 * nice_to_have_coverage
+        technical += 0.08 * career_nice_to_have_coverage
+        technical += 0.08 if ev.career_production_terms else 0.0
     technical += 0.08 if ev.skill_assessment_max >= 70 else 0.04 if ev.skill_assessment_max >= 50 else 0.0
     technical = clamp(technical)
 
     career = 0.0
-    career += 0.32 if ev.ai_title else 0.18 if ev.adjacent_title else 0.0
+    if ai_search_role:
+        career += 0.32 if ev.ai_title else 0.18 if ev.adjacent_title else 0.0
+    else:
+        career += 0.22 * title_coverage
+        career += 0.24 * career_must_have_coverage
+        career += 0.10 * career_nice_to_have_coverage
     career += 0.18 if ev.product_company_count else 0.0
-    career += 0.16 if ev.career_retrieval_terms else 0.0
-    career += 0.12 if ev.career_production_terms else 0.0
+    if ai_search_role:
+        career += 0.16 if ev.career_retrieval_terms else 0.0
+        career += 0.12 if ev.career_production_terms else 0.0
+    else:
+        career += 0.10 if ev.career_production_terms else 0.0
+    career += 0.12 * career_must_have_coverage
+    career += 0.04 * career_nice_to_have_coverage
     career += 0.10 if "hr" in ev.current_industry.lower() or "ai" in ev.current_industry.lower() or "software" in ev.current_industry.lower() else 0.0
-    career -= 0.18 if ev.non_tech_title and not ev.career_retrieval_terms else 0.0
-    career -= 0.12 if ev.service_only and not ev.product_company_count else 0.0
+    career -= 0.18 if ai_search_role and ev.non_tech_title and not ev.career_retrieval_terms else 0.0
+    career -= 0.12 if ai_search_role and ev.service_only and not ev.product_company_count else 0.0
     career = clamp(career)
 
     if job.strongest_min_years <= ev.years <= job.strongest_max_years:
@@ -92,7 +129,10 @@ def score_candidate(ev: CandidateEvidence, job: JobSpec) -> ScoreBreakdown:
 
     flags = risk_flags(ev)
     penalty = risk_penalty(flags)
+    if disqualifier_coverage >= 0.34 and must_have_coverage < 0.34:
+        penalty += 0.06
     direct_career_evidence = bool(ev.career_retrieval_terms and (ev.career_production_terms or ev.eval_terms or ev.vector_terms))
+    role_career_evidence = career_must_have_coverage >= 0.34 or (must_have_coverage >= 0.50 and career_must_have_coverage >= 0.20)
     top10_eligible = direct_career_evidence and not any(
         flag in flags
         for flag in {
@@ -102,12 +142,22 @@ def score_candidate(ev: CandidateEvidence, job: JobSpec) -> ScoreBreakdown:
             "shallow_ai_tool_interest",
         }
     )
+    if not ai_search_role:
+        top10_eligible = role_career_evidence and not any(
+            flag in flags for flag in {"expert_skills_zero_duration", "stale_low_response"}
+        )
     confidence = 0.0
-    confidence += 0.30 if ev.career_retrieval_terms else 0.0
-    confidence += 0.20 if ev.career_production_terms else 0.0
-    confidence += 0.15 if ev.ai_title or ev.adjacent_title else 0.0
-    confidence += 0.10 if ev.vector_terms else 0.0
-    confidence += 0.10 if ev.eval_terms else 0.0
+    if ai_search_role:
+        confidence += 0.30 if ev.career_retrieval_terms else 0.0
+        confidence += 0.20 if ev.career_production_terms else 0.0
+        confidence += 0.15 if ev.ai_title or ev.adjacent_title else 0.0
+        confidence += 0.10 if ev.vector_terms else 0.0
+        confidence += 0.10 if ev.eval_terms else 0.0
+    else:
+        confidence += 0.35 * career_must_have_coverage
+        confidence += 0.20 * must_have_coverage
+        confidence += 0.15 * title_coverage
+        confidence += 0.15 if ev.career_production_terms else 0.0
     confidence += 0.10 if ev.response_rate >= 0.5 and ev.open_to_work else 0.0
     confidence += 0.05 if not flags else 0.0
     confidence = clamp(confidence)
@@ -122,7 +172,7 @@ def score_candidate(ev: CandidateEvidence, job: JobSpec) -> ScoreBreakdown:
         + weights["behavioral"] * behavioral
         + weights["trust"] * trust
     )
-    if not ev.career_retrieval_terms and not ev.ai_title and ev.non_tech_title:
+    if ai_search_role and not ev.career_retrieval_terms and not ev.ai_title and ev.non_tech_title:
         penalty += 0.08
     final = clamp(raw - penalty)
     return ScoreBreakdown(

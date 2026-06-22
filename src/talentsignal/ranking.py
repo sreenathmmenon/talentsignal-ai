@@ -13,13 +13,17 @@ from .reasoning import generate_reasoning
 from .scoring import score_candidate
 
 
-def rank_candidates(candidates_path: str | Path, job: JobSpec, top_n: int = 100) -> list[dict[str, Any]]:
+def _score_pool(candidates_path: str | Path, job: JobSpec) -> list[tuple[Any, Any, dict[str, Any]]]:
     scored: list[tuple[Any, Any, dict[str, Any]]] = []
     for candidate in iter_candidates(candidates_path):
         ev = build_evidence(candidate)
         score = score_candidate(ev, job)
         scored.append((score, ev, candidate))
     scored.sort(key=lambda item: (-item[0].final_score, item[1].candidate_id))
+    return scored
+
+
+def _rows_from_scored(scored: list[tuple[Any, Any, dict[str, Any]]], job: JobSpec, top_n: int) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for rank, (score, ev, _candidate) in enumerate(scored[:top_n], start=1):
         # Ensure strict non-increasing scores after rounding and deterministic ordering.
@@ -29,12 +33,23 @@ def rank_candidates(candidates_path: str | Path, job: JobSpec, top_n: int = 100)
                 "candidate_id": ev.candidate_id,
                 "rank": rank,
                 "score": f"{display_score:.6f}",
-                "reasoning": generate_reasoning(ev, score, rank),
+                "reasoning": generate_reasoning(ev, score, rank, job),
                 "_score": score,
                 "_evidence": ev,
             }
         )
     return rows
+
+
+def rank_candidates(candidates_path: str | Path, job: JobSpec, top_n: int = 100) -> list[dict[str, Any]]:
+    return _rows_from_scored(_score_pool(candidates_path, job), job, top_n)
+
+
+def rank_candidates_with_pool(
+    candidates_path: str | Path, job: JobSpec, top_n: int = 100
+) -> tuple[list[dict[str, Any]], list[tuple[Any, Any, dict[str, Any]]]]:
+    scored = _score_pool(candidates_path, job)
+    return _rows_from_scored(scored, job, top_n), scored
 
 
 def write_submission(rows: list[dict[str, Any]], out_path: str | Path) -> None:

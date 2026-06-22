@@ -1,0 +1,36 @@
+id: product_designer_systems
+title: Senior Product Designer - Design Systems
+company: Example Platform
+category: design_product
+experience:
+  preferred_min_years: 4
+  preferred_max_years: 9
+  strongest_min_years: 5
+  strongest_max_years: 8
+locations:
+  preferred:
+    - Bangalore
+    - Pune
+    - Remote
+  country_preferred: India
+must_have:
+  - product design portfolio
+  - design systems
+  - interaction design
+  - shipped product work
+nice_to_have:
+  - research synthesis
+  - accessibility
+  - developer collaboration
+disqualifiers:
+  - visual-only work
+  - no product impact
+  - template portfolio without case studies
+weights:
+  technical_evidence: 0.22
+  career_fit: 0.30
+  seniority: 0.12
+  logistics: 0.10
+  behavioral: 0.18
+  trust: 0.08
+

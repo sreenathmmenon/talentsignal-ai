@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from .category_taxonomy import get_category_profile, validate_weights
+
 
 @dataclass(frozen=True)
 class JobSpec:
@@ -20,6 +22,10 @@ class JobSpec:
     nice_to_have: tuple[str, ...]
     disqualifiers: tuple[str, ...]
     weights: dict[str, float]
+    category_label: str
+    category_core_signals: tuple[str, ...]
+    category_evidence_priorities: tuple[str, ...]
+    category_common_risks: tuple[str, ...]
 
 
 def _parse_scalar(value: str) -> Any:
@@ -78,10 +84,14 @@ def load_job_spec(path: str | Path) -> JobSpec:
     data = load_simple_yaml(path)
     exp = data["experience"]
     loc = data["locations"]
+    category = str(data["category"])
+    category_profile = get_category_profile(category)
+    weights = {k: float(v) for k, v in data.get("weights", category_profile.default_weights).items()}
+    validate_weights(weights)
     return JobSpec(
         id=str(data["id"]),
         title=str(data["title"]),
-        category=str(data["category"]),
+        category=category,
         preferred_min_years=float(exp["preferred_min_years"]),
         preferred_max_years=float(exp["preferred_max_years"]),
         strongest_min_years=float(exp["strongest_min_years"]),
@@ -91,5 +101,9 @@ def load_job_spec(path: str | Path) -> JobSpec:
         must_have=tuple(data["must_have"]),
         nice_to_have=tuple(data["nice_to_have"]),
         disqualifiers=tuple(data["disqualifiers"]),
-        weights={k: float(v) for k, v in data["weights"].items()},
+        weights=weights,
+        category_label=category_profile.label,
+        category_core_signals=category_profile.core_signals,
+        category_evidence_priorities=category_profile.evidence_priorities,
+        category_common_risks=category_profile.common_risks,
     )

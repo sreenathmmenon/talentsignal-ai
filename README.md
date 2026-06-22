@@ -2,6 +2,8 @@
 
 TalentSignal AI is an agentic talent-intelligence ranker for the Redrob Intelligent Candidate Discovery and Ranking Challenge.
 
+Tagline: **Evidence-backed hiring decisions for any role.**
+
 It turns a job description into a structured scorecard, extracts evidence from candidate profiles, ranks candidates with inspectable factor scores, flags risk patterns, and generates grounded shortlist reasoning. The challenge artifact is a valid top-100 CSV; the product artifact is a recruiter-facing evidence workflow.
 
 ## Repository
@@ -12,19 +14,21 @@ It turns a job description into a structured scorecard, extracts evidence from c
 
 ## Current Status
 
-The repository is a validated checkpoint, not the final frozen submission. The backend/ranker, local submission package, REST API, and live recruiter cockpit are validated against the provided candidate data. We will keep iterating until final submission freeze.
+The repository is a validated checkpoint, not the final frozen submission. The ranking engine, local submission package, API, and recruiter cockpit are validated against the provided candidate data. We will keep iterating until final submission freeze.
 
 Implemented checkpoint:
 
 - Challenge command-center docs.
 - Redrob Senior AI Engineer scorecard.
+- Universal JD scorecard taxonomy and example scorecards across backend, data, product, sales, and design.
 - Dataset profiler and archetype sampler.
 - Deterministic offline ranker.
 - Evidence extraction and factor scoring.
+- V2 decision modules for candidate comparison, boundary review, trap examples, and interview kits.
 - Risk audit and top-10 eligibility.
 - Explanation audit.
 - Top-25 audit and candidate comparison tools.
-- Live REST-backed recruiter cockpit checkpoint.
+- Production-grade recruiter cockpit checkpoint.
 - Methodology, metadata, interview defense, and final validation reports.
 
 ## Requirements
@@ -120,7 +124,9 @@ python3 app.py --host 127.0.0.1 --port 8765
 
 Open `http://127.0.0.1:8765/` in a browser.
 
-The UI calls `/api/rank`, runs the actual backend ranker on the selected candidate JSONL and JD scorecard, renders ranked candidates, shows score factors and grounded evidence, exposes risk flags, supports search/sort/risk filtering, and downloads generated CSV/evidence/risk artifacts from `/download/...`.
+The UI uses the Helix control-plane design system for a production-grade hiring intelligence cockpit. It generates a ranked shortlist from the selected candidate JSONL and JD scorecard, shows fit factors and grounded evidence, exposes risk flags, supports search/sort/risk filtering, and downloads generated CSV/evidence/risk artifacts.
+
+The product direction is a universal JD-to-hiring-decision command center: role intelligence, evidence ranking, candidate comparison, boundary review, trust/trap review, interview probes, and exports. See `REDROB_BUSINESS_PLAN_PRODUCT_STRATEGY.md` for the Redrob business-plan signal and roadmap implication, and `TALENTSIGNAL_V2_PRODUCT_AND_ACTION_PLAN.md` for the V2 product plan.
 
 ## Docker Reproduction
 
@@ -147,11 +153,18 @@ The raw `candidates.jsonl` is ignored by git because it is large. For external r
 ## Important Docs
 
 - `AIM.md`
+- `HACKATHON_CHALLENGE_AND_WORK_PREPARED.md`
 - `PROJECT_COMPLETION_RULE.md`
 - `PROJECT_AUTHORSHIP_RULE.md`
+- `PROJECT_TAGLINE_DECISION.md`
+- `COUNCIL_REVIEW_JUNE_16_2026.md`
 - `PROJECT_EXECUTION_STORIES_AND_TASKS.md`
+- `TALENTSIGNAL_V2_PRODUCT_AND_ACTION_PLAN.md`
 - `WORLD_CLASS_EXECUTION_PLAN.md`
 - `FIRST_PRIZE_PREMORTEM.md`
 - `AGENTIC_AI_TALENT_INTELLIGENCE_RESEARCH.md`
+- `REDROB_BUSINESS_PLAN_PRODUCT_STRATEGY.md`
+- `REDROB_RESEARCH_AND_BIG_BET_STRATEGY_JUNE_17_2026.md`
 - `methodology.md`
 - `docs/final_completion_evidence.md`
+- `docs/v2_completion_evidence.md`
