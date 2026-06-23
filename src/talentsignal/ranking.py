@@ -4,7 +4,7 @@ import csv
 import json
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 from .features import build_evidence
 from .io import iter_candidates
@@ -13,14 +13,28 @@ from .reasoning import generate_reasoning
 from .scoring import score_candidate
 
 
-def _score_pool(candidates_path: str | Path, job: JobSpec) -> list[tuple[Any, Any, dict[str, Any]]]:
+def score_pool_from_iter(
+    candidates: "Iterable[dict[str, Any]]", job: JobSpec
+) -> list[tuple[Any, Any, dict[str, Any]]]:
+    """Score an in-memory iterable of candidate records and return them sorted
+    best-first. Shared by the file-based ranker and the eval harness so both
+    exercise the exact same scoring path."""
     scored: list[tuple[Any, Any, dict[str, Any]]] = []
-    for candidate in iter_candidates(candidates_path):
+    for candidate in candidates:
         ev = build_evidence(candidate)
         score = score_candidate(ev, job)
         scored.append((score, ev, candidate))
     scored.sort(key=lambda item: (-item[0].final_score, item[1].candidate_id))
     return scored
+
+
+def _score_pool(candidates_path: str | Path, job: JobSpec) -> list[tuple[Any, Any, dict[str, Any]]]:
+    return score_pool_from_iter(iter_candidates(candidates_path), job)
+
+
+def rank_records(records: "Iterable[dict[str, Any]]", job: JobSpec, top_n: int = 100) -> list[dict[str, Any]]:
+    """Rank in-memory candidate records (used by eval + demo)."""
+    return _rows_from_scored(score_pool_from_iter(records, job), job, top_n)
 
 
 def _rows_from_scored(scored: list[tuple[Any, Any, dict[str, Any]]], job: JobSpec, top_n: int) -> list[dict[str, Any]]:
