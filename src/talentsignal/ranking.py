@@ -37,6 +37,64 @@ def rank_records(records: "Iterable[dict[str, Any]]", job: JobSpec, top_n: int =
     return _rows_from_scored(score_pool_from_iter(records, job), job, top_n)
 
 
+def score_pool_hybrid(
+    candidates: "Iterable[dict[str, Any]]",
+    job: JobSpec,
+    *,
+    index_dir: str | None = None,
+    req_embeddings=None,
+    candidate_embeddings=None,      # optional: (id_to_row, emb_matrix)
+    live_embedder=None,             # optional callable(list[str]) -> np.ndarray for demo
+    alpha: float | None = None,
+) -> list[tuple[Any, Any, dict[str, Any]]]:
+    """Score a pool with the hybrid (semantic + schema + consistency) engine.
+
+    Embeddings are optional: if a precomputed index (or live embedder) is given,
+    the dense channel is active; otherwise it degrades to lexical-only — the
+    system always produces a ranking. This is the same scoring path for any JD.
+    """
+    from . import artifacts
+    from . import semantic_match as sm
+    from .consistency_audit import audit_candidate
+    from .schema_profile import schema_signals
+    from .scoring import score_candidate_hybrid
+
+    requirements = list(getattr(job, "requirements", ()) or ())
+    a = sm.DEFAULT_ALPHA if alpha is None else alpha
+
+    # Resolve candidate + requirement embeddings (precomputed index path).
+    id_to_row = emb = None
+    if candidate_embeddings is not None:
+        id_to_row, emb = candidate_embeddings
+    elif index_dir is not None:
+        id_to_row, emb, _meta = artifacts.load_candidate_index(index_dir)
+    if req_embeddings is None and index_dir is not None:
+        req_embeddings = artifacts.load_requirement_embeddings(job.id, index_dir)
+
+    scored: list[tuple[Any, Any, dict[str, Any]]] = []
+    for candidate in candidates:
+        ev = build_evidence(candidate)
+        cid = ev.candidate_id
+        evidence_text = artifacts.evidence_text_of(candidate)
+        ev_vec = None
+        if emb is not None and id_to_row is not None and cid in id_to_row:
+            ev_vec = emb[id_to_row[cid]]
+        elif live_embedder is not None:
+            ev_vec = live_embedder([evidence_text])[0]
+        result = sm.match(requirements, req_embeddings, evidence_text, ev_vec, alpha=a)
+        schema_sig = schema_signals(candidate)
+        consistency = audit_candidate(candidate)
+        score = score_candidate_hybrid(ev, job, match_result=result,
+                                       schema_sig=schema_sig, consistency=consistency)
+        scored.append((score, ev, candidate))
+    scored.sort(key=lambda item: (-item[0].final_score, item[1].candidate_id))
+    return scored
+
+
+def rank_records_hybrid(records, job: JobSpec, top_n: int = 100, **kwargs) -> list[dict[str, Any]]:
+    return _rows_from_scored(score_pool_hybrid(records, job, **kwargs), job, top_n)
+
+
 def _rows_from_scored(scored: list[tuple[Any, Any, dict[str, Any]]], job: JobSpec, top_n: int) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for rank, (score, ev, _candidate) in enumerate(scored[:top_n], start=1):

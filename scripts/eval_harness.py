@@ -56,7 +56,39 @@ def spine_ranker(records: list[dict[str, Any]], job: Any, top_n: int) -> list[st
     return [r["candidate_id"] for r in rows]
 
 
-ENGINES: dict[str, Ranker] = {"spine": spine_ranker}
+# Cache one embedding model for the whole hybrid eval run (offline, dev-time only;
+# eval is NOT the constrained ranking step). Lets us embed synthetic pools on the
+# fly so the hybrid engine is exercised end-to-end without a prebuilt index.
+_EMBEDDER = {"model": None}
+
+
+def _embedder():
+    if _EMBEDDER["model"] is None:
+        import os
+        os.environ.setdefault("HF_HUB_OFFLINE", "1")
+        os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+        from sentence_transformers import SentenceTransformer
+        _EMBEDDER["model"] = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
+    return _EMBEDDER["model"]
+
+
+def hybrid_ranker(records: list[dict[str, Any]], job: Any, top_n: int) -> list[str]:
+    from talentsignal import artifacts
+    from talentsignal.ranking import rank_records_hybrid
+    model = _embedder()
+    # embed candidates + requirements live (eval-time convenience)
+    texts = [artifacts.evidence_text_of(c) for c in records]
+    ids = [c["candidate_id"] for c in records]
+    emb = model.encode(texts, batch_size=128, convert_to_numpy=True, normalize_embeddings=True)
+    id_to_row = {cid: i for i, cid in enumerate(ids)}
+    req_texts = [r.text for r in getattr(job, "requirements", ()) or ()]
+    req_emb = model.encode(req_texts, convert_to_numpy=True, normalize_embeddings=True) if req_texts else None
+    rows = rank_records_hybrid(records, job, top_n=top_n,
+                               candidate_embeddings=(id_to_row, emb), req_embeddings=req_emb)
+    return [r["candidate_id"] for r in rows]
+
+
+ENGINES: dict[str, Ranker] = {"spine": spine_ranker, "hybrid": hybrid_ranker}
 
 
 def _eval_pool(pool: list[D.LabeledCandidate], job: Any, ranker: Ranker) -> dict[str, float]:
