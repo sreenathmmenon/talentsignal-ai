@@ -1,0 +1,36 @@
+name: CI
+
+# Continuous quality: run the full test suite and the quality gate on every push
+# and PR, so ranking-quality / fairness / reproduction-safety regressions can
+# never merge silently. None of this needs the 100K challenge file — it all runs
+# on synthetic labeled data.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install rank-time deps
+        run: pip install -r requirements.txt pytest
+      - name: Run test suite
+        run: python -m pytest tests/ -q
+
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install rank-time deps
+        run: pip install -r requirements.txt
+      - name: Quality gate (ranking, honeypot, generality, fairness, reproduction)
+        run: python scripts/ci_gate.py
