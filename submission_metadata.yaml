@@ -14,7 +14,7 @@ github_repo: "https://github.com/sreenathmmenon/talentsignal-ai"
 
 sandbox_link: "https://github.com/sreenathmmenon/talentsignal-ai#demo"
 
-reproduce_command: "python3 rank.py --candidates '[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl' --out outputs/final_submission.csv  # spine engine, zero deps; for hybrid add: --engine hybrid --index-dir outputs/index (after 'make precompute')"
+reproduce_command: "python3 rank.py --engine hybrid --index-dir outputs/index --candidates '[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl' --out outputs/final_submission.csv  # uses the git-lfs committed index; spine fallback (zero deps): drop --engine/--index-dir"
 
 compute:
   platform: "Local macOS development machine"
