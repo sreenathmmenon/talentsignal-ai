@@ -20,11 +20,28 @@ from .model import Candidate, parse_duration_months
 
 # Section headers we recognize (case-insensitive, line-leading).
 _SECTIONS = {
-    "experience": r"(work\s+experience|experience|employment|professional\s+experience|career)",
+    "experience": r"(work\s+experience|work\s+history|experience|employment|professional\s+experience|career)",
     "education": r"(education|academic)",
-    "skills": r"(skills|technical\s+skills|core\s+competencies|technologies)",
+    "skills": r"(technical\s+skills|core\s+competencies|technologies|skills)",
     "summary": r"(summary|profile|objective|about)",
 }
+
+# A gazetteer of common tech skills, used as a fallback to recover skills that
+# appear anywhere in the text when there's no clean SKILLS section. Conservative
+# (only well-known multi-char tech terms) to avoid false positives.
+_KNOWN_SKILLS = (
+    "python", "typescript", "javascript", "java", "golang", "go", "rust", "c++", "scala",
+    "react", "node.js", "node", "graphql", "apollo", "fastapi", "rest", "django", "flask",
+    "kubernetes", "docker", "aws", "azure", "gcp", "openstack", "kafka", "rabbitmq", "terraform",
+    "mongodb", "postgresql", "mysql", "mariadb", "redis", "elasticsearch", "opensearch",
+    "llms", "llm", "rag", "ai agents", "agents", "mcp", "embeddings", "prompt engineering",
+    "langchain", "langgraph", "crewai", "chromadb", "milvus", "pinecone", "qdrant", "faiss",
+    "vector db", "vector search", "ollama", "watsonx", "openai", "anthropic", "claude", "gemini",
+    "pytorch", "tensorflow", "scikit-learn", "xgboost", "lightgbm", "hugging face", "transformers",
+    "ranking", "recommendation", "recommendation systems", "learning to rank", "ndcg", "semantic search",
+    "reinforcement learning", "guardrails", "tool calling", "fine-tuning", "lora", "qlora", "peft",
+    "ci/cd", "salesforce", "sentiment analysis", "distributed systems", "microservices",
+)
 _EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
 _PHONE = re.compile(r"(?:\+?\d[\d\s().-]{7,}\d)")
 _YEARS_EXP = re.compile(r"(\d{1,2}(?:\.\d)?)\+?\s*years?", re.IGNORECASE)
@@ -77,8 +94,9 @@ def _parse_local(text: str) -> Candidate:
     if m:
         c.years_of_experience = float(m.group(1))
 
-    # experience entries
-    c.career = _parse_experience(sections.get("experience", []))
+    # experience entries — try the experience section, else scan all lines
+    # (paragraph/terse resumes have no section headers).
+    c.career = _parse_experience(sections.get("experience", []) or nonempty)
     if c.career:
         cur = c.career[0]
         c.current_title = cur.get("title", "")
@@ -87,11 +105,27 @@ def _parse_local(text: str) -> Candidate:
             months = sum(int(j.get("duration_months") or 0) for j in c.career)
             c.years_of_experience = round(months / 12.0, 1)
 
+    # Title fallback: infer from the summary/whole text when no career title parsed.
+    if not c.current_title:
+        c.current_title = _infer_title(text)
+
+    # Career fallback: if nothing structured parsed but we clearly have a role +
+    # experience (paragraph/terse resume), synthesize one role from the summary so
+    # career-based matching has evidence instead of nothing.
+    if not c.career and c.current_title:
+        months = int((c.years_of_experience or 0) * 12)
+        c.career = [{
+            "title": c.current_title, "company": "",
+            "description": (c.summary or text)[:800],
+            "start_date": "", "end_date": None, "is_current": True,
+            "duration_months": months, "industry": "", "company_size": "51-200",
+        }]
+
     # education
     c.education = _parse_education(sections.get("education", []))
 
-    # skills
-    c.skills = _parse_skills(sections.get("skills", []))
+    # skills (section + inline + gazetteer fallback over the whole text)
+    c.skills = _parse_skills(sections.get("skills", []), text)
 
     # confidence: how much structure did we recover?
     got = sum([bool(c.name), bool(c.summary), bool(c.career), bool(c.skills), bool(c.years_of_experience)])
@@ -122,16 +156,21 @@ def _is_section(line: str) -> bool:
 
 
 def _split_sections(lines: list[str]) -> dict[str, list[str]]:
-    out: dict[str, list[str]] = {}
+    """Split into summary/experience/education/skills sections. A header is a short
+    line that starts with a known section word (case-insensitive, ALL-CAPS ok),
+    optionally followed by ':' — e.g. 'EXPERIENCE', 'Technical Skills:', 'WORK HISTORY'."""
+    out: dict[str, list[str]] = {"summary": []}
     current = "summary"
-    out[current] = []
     for ln in lines:
-        low = ln.strip().lower()
+        stripped = ln.strip()
+        low = stripped.lower().rstrip(":").strip()
         matched = None
-        for name, pat in _SECTIONS.items():
-            if re.match(rf"^{pat}\b[:\s]*$", low) or re.match(rf"^{pat}\b", low) and len(low) < 30:
-                matched = name
-                break
+        # a header line is short and IS (essentially) just the section word
+        if len(stripped.split()) <= 3:
+            for name, pat in _SECTIONS.items():
+                if re.fullmatch(rf"{pat}\b", low):
+                    matched = name
+                    break
         if matched:
             current = matched
             out.setdefault(current, [])
@@ -140,46 +179,110 @@ def _split_sections(lines: list[str]) -> dict[str, list[str]]:
     return out
 
 
+# Words that signal a line is a job title (used to detect entry headers when
+# there's no "Title at Company" or date on the line).
+_TITLE_WORDS = re.compile(
+    r"\b(engineer|developer|analyst|manager|lead|architect|scientist|consultant|"
+    r"designer|director|head|specialist|administrator|sde|intern|principal|staff|"
+    r"senior|advisory|associate)\b", re.IGNORECASE)
+
+
+def _infer_title(text: str) -> str:
+    """Infer a job title from free text — find the title-word and grab the
+    preceding qualifier(s), e.g. 'staff AI engineer' -> 'Staff AI Engineer'."""
+    m = re.search(
+        r"\b((?:senior|staff|lead|principal|advisory|associate|junior)\s+)?"
+        r"((?:ai|ml|data|backend|frontend|full[\s-]?stack|software|cloud|devops|nlp|"
+        r"platform|security|systems|product)\s+){0,2}"
+        r"(engineer|developer|analyst|manager|architect|scientist|"
+        r"consultant|designer|director|specialist)\b", text, re.IGNORECASE)
+    if m:
+        title = re.sub(r"\s+", " ", m.group(0)).strip()
+        return title.title() if title.islower() else title
+    return ""
+
+
+def _make_job(title: str, company: str, date_line: str, body: list[str]) -> dict:
+    start = end = None
+    dm = _DATE_RANGE.search(date_line)
+    if dm:
+        start, end_raw = dm.group(1), dm.group(2)
+        end = None if end_raw.lower() in ("present", "current") else end_raw
+    months = parse_duration_months(start or "", end) if start else 0
+    return {
+        "title": title.strip()[:60], "company": company.strip()[:60],
+        "description": " ".join(body).strip()[:800],
+        "start_date": (start + "-01") if start and len(start) == 4 else (start or ""),
+        "end_date": (end + "-01") if end and len(end) == 4 else end,
+        "is_current": end is None and start is not None,
+        "duration_months": months, "industry": "", "company_size": "51-200",
+    }
+
+
+def _split_header_parts(line: str) -> tuple[str, str, str]:
+    """From a header line, return (title, company, date_fragment). Handles
+    'Title at Company (2019 - present)', 'TITLE | COMPANY | 2018-PRESENT',
+    'Title, Company, 2019 - 2021'."""
+    date_frag = ""
+    dm = _DATE_RANGE.search(line)
+    if dm:
+        date_frag = dm.group(0)
+        line = line.replace(dm.group(0), " ")
+    line = re.sub(r"[()]", " ", line).strip(" ,-|")
+    # pipe or 'at'/'@'/comma separated
+    parts = [p.strip() for p in re.split(r"\s*[|@]\s*|\s+at\s+|\s*,\s*", line) if p.strip()]
+    if len(parts) >= 2:
+        return parts[0], parts[1], date_frag
+    return (parts[0] if parts else line.strip()), "", date_frag
+
+
+def _looks_like_header(line: str) -> bool:
+    s = line.strip()
+    if not s or s.startswith(("-", "•", "·", "*")):
+        return False
+    return bool(_DATE_RANGE.search(s) or _TITLE_AT.match(s) or
+                ("|" in s and _TITLE_WORDS.search(s)) or
+                (_TITLE_WORDS.search(s) and len(s.split()) <= 8))
+
+
 def _parse_experience(lines: list[str]) -> list[dict]:
+    """Group experience lines into jobs. Robust to: title-at-company, pipe format,
+    and the common 'title line / company line / date line' split layout."""
     jobs: list[dict] = []
-    buf: list[str] = []
+    title = company = date_line = ""
+    body: list[str] = []
+    have_header = False
 
-    def flush(header: str, body: list[str]):
-        title, company = "", ""
-        mt = _TITLE_AT.match(header.strip())
-        if mt:
-            title, company = mt.group(1).strip(), mt.group(2).strip()
-        else:
-            title = header.strip()[:60]
-        start = end = None
-        dm = _DATE_RANGE.search(header + " " + " ".join(body[:1]))
-        if dm:
-            start, end_raw = dm.group(1), dm.group(2)
-            end = None if end_raw.lower() in ("present", "current") else end_raw
-        months = parse_duration_months(start or "", end) if start else 0
-        jobs.append({
-            "title": title, "company": company,
-            "description": " ".join(body).strip()[:800],
-            "start_date": (start + "-01") if start and len(start) == 4 else (start or ""),
-            "end_date": (end + "-01") if end and len(end) == 4 else end,
-            "is_current": end is None and start is not None,
-            "duration_months": months,
-            "industry": "", "company_size": "51-200",
-        })
+    def flush():
+        nonlocal title, company, date_line, body, have_header
+        if have_header:
+            jobs.append(_make_job(title, company, date_line, body))
+        title = company = date_line = ""
+        body = []
+        have_header = False
 
-    header = None
-    for ln in lines:
-        if not ln.strip():
-            continue
-        # a line with a date range or 'Title at Company' looks like a new entry header
-        if _DATE_RANGE.search(ln) or _TITLE_AT.match(ln.strip()):
-            if header is not None:
-                flush(header, buf)
-            header, buf = ln, []
+    i = 0
+    nonempty = [ln for ln in lines if ln.strip()]
+    while i < len(nonempty):
+        ln = nonempty[i].strip()
+        if _looks_like_header(ln):
+            flush()
+            t, c, d = _split_header_parts(ln)
+            title, company, date_line = t, c, d
+            have_header = True
+            # split layout: next 1-2 short lines may be company / a bare date range
+            for j in (i + 1, i + 2):
+                if j < len(nonempty):
+                    nxt = nonempty[j].strip()
+                    if not company and nxt and len(nxt.split()) <= 4 and not _DATE_RANGE.search(nxt) \
+                       and not nxt.startswith(("-", "•")) and not _TITLE_WORDS.search(nxt):
+                        company = nxt; i = j
+                    elif not date_line and _DATE_RANGE.search(nxt) and len(nxt.split()) <= 4:
+                        date_line = nxt; i = j
         else:
-            buf.append(ln)
-    if header is not None:
-        flush(header, buf)
+            body.append(ln)
+        i += 1
+    flush()
     return jobs[:10]
 
 
@@ -210,20 +313,47 @@ def _guess_degree(line: str) -> str:
     return ""
 
 
-def _parse_skills(lines: list[str]) -> list[dict]:
-    text = " ".join(lines)
-    raw = re.split(r"[,;|••\n]+", text)
-    skills = []
-    seen = set()
-    for s in raw:
-        name = s.strip(" .-")
-        if 2 <= len(name) <= 30 and name.lower() not in seen and not name.lower().startswith("skill"):
-            seen.add(name.lower())
-            skills.append({"name": name, "proficiency": "intermediate",
-                           "endorsements": 0, "duration_months": 12})
+def _mk_skill(name: str) -> dict:
+    return {"name": name, "proficiency": "intermediate", "endorsements": 0, "duration_months": 12}
+
+
+def _parse_skills(section_lines: list[str], full_text: str) -> list[dict]:
+    """Recover skills from (a) a SKILLS section if present, (b) inline 'Skills: a, b'
+    anywhere, and (c) a gazetteer scan of the whole text as a fallback. De-duped,
+    case-insensitive."""
+    skills: list[dict] = []
+    seen: set[str] = set()
+
+    def add(name: str):
+        name = name.strip(" .-•·|")
+        key = name.lower()
+        if 2 <= len(name) <= 30 and key not in seen and not key.startswith("skill"):
+            seen.add(key)
+            skills.append(_mk_skill(name))
+
+    # (a) explicit section content
+    for s in re.split(r"[,;|•·\n]+", " ".join(section_lines)):
+        add(s)
+
+    # (b) inline "Skills: x, y, z" or "Technical Skills - ..." anywhere in the text
+    for m in re.finditer(r"(?:technical\s+skills|skills)\s*[:\-]\s*(.+)", full_text, re.IGNORECASE):
+        for s in re.split(r"[,;|•·]+", m.group(1)):
+            add(s)
+
+    # (c) gazetteer fallback — recover well-known skills mentioned anywhere, so a
+    # paragraph resume with no SKILLS section still yields a skill list.
+    low = full_text.lower()
+    for kw in _KNOWN_SKILLS:
+        if kw in seen:
+            continue
+        # whole-token / phrase presence (word-boundary safe for single tokens)
+        if (" " in kw and kw in low) or re.search(rf"(?<![a-z0-9]){re.escape(kw)}(?![a-z0-9])", low):
+            # title-case display for readability
+            add(kw if any(ch in kw for ch in "+.#/") else kw.title())
         if len(skills) >= 30:
             break
-    return skills
+
+    return skills[:30]
 
 
 # --- LLM parser (optional, ingest-time only) -----------------------------------

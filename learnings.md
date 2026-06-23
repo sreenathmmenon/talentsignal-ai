@@ -173,6 +173,34 @@ consistently across the two things you're comparing.
 
 ---
 
+## 11. Free-text resume parsing was weak — broke ranking on real input
+
+**Issue (found via real-JD test).** Running a real GitLab Senior AI Engineer JD
+against paste-style resumes, a keyword-stuffer ranked #2 above genuinely strong
+candidates, and `career_fit` was 0 for everyone. Root cause: the local resume
+parser only recognized clean "Title at Company DATE" lines. On a fixture suite of
+6 realistic messy resumes (paragraph, split-date, ALL-CAPS/pipe, terse,
+bullets-with-dates, keyword-stuffer), only **1 of 6 parsed correctly** — the rest
+lost skills, career, title, or years, and that under-extraction flowed straight
+into bad rankings (a profile with no parsed career can't be scored on career fit,
+so the engine leans on the skills dump, which is exactly where stuffers win).
+
+**Fix.** Rewrote `resume_parser.py`: a skills gazetteer fallback (recover known
+tech skills mentioned anywhere, plus inline "Skills: a, b"), robust section
+detection (ALL-CAPS, "WORK HISTORY", "SKILLS:"), multi-format career grouping
+(title-at-company, pipe format, and the common title/company/date split layout),
+title inference from free text, and a synthesized role for paragraph/terse
+resumes. Result: **6/6 fixtures parse**. Re-running the real GitLab JD: the two
+best fits are now #1/#2, the keyword-stuffer dropped to #5, and an
+under-marketed terse resume correctly rose to #3. The optional LLM-assist mode is
+wired (activates with ANTHROPIC_API_KEY) for messy real resumes, with graceful
+local fallback.
+
+**Lesson.** A ranking engine is only as good as the structure it can extract from
+real input. Synthetic *structured* data hid this entirely — testing on realistic
+*unstructured* input is what exposed it. "Works on the benchmark" ≠ "works on real
+resumes." Build a fixture suite of messy real-world inputs and gate on it.
+
 ## Cross-cutting lessons
 
 - **Verify claims against data, not memory.** Multiple "facts" we stated needed
