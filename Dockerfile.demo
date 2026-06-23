@@ -1,0 +1,27 @@
+# Hosted demo image — the product UI anyone can click and try.
+#
+# Serves product_ui.py (drop a JD + resumes -> ranked explainable shortlist) on
+# the port the host provides. Includes the embedding model deps so the demo runs
+# the hybrid engine on small uploaded samples. Deployable to Render, Railway,
+# Fly.io, HuggingFace Spaces (Docker), or any container host.
+FROM python:3.11-slim
+
+ENV HF_HUB_OFFLINE=0 \
+    TOKENIZERS_PARALLELISM=false \
+    PYTHONUNBUFFERED=1 \
+    PORT=8800
+
+WORKDIR /app
+
+# Demo runs the hybrid engine on small samples, so it needs the embedding stack.
+COPY requirements-precompute.txt /app/requirements-precompute.txt
+RUN pip install --no-cache-dir -r requirements-precompute.txt
+
+# Warm the model into the image so first request is fast (and works offline after).
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+
+COPY . /app
+
+EXPOSE 8800
+# Bind to 0.0.0.0 and honor the host's $PORT (Render/Railway set it).
+CMD ["sh", "-c", "python product_ui.py --host 0.0.0.0 --port ${PORT:-8800}"]

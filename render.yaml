@@ -1,0 +1,14 @@
+# One-click deploy of the TalentSignal product UI to Render (free tier works).
+# Connect this repo on render.com -> it reads this file and deploys the demo.
+services:
+  - type: web
+    name: talentsignal-demo
+    runtime: docker
+    dockerfilePath: ./Dockerfile.demo
+    plan: free
+    envVars:
+      - key: PORT
+        value: "8800"
+      - key: HOST
+        value: "0.0.0.0"
+    healthCheckPath: /
