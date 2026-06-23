@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>TalentSignal — The right people for any role</title>
+<style>
+:root{--bg:#0a0e1a;--panel:#121829;--ink:#eef2fb;--mut:#9aa7c6;--acc:#5b8cff;--acc2:#7c5bff;
+--good:#39d98a;--bad:#ff6b6b;--line:#222c47}
+*{box-sizing:border-box;margin:0;padding:0}body{background:radial-gradient(1200px 600px at 70% -10%,#16203a,#0a0e1a 60%),var(--bg);
+color:var(--ink);font:16px/1.6 -apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:0 24px}
+.hero{text-align:center;padding:90px 0 50px}
+.badge{display:inline-block;font-size:13px;color:var(--good);border:1px solid var(--line);
+border-radius:20px;padding:5px 14px;margin-bottom:22px}
+h1{font-size:48px;line-height:1.1;letter-spacing:-1px;margin-bottom:18px;
+background:linear-gradient(90deg,#fff,#9db4ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font-size:20px;color:var(--mut);max-width:680px;margin:0 auto 30px}
+.cta{display:inline-flex;gap:12px}
+.btn{background:linear-gradient(90deg,var(--acc),var(--acc2));color:#fff;text-decoration:none;
+padding:13px 24px;border-radius:12px;font-weight:600}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:50px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center}
+.stat .n{font-size:30px;font-weight:700;color:var(--acc)}.stat .l{font-size:13px;color:var(--mut);margin-top:4px}
+.section{padding:40px 0;border-top:1px solid var(--line)}
+h2{font-size:28px;margin-bottom:8px}.lead{color:var(--mut);margin-bottom:26px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+.card h3{font-size:17px;margin-bottom:8px}.card p{color:var(--mut);font-size:14.5px}
+.card .tag{font-size:12px;color:var(--acc);text-transform:uppercase;letter-spacing:.5px}
+.proof{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;font-family:ui-monospace,monospace;font-size:13.5px}
+.proof .ok{color:var(--good)}.proof .x{color:var(--bad)}
+.surfaces{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.surfaces span{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-size:14px}
+footer{padding:50px 0;color:var(--mut);text-align:center;border-top:1px solid var(--line);font-size:14px}
+@media(max-width:720px){.stats,.grid{grid-template-columns:1fr 1fr}h1{font-size:34px}}
+</style></head><body>
+<div class="wrap">
+  <div class="hero">
+    <span class="badge">● universal candidate intelligence</span>
+    <h1>The right people for any role.<br/>Any JD. Any resume. Any format.</h1>
+    <p class="sub">TalentSignal ranks candidates by the <b>evidence of their work</b>, reasons
+    <b>beyond keywords</b>, rejects fakes, and weighs who's actually hireable — and it proves
+    every claim with a real evaluation framework.</p>
+    <div class="cta">
+      <a class="btn" href="#demo">Try the live demo</a>
+      <a class="btn ghost" href="https://github.com/sreenathmmenon">View the code</a>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="n">0.96</div><div class="l">eval composite (vs 0.88 keyword)</div></div>
+    <div class="stat"><div class="n">10/10</div><div class="l">zero-keyword fits in top-10</div></div>
+    <div class="stat"><div class="n">0%</div><div class="l">honeypots in top-10</div></div>
+    <div class="stat"><div class="n">~0.06</div><div class="l">cross-JD overlap (JD-agnostic)</div></div>
+  </div>
+
+  <div class="section">
+    <h2>Why it's different</h2>
+    <p class="lead">Most rankers count keywords. This one reads careers.</p>
+    <div class="grid">
+      <div class="card"><div class="tag">beyond keywords</div><h3>Hybrid semantic matching</h3>
+      <p>"Built the recommendation engine serving the homepage" matches "shipped a ranking
+      system" — with zero shared keywords. Embeddings + lexical, over the JD's own requirements.</p></div>
+      <div class="card"><div class="tag">rejects fakes</div><h3>Role-independent honeypot auditor</h3>
+      <p>Catches the impossible — 8 years at a 3-year-old company, "expert" in a skill used 0
+      months — by internal contradiction, not keywords. Works for any role.</p></div>
+      <div class="card"><div class="tag">actually hireable</div><h3>Schema-driven behavioral signals</h3>
+      <p>Down-weights the stale, unresponsive "perfect on paper" candidate. Adapts to whatever
+      signal fields a dataset provides — not hardcoded.</p></div>
+      <div class="card"><div class="tag">provable</div><h3>A real evaluation framework</h3>
+      <p>NDCG@10/@50, MAP, P@10 over labeled data across many JDs. Every change is measured,
+      name/identity-blind (fairness delta 0.0), and reproducible offline.</p></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>One engine. Four ways to use it.</h2>
+    <p class="lead">Embed it, call it, agent it, or click it.</p>
+    <div class="surfaces">
+      <span>🧩 Python SDK — <code>rank(jd, candidates)</code></span>
+      <span>🤖 MCP server — agentic tools</span>
+      <span>🌐 REST API — integrate any ATS</span>
+      <span>🖥️ Product UI — drop &amp; rank</span>
+    </div>
+  </div>
+
+  <div class="section" id="demo">
+    <h2>See it judge</h2>
+    <p class="lead">Real GitLab Senior AI Engineer JD × a diverse candidate pool. It surfaces the
+    real fits and pushes the keyword-stuffer down.</p>
+    <div class="proof">
+      <div><span class="ok">#1</span> Senior AI Engineer (real evidence: agents, RAG, guardrails)</div>
+      <div><span class="ok">#2</span> Staff AI Engineer — shipped LLM products to real users</div>
+      <div>...</div>
+      <div><span class="x">#9</span> Marketing Manager who listed every AI keyword → <b>caught &amp; pushed down</b></div>
+    </div>
+  </div>
+
+  <footer>
+    Built by <a href="https://sreenathmenon.com" style="color:var(--acc)">Sreenath M Menon</a> ·
+    <a href="https://github.com/sreenathmmenon" style="color:var(--acc)">GitHub</a> ·
+    open, reproducible, fairness-audited.
+  </footer>
+</div></body></html>
