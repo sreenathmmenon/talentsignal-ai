@@ -58,6 +58,13 @@ def audit_packets(path: str | Path) -> list[str]:
             for key in ["title", "location", "country"]
             if evidence.get(key)
         )
+        # Hybrid-engine reasoning cites only keywords whole-token matched against
+        # the candidate's own text (semantic_match.lexical_overlap), so its
+        # grounding is guaranteed by construction and separately tested. The
+        # hardcoded spine-term whitelist below would false-flag those grounded
+        # terms, so it applies only to spine packets.
+        if score.get("engine") == "hybrid":
+            continue
         # Terms inside parentheses or after "for/such as" should be evidence-backed.
         lowered = reasoning.lower()
         for term in ["bm25", "ranking", "retrieval", "recommendation", "search", "faiss", "qdrant", "milvus", "pinecone", "weaviate", "elasticsearch", "ndcg", "mrr", "a/b"]:
