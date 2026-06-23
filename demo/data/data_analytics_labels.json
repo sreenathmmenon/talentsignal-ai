@@ -1,0 +1,222 @@
+{
+  "CAND_6265962": {
+    "grade": 5,
+    "archetype": "strong"
+  },
+  "CAND_4826178": {
+    "grade": 5,
+    "archetype": "strong"
+  },
+  "CAND_1126757": {
+    "grade": 5,
+    "archetype": "strong"
+  },
+  "CAND_6282597": {
+    "grade": 5,
+    "archetype": "strong"
+  },
+  "CAND_8343317": {
+    "grade": 5,
+    "archetype": "strong"
+  },
+  "CAND_9826146": {
+    "grade": 5,
+    "archetype": "strong"
+  },
+  "CAND_2651476": {
+    "grade": 4,
+    "archetype": "paraphrase"
+  },
+  "CAND_5297167": {
+    "grade": 4,
+    "archetype": "paraphrase"
+  },
+  "CAND_9209421": {
+    "grade": 4,
+    "archetype": "paraphrase"
+  },
+  "CAND_2368765": {
+    "grade": 4,
+    "archetype": "paraphrase"
+  },
+  "CAND_5316804": {
+    "grade": 4,
+    "archetype": "paraphrase"
+  },
+  "CAND_3097807": {
+    "grade": 3,
+    "archetype": "adjacent"
+  },
+  "CAND_3466289": {
+    "grade": 3,
+    "archetype": "adjacent"
+  },
+  "CAND_5850807": {
+    "grade": 3,
+    "archetype": "adjacent"
+  },
+  "CAND_0975738": {
+    "grade": 3,
+    "archetype": "adjacent"
+  },
+  "CAND_9755883": {
+    "grade": 3,
+    "archetype": "adjacent"
+  },
+  "CAND_9879590": {
+    "grade": 3,
+    "archetype": "adjacent"
+  },
+  "CAND_3107196": {
+    "grade": 3,
+    "archetype": "adjacent"
+  },
+  "CAND_0674770": {
+    "grade": 3,
+    "archetype": "adjacent"
+  },
+  "CAND_9323999": {
+    "grade": 1,
+    "archetype": "weak"
+  },
+  "CAND_4403194": {
+    "grade": 1,
+    "archetype": "weak"
+  },
+  "CAND_6818640": {
+    "grade": 1,
+    "archetype": "weak"
+  },
+  "CAND_9342486": {
+    "grade": 1,
+    "archetype": "weak"
+  },
+  "CAND_9691937": {
+    "grade": 1,
+    "archetype": "weak"
+  },
+  "CAND_5526181": {
+    "grade": 1,
+    "archetype": "weak"
+  },
+  "CAND_1793434": {
+    "grade": 1,
+    "archetype": "weak"
+  },
+  "CAND_3637295": {
+    "grade": 1,
+    "archetype": "weak"
+  },
+  "CAND_6058115": {
+    "grade": 1,
+    "archetype": "weak"
+  },
+  "CAND_9774039": {
+    "grade": 1,
+    "archetype": "weak"
+  },
+  "CAND_5751675": {
+    "grade": 1,
+    "archetype": "weak"
+  },
+  "CAND_3991898": {
+    "grade": 1,
+    "archetype": "weak"
+  },
+  "CAND_6541455": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_7934751": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_1307655": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_7939031": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_0323211": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_8689250": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_6644393": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_8716715": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_3889850": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_6253841": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_5237743": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_6682959": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_3356937": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_8705157": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_2144132": {
+    "grade": 0,
+    "archetype": "irrelevant"
+  },
+  "CAND_9088921": {
+    "grade": 0,
+    "archetype": "honeypot"
+  },
+  "CAND_7033154": {
+    "grade": 0,
+    "archetype": "honeypot"
+  },
+  "CAND_9654101": {
+    "grade": 0,
+    "archetype": "honeypot"
+  },
+  "CAND_1620596": {
+    "grade": 0,
+    "archetype": "honeypot"
+  },
+  "CAND_5026324": {
+    "grade": 0,
+    "archetype": "honeypot"
+  },
+  "CAND_1695246": {
+    "grade": 0,
+    "archetype": "honeypot"
+  },
+  "CAND_3445359": {
+    "grade": 3,
+    "archetype": "behavioral_twin"
+  },
+  "CAND_0593737": {
+    "grade": 3,
+    "archetype": "behavioral_twin"
+  },
+  "CAND_2454137": {
+    "grade": 3,
+    "archetype": "behavioral_twin"
+  }
+}

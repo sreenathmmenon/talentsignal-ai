@@ -1,0 +1,62 @@
+[
+  {
+    "role_id": "ai_search",
+    "title": "Senior AI Engineer",
+    "candidates": "demo/data/ai_search_candidates.jsonl",
+    "labels": "demo/data/ai_search_labels.json",
+    "jd_text": "demo/data/ai_search_jd.md",
+    "jd_spec": "job_specs/redrob_senior_ai_engineer.yaml",
+    "count": 55,
+    "schema_variant": "redrob"
+  },
+  {
+    "role_id": "backend",
+    "title": "Senior Backend Engineer",
+    "candidates": "demo/data/backend_candidates.jsonl",
+    "labels": "demo/data/backend_labels.json",
+    "jd_text": "demo/data/backend_jd.md",
+    "jd_spec": "job_specs/examples/backend_platform_engineer.yaml",
+    "count": 55,
+    "schema_variant": "redrob"
+  },
+  {
+    "role_id": "data_analytics",
+    "title": "Data Analytics Lead",
+    "candidates": "demo/data/data_analytics_candidates.jsonl",
+    "labels": "demo/data/data_analytics_labels.json",
+    "jd_text": "demo/data/data_analytics_jd.md",
+    "jd_spec": "job_specs/examples/data_analytics_lead.yaml",
+    "count": 55,
+    "schema_variant": "redrob"
+  },
+  {
+    "role_id": "design",
+    "title": "Senior Product Designer",
+    "candidates": "demo/data/design_candidates.jsonl",
+    "labels": "demo/data/design_labels.json",
+    "jd_text": "demo/data/design_jd.md",
+    "jd_spec": "job_specs/examples/product_designer_systems.yaml",
+    "count": 55,
+    "schema_variant": "redrob"
+  },
+  {
+    "role_id": "product",
+    "title": "Senior Product Manager",
+    "candidates": "demo/data/product_candidates.jsonl",
+    "labels": "demo/data/product_labels.json",
+    "jd_text": "demo/data/product_jd.md",
+    "jd_spec": "job_specs/examples/product_manager_growth.yaml",
+    "count": 55,
+    "schema_variant": "redrob"
+  },
+  {
+    "role_id": "sales",
+    "title": "Enterprise Account Executive",
+    "candidates": "demo/data/sales_candidates.jsonl",
+    "labels": "demo/data/sales_labels.json",
+    "jd_text": "demo/data/sales_jd.md",
+    "jd_spec": "job_specs/examples/enterprise_account_executive.yaml",
+    "count": 55,
+    "schema_variant": "redrob"
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "role_id": "ai_search",
+    "title": "Senior AI Engineer",
+    "candidates": "demo/data_alt/ai_search_candidates.jsonl",
+    "labels": "demo/data_alt/ai_search_labels.json",
+    "jd_text": "demo/data_alt/ai_search_jd.md",
+    "jd_spec": "job_specs/redrob_senior_ai_engineer.yaml",
+    "count": 55,
+    "schema_variant": "alt"
+  }
+]
