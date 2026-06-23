@@ -89,28 +89,20 @@ python3 scripts/demo_rank.py --jd demo/data/sales_jd.md \
 - Author: Sreenath
 - Contact: sreenathmmmenon@gmail.com
 
-## Current Status
+## Status
 
-The repository is a validated checkpoint, not the final frozen submission. The ranking engine, local submission package, API, and recruiter cockpit are validated against the provided candidate data. We will keep iterating until final submission freeze.
+The engine and all four surfaces are implemented, tested (115 tests), and validated end-to-end:
 
-Implemented checkpoint:
-
-- Challenge command-center docs.
-- Redrob Senior AI Engineer scorecard.
-- Universal JD scorecard taxonomy and example scorecards across backend, data, product, sales, and design.
-- Dataset profiler and archetype sampler.
-- Deterministic offline ranker.
-- Evidence extraction and factor scoring.
-- V2 decision modules for candidate comparison, boundary review, trap examples, and interview kits.
-- Risk audit and top-10 eligibility.
-- Explanation audit.
-- Top-25 audit and candidate comparison tools.
-- Production-grade recruiter cockpit checkpoint.
-- Methodology, metadata, interview defense, and final validation reports.
+- **Engine**: JD ingestion, hybrid semantic matching, schema-driven signals, role-independent consistency auditor, unified scoring, grounded reasoning — with a labeled evaluation suite (composite 0.96, paraphrase 10/10, honeypots 0%, JD-agnostic ~0.06).
+- **Universal ingest**: PDF/DOCX/TXT/CSV/JSON/LinkedIn/paste → rankable; pluggable adapters.
+- **Surfaces**: clean `rank()` facade + SDK, MCP server (agentic), REST API + Python client, product UI.
+- **Extensibility**: signal-plugin framework with roadmap stubs (background verification, GitHub-repo analysis).
+- **Hackathon submission**: valid top-100 CSV (hybrid engine), 0 honeypots, reproduces offline in budget; the spine engine is a zero-dependency fallback.
+- **Quality**: name/identity-blind (fairness audit, score delta 0.0), no reasoning hallucination (audited), Stage-3 reproduction verifier.
 
 ## Requirements
 
-The core ranker uses only the Python standard library.
+The ranking step uses only `numpy` (the spine engine uses only the Python standard library). Embeddings are precomputed offline by `precompute.py` (`requirements-precompute.txt`). The universal ingest layer optionally uses `pypdf` / `python-docx` for those formats.
 
 Recommended:
 

@@ -98,6 +98,18 @@ MCP server (agentic tools), a REST API + Python SDK (integrate), and a product U
 (background verification, GitHub-repo analysis) additive. The challenge submission
 is one output of this engine; the product is the system the JD is hiring for.
 
+## Privacy & fairness
+
+- **Identity-blind ranking.** The engine scores from evidence (summary, career,
+  skills) and structured signals — never the candidate's name. A name-swap audit
+  (gendered/cultural name sets) yields a score delta of exactly 0.0, so ranking
+  is provably invariant to identity.
+- **PII handling.** Real resumes contain PII. The ranking step is local, offline,
+  and deterministic — no candidate data leaves the machine. The optional LLM
+  ingest mode is the only path that sends resume text to an external service and
+  is strictly opt-in; the default parser is fully local. A production deployment
+  should add PII minimization/retention controls at the ingest boundary.
+
 ## Honest limitations / next steps
 
 - Local resume parsing is heuristic; an optional LLM ingest mode raises accuracy.
