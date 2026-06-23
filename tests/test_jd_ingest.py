@@ -63,3 +63,13 @@ def test_yaml_spec_now_carries_requirements() -> None:
     assert len(spec.requirements) >= 5
     kinds = {r.kind for r in spec.requirements}
     assert ji.MUST_HAVE in kinds and ji.DISQUALIFIER in kinds
+
+
+def test_title_line_not_a_requirement():
+    # the JD title/intro line must NOT become a scored requirement (it gave weak
+    # candidates spurious credit for sharing the role word)
+    m = ji.ingest_text("Senior AI Engineer at GitLab. Remote, US.\n"
+                       "Required: confident coding in Python; deep experience with modern AI.")
+    texts = [r.text.lower() for r in m.requirements]
+    assert not any("gitlab" in t for t in texts), texts
+    assert any("python" in t or "modern ai" in t for t in texts)

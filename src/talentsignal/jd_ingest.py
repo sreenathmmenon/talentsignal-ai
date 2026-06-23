@@ -128,6 +128,28 @@ def _is_header_only(line: str) -> bool:
     return len(line.split()) <= 6 and line.rstrip().endswith(":")
 
 
+_REQ_VERB = re.compile(
+    r"\b(must|require|need|should|experience|build|built|ship|design|own|lead|"
+    r"deliver|understand|fluen|aware|able|coding|knowledge|track record|"
+    r"proficien|familiar|deep|strong|hands.?on)\b", re.IGNORECASE)
+_ROLE_WORD = re.compile(
+    r"\b(engineer|developer|analyst|manager|architect|scientist|consultant|"
+    r"designer|director|specialist|lead|executive|representative)\b", re.IGNORECASE)
+
+
+def _is_title_or_intro(sent: str) -> bool:
+    """True for a job-title / intro line that should not be a scored requirement:
+    short, contains a role word, and has no requirement verb (so it reads like a
+    title 'Senior AI Engineer at GitLab', not 'must have ...')."""
+    words = sent.split()
+    if len(words) > 12:
+        return False
+    if _REQ_VERB.search(sent):
+        return False
+    # a role word present, or a "... at Company" / "Role. Location." shape
+    return bool(_ROLE_WORD.search(sent))
+
+
 def _is_logistics_only(sent: str) -> bool:
     """True for short lines that are only a seniority band and/or locations
     (e.g. '4-9 years in enterprise sales.', 'Mumbai, Bangalore, or Delhi.').
@@ -190,7 +212,7 @@ def ingest_text(text: str, title: str = "") -> RequirementModel:
     current_kind = MUST_HAVE  # default before any cue: treat substantive lines as requirements
     seen: set[str] = set()
 
-    for raw in _SENT_SPLIT.split(text):
+    for i, raw in enumerate(_SENT_SPLIT.split(text)):
         sent = _norm(raw)
         if not sent:
             continue
@@ -204,6 +226,13 @@ def ingest_text(text: str, title: str = "") -> RequirementModel:
         # Skip pure logistics lines (years/location only) — they're captured as
         # the seniority band and preferred_locations, not as scored requirements.
         if _is_logistics_only(sent):
+            continue
+        # Skip the job title / intro line (e.g. "Senior AI Engineer at GitLab.",
+        # "Machine Learning Engineer. Bangalore."). A title matched as a
+        # "requirement" gives every candidate spurious credit for sharing the role
+        # word, which inflates weak candidates. A title line is short, has no
+        # requirement verb, and reads like "Role [at Company]".
+        if i < 4 and _is_title_or_intro(sent):
             continue
         # Skip lines with too little substance to be a requirement.
         kws = _keywords(sent)
