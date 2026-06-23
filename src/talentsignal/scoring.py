@@ -60,6 +60,9 @@ class ScoreBreakdown:
     requirement_coverage: float = 0.0
     disqualifier_hits: tuple = ()
     engine: str = "spine"
+    # Top matched requirements (text, matched keywords) for grounded reasoning.
+    matched_requirements: tuple = ()
+    concern_notes: tuple = ()
 
 
 def _seniority_score(ev: CandidateEvidence, job: JobSpec) -> float:
@@ -314,6 +317,16 @@ def score_candidate_hybrid(
         disq_hits = tuple(m.req_text for m in match_result.requirement_matches
                           if m.kind == "disqualifier" and m.score >= 0.5)
 
+    # Top matched must/nice requirements (grounded evidence for reasoning): the
+    # best-scoring requirements with the candidate's actually-matched keywords.
+    pos_matches = sorted(
+        (m for m in match_result.requirement_matches
+         if m.kind in {"must_have", "nice_to_have"} and m.score >= 0.30),
+        key=lambda m: -m.score,
+    )
+    matched_requirements = tuple((m.req_text, m.matched_keywords) for m in pos_matches[:4])
+    concern_notes = tuple(c.detail for c in consistency.flags[:3])
+
     # Top-10 eligibility: real requirement coverage AND no impossibility/keyword traps.
     top10_eligible = (
         match_result.coverage >= 0.34
@@ -363,4 +376,6 @@ def score_candidate_hybrid(
         requirement_coverage=round(float(match_result.coverage), 6),
         disqualifier_hits=disq_hits,
         engine="hybrid",
+        matched_requirements=matched_requirements,
+        concern_notes=concern_notes,
     )
