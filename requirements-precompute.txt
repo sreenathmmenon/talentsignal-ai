@@ -1,0 +1,10 @@
+# Precompute-ONLY dependencies (the offline embedding step, NOT the ranking step).
+#
+# These are heavy (torch + the transformer) and are used solely by precompute.py
+# to build the embedding index offline. They are never imported during the
+# <=5-min ranking step. Pinned for reproducibility.
+numpy==1.26.4
+scikit-learn==1.6.1
+sentence-transformers==5.1.2
+torch==2.7.0
+transformers==4.52.4

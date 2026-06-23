@@ -1,0 +1,5 @@
+# Store the precomputed embedding index via Git LFS so the repo is
+# self-contained and the hybrid ranking step reproduces without re-embedding
+# (which would need the network-blocked model download). The candidate matrix is
+# ~154 MB for 100K x 384 float32.
+*.npy filter=lfs diff=lfs merge=lfs -text

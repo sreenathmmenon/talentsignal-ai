@@ -1,3 +1,7 @@
-# Core implementation uses only the Python standard library.
-# Keep this intentionally light for challenge reproduction.
-
+# Ranking-step dependencies (the <=5-min, no-network, CPU-only step).
+#
+# The spine engine uses ONLY the Python standard library.
+# The hybrid engine additionally needs numpy to load the precomputed embedding
+# index and run the dense matmul. It does NOT import sentence-transformers or
+# torch at rank time (those are precompute-only; see requirements-precompute.txt).
+numpy==1.26.4

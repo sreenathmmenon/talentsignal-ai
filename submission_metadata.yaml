@@ -14,7 +14,7 @@ github_repo: "https://github.com/sreenathmmenon/talentsignal-ai"
 
 sandbox_link: "https://github.com/sreenathmmenon/talentsignal-ai#demo"
 
-reproduce_command: "python3 rank.py --candidates '[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl' --out outputs/final_submission.csv"
+reproduce_command: "python3 rank.py --candidates '[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl' --out outputs/final_submission.csv  # spine engine, zero deps; for hybrid add: --engine hybrid --index-dir outputs/index (after 'make precompute')"
 
 compute:
   platform: "Local macOS development machine"
@@ -24,19 +24,39 @@ compute:
   os: "macOS"
   uses_gpu_for_inference: false
   has_network_during_ranking: false
-  pre_computation_required: false
-  pre_computation_time_minutes: 0
+  # The spine engine needs no precomputation. The hybrid engine uses a
+  # precomputed embedding index (built offline by precompute.py, ~9 minutes,
+  # committed via git-lfs); the ranking step itself loads only numpy arrays and
+  # stays offline and within the 5-minute budget.
+  pre_computation_required: true
+  pre_computation_time_minutes: 9
 
 ai_tools_used:
-  - "Codex"
+  - "Claude"
   - "ChatGPT"
+  - "Codex"
 
 ai_usage_summary: |
-  Used AI assistance for planning, code generation support, review, and documentation.
-  The final ranking command is deterministic, local, CPU-only, and makes no hosted LLM/API calls.
+  Used AI assistance (Claude Code and others) for planning, premortem analysis,
+  code generation support, review, and documentation. The author drove the
+  architecture, the evaluation framework, and all design decisions. Both the
+  spine and hybrid ranking steps are deterministic, local, CPU-only, and make no
+  hosted LLM/API calls; embeddings are precomputed offline and loaded as numpy
+  arrays at rank time.
 
 methodology_summary: |
-  Evidence-based deterministic ranker for the Redrob Senior AI Engineer JD. The system converts the JD into a scorecard, extracts source-separated evidence from profile/career/skills/Redrob signals, scores candidates across technical fit, career fit, seniority, logistics, behavior, and trust, applies risk penalties for keyword-stuffing and weak evidence, then writes grounded top-100 reasoning. The final command is CPU-only, offline, standard-library Python, and completes well inside the 5-minute limit.
+  JD-agnostic, semantic, explainable talent-intelligence ranking engine. Any job
+  description (free text or structured) is parsed into a weighted requirement
+  model; candidates are matched by hybrid retrieval (sentence-embedding cosine +
+  lexical overlap) over those requirements, so strong fits described without the
+  JD's keywords are still surfaced. Behavioral/availability scoring is
+  schema-driven (adapts to any signal vocabulary); a role-independent consistency
+  auditor vetoes internally-impossible honeypots. A first-class evaluation suite
+  (NDCG@10/@50, MAP, P@10 over labeled synthetic data across multiple JDs)
+  measures every change. A structured "spine" engine guarantees a valid CSV with
+  zero dependencies; the hybrid engine adds the semantic index (numpy-only at
+  rank time) and measurably improves ranking quality. CPU-only, offline, within
+  the 5-minute budget.
 
 declarations:
   read_submission_spec: true
