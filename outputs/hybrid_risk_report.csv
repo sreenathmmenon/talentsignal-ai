@@ -1,0 +1,101 @@
+candidate_id,rank,score,penalty,risk_flags,top10_eligible,audit_note
+CAND_0083307,1,0.698488,0.0,,True,no material risk flags
+CAND_0081846,2,0.695087,0.0,,True,no material risk flags
+CAND_0046525,3,0.693733,0.0,,True,no material risk flags
+CAND_0018499,4,0.692911,0.0,,True,no material risk flags
+CAND_0039383,5,0.690633,0.0,,True,no material risk flags
+CAND_0041669,6,0.685902,0.0,,True,no material risk flags
+CAND_0043860,7,0.677095,0.0,,True,no material risk flags
+CAND_0010149,8,0.672936,0.0,,True,no material risk flags
+CAND_0008425,9,0.669947,0.0,,True,no material risk flags
+CAND_0076163,10,0.667205,0.0,,True,no material risk flags
+CAND_0005260,11,0.663919,0.0,,True,no material risk flags
+CAND_0049896,12,0.662729,0.0,,True,no material risk flags
+CAND_0005649,13,0.658232,0.0,,True,no material risk flags
+CAND_0042029,14,0.656788,0.0,,True,no material risk flags
+CAND_0086151,15,0.655770,0.0,,True,no material risk flags
+CAND_0099401,16,0.653370,0.0,,True,no material risk flags
+CAND_0070398,17,0.652975,0.0,,True,no material risk flags
+CAND_0007412,18,0.650962,0.0,,True,no material risk flags
+CAND_0037944,19,0.649290,0.0,,True,no material risk flags
+CAND_0046924,20,0.649025,0.0,,True,no material risk flags
+CAND_0012837,21,0.647549,0.0,,True,no material risk flags
+CAND_0077337,22,0.647190,0.1,skill_not_in_evidence,True,risk flags present
+CAND_0017960,23,0.647061,0.1,skill_not_in_evidence,True,risk flags present
+CAND_0056262,24,0.646293,0.0,,True,no material risk flags
+CAND_0060054,25,0.645609,0.0,,True,no material risk flags
+CAND_0073883,26,0.645514,0.0,,True,no material risk flags
+CAND_0007009,27,0.643439,0.0,,True,no material risk flags
+CAND_0080766,28,0.636609,0.0,,True,no material risk flags
+CAND_0050454,29,0.636458,0.0,,True,no material risk flags
+CAND_0014440,30,0.634982,0.0,,True,no material risk flags
+CAND_0042506,31,0.634604,0.0,,True,no material risk flags
+CAND_0061339,32,0.634561,0.0,,True,no material risk flags
+CAND_0061257,33,0.633093,0.0,,True,no material risk flags
+CAND_0092255,34,0.633088,0.0,,True,no material risk flags
+CAND_0057563,35,0.632531,0.0,,True,no material risk flags
+CAND_0080344,36,0.632294,0.0,,True,no material risk flags
+CAND_0093912,37,0.631452,0.0,,True,no material risk flags
+CAND_0067866,38,0.630076,0.0,,True,no material risk flags
+CAND_0012888,39,0.629216,0.0,,True,no material risk flags
+CAND_0094759,40,0.629215,0.0,,True,no material risk flags
+CAND_0005509,41,0.627357,0.0,,True,no material risk flags
+CAND_0030468,42,0.627152,0.0,,True,no material risk flags
+CAND_0047721,43,0.626164,0.0,,True,no material risk flags
+CAND_0052195,44,0.626099,0.0,,True,no material risk flags
+CAND_0032179,45,0.626049,0.0,,True,no material risk flags
+CAND_0037160,46,0.622752,0.0,,True,no material risk flags
+CAND_0088385,47,0.622735,0.0,,True,no material risk flags
+CAND_0044855,48,0.621561,0.0,,True,no material risk flags
+CAND_0007596,49,0.621403,0.0,,True,no material risk flags
+CAND_0076251,50,0.620958,0.0,,True,no material risk flags
+CAND_0081686,51,0.620938,0.0,,True,no material risk flags
+CAND_0032216,52,0.619939,0.0,,True,no material risk flags
+CAND_0015578,53,0.618193,0.0,,True,no material risk flags
+CAND_0045862,54,0.617888,0.0,,True,no material risk flags
+CAND_0015967,55,0.615325,0.0,,True,no material risk flags
+CAND_0057701,56,0.615254,0.0,,True,no material risk flags
+CAND_0026532,57,0.613013,0.0,,True,no material risk flags
+CAND_0069638,58,0.612769,0.0,,True,no material risk flags
+CAND_0006567,59,0.611863,0.1,skill_not_in_evidence,True,risk flags present
+CAND_0075249,60,0.611033,0.0,,True,no material risk flags
+CAND_0026640,61,0.610855,0.0,,True,no material risk flags
+CAND_0082489,62,0.607962,0.0,,True,no material risk flags
+CAND_0029367,63,0.607762,0.0,,True,no material risk flags
+CAND_0051292,64,0.607751,0.0,,True,no material risk flags
+CAND_0051630,65,0.607095,0.0,,True,no material risk flags
+CAND_0033179,66,0.606989,0.0,,True,no material risk flags
+CAND_0098454,67,0.606687,0.0,,True,no material risk flags
+CAND_0018549,68,0.606489,0.1,skill_not_in_evidence,True,risk flags present
+CAND_0065277,69,0.605681,0.0,,True,no material risk flags
+CAND_0096104,70,0.605375,0.0,,True,no material risk flags
+CAND_0075491,71,0.605245,0.0,,True,no material risk flags
+CAND_0018013,72,0.604225,0.0,,True,no material risk flags
+CAND_0073007,73,0.603562,0.0,,True,no material risk flags
+CAND_0048558,74,0.602383,0.0,,True,no material risk flags
+CAND_0000031,75,0.601881,0.1,skill_not_in_evidence,True,risk flags present
+CAND_0011327,76,0.600986,0.0,,True,no material risk flags
+CAND_0073620,77,0.600177,0.0,,True,no material risk flags
+CAND_0013393,78,0.599487,0.0,,True,no material risk flags
+CAND_0068811,79,0.598811,0.1,skill_not_in_evidence,True,risk flags present
+CAND_0060315,80,0.598330,0.0,,True,no material risk flags
+CAND_0066376,81,0.598317,0.0,,True,no material risk flags
+CAND_0052328,82,0.598273,0.1,skill_not_in_evidence,True,risk flags present
+CAND_0025882,83,0.598096,0.0,,True,no material risk flags
+CAND_0041402,84,0.597234,0.0,,True,no material risk flags
+CAND_0011162,85,0.597201,0.1,skill_not_in_evidence,True,risk flags present
+CAND_0098952,86,0.597195,0.05231,,True,no material risk flags
+CAND_0064888,87,0.596941,0.0,,True,no material risk flags
+CAND_0044883,88,0.596876,0.0,,True,no material risk flags
+CAND_0091745,89,0.595592,0.0,,True,no material risk flags
+CAND_0006538,90,0.595355,0.0,,True,no material risk flags
+CAND_0055139,91,0.595157,0.0,,True,no material risk flags
+CAND_0079387,92,0.595039,0.1,skill_not_in_evidence,True,risk flags present
+CAND_0005311,93,0.594652,0.0,,True,no material risk flags
+CAND_0074735,94,0.594144,0.0,,True,no material risk flags
+CAND_0073504,95,0.592114,0.0,,True,no material risk flags
+CAND_0011432,96,0.591343,0.0,,True,no material risk flags
+CAND_0052335,97,0.591321,0.0,,True,no material risk flags
+CAND_0016163,98,0.591140,0.0,,True,no material risk flags
+CAND_0010257,99,0.590651,0.1,skill_not_in_evidence,True,risk flags present
+CAND_0069771,100,0.588205,0.0,,True,no material risk flags
