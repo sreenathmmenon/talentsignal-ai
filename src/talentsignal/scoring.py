@@ -322,6 +322,16 @@ def score_candidate_hybrid(
                           if m.kind == "disqualifier" and m.score >= 0.5)
         flags.append("semantic_disqualifier_overlap")
 
+    # Low-relevance penalty: a candidate who genuinely doesn't match the role's
+    # must-haves (low coverage AND low semantic fit) must not ride seniority +
+    # behavioral defaults into a high rank. This separates clearly-irrelevant
+    # candidates from real fits, which matters most on terse resumes where all the
+    # other factors compress. Scaled so a borderline-adjacent candidate is nudged,
+    # an off-role candidate is pushed firmly down.
+    if match_result.coverage < 0.34 and semantic_fit < 0.30:
+        penalty += 0.10 + 0.20 * (0.30 - semantic_fit)  # up to ~0.16
+        flags.append("low_role_relevance")
+
     # Top matched must/nice requirements (grounded evidence for reasoning): the
     # best-scoring requirements with the candidate's actually-matched keywords.
     pos_matches = sorted(
