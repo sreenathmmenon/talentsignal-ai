@@ -308,14 +308,19 @@ def score_candidate_hybrid(
                        + 0.33 * _behavioral_score(ev))
     trust = clamp(0.5 * _trust_score(ev) + 0.5 * schema_sig.get("trust", 0.5))
 
-    # Penalty: AI risk flags + general consistency + semantic disqualifier hits.
-    flags = list(risk_flags(ev)) + list(consistency.codes)
-    penalty = risk_penalty(risk_flags(ev)) + consistency.penalty
+    # Penalty: GENERAL signals only — the role-independent consistency auditor
+    # plus semantic disqualifier hits derived from THIS JD's own disqualifier
+    # requirements. The hybrid path deliberately does NOT use the AI-specific
+    # risk_audit term/title lists, so it stays genuinely JD-agnostic (a sales or
+    # design JD is scored with no AI-keyword assumptions).
+    flags = list(consistency.codes)
+    penalty = consistency.penalty
     disq_hits: tuple = ()
     if match_result.disqualifier_hit >= 0.5:
-        penalty += 0.10 * match_result.disqualifier_hit
+        penalty += 0.12 * match_result.disqualifier_hit
         disq_hits = tuple(m.req_text for m in match_result.requirement_matches
                           if m.kind == "disqualifier" and m.score >= 0.5)
+        flags.append("semantic_disqualifier_overlap")
 
     # Top matched must/nice requirements (grounded evidence for reasoning): the
     # best-scoring requirements with the candidate's actually-matched keywords.
@@ -327,15 +332,13 @@ def score_candidate_hybrid(
     matched_requirements = tuple((m.req_text, m.matched_keywords) for m in pos_matches[:4])
     concern_notes = tuple(c.detail for c in consistency.flags[:3])
 
-    # Top-10 eligibility: real requirement coverage AND no impossibility/keyword traps.
+    # Top-10 eligibility: real requirement coverage AND no internal impossibility.
+    # Uses only the GENERAL consistency signals (role-independent), not AI-specific
+    # flags, so eligibility means the same thing for any JD.
     top10_eligible = (
         match_result.coverage >= 0.34
         and not consistency.is_impossible
-        and not any(f in flags for f in {
-            "expert_skills_zero_duration", "expert_zero_duration",
-            "non_tech_ai_keyword_stuffing", "ai_terms_without_career_evidence",
-            "tenure_exceeds_experience",
-        })
+        and "semantic_disqualifier_overlap" not in flags
     )
     if not top10_eligible:
         penalty += 0.04
