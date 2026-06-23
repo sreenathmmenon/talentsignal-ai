@@ -1,10 +1,50 @@
-# talentsignal-ai
+# TalentSignal
 
-TalentSignal AI is an agentic talent-intelligence ranker for the Redrob Intelligent Candidate Discovery and Ranking Challenge.
+**A universal candidate-intelligence engine.** Drop in ANY job description and ANY set of resumes/candidates — in ANY format (PDF, DOCX, TXT, CSV, JSON, LinkedIn, or pasted text) — and get back a ranked, explainable, fake-resistant shortlist that reasons *beyond keywords* and weighs who's actually hireable.
 
-Tagline: **Evidence-backed hiring decisions for any role.**
+Tagline: **The right people for any role — any JD, any resume, any way.**
 
-It turns a job description into a structured scorecard, extracts evidence from candidate profiles, ranks candidates with inspectable factor scores, flags risk patterns, and generates grounded shortlist reasoning. The challenge artifact is a valid top-100 CSV; the product artifact is a recruiter-facing evidence workflow.
+Use it three ways, all over one engine:
+- **MCP server** — agentic: any AI agent (Claude Desktop, agent frameworks) calls it as a tool.
+- **REST API + Python SDK** — integrate it into any portal or ATS.
+- **Product UI** — a recruiter app: upload a JD + resumes → live, explainable shortlist.
+
+Built for the Redrob *Intelligent Candidate Discovery & Ranking Challenge* — the challenge JD/dataset is proof-case #1, and the submission is a valid top-100 CSV produced by this engine — but the system is the general product the challenge's job is hiring someone to build.
+
+## Why it's different
+
+1. **Reasons beyond keywords.** Hybrid retrieval (sentence-embeddings + lexical) over the JD's *own* requirements means a candidate who "built the recommendation engine serving the homepage" matches "shipped a ranking system" with zero shared keywords.
+2. **Rejects fakes.** A role-independent consistency auditor vetoes internally-impossible honeypots (8 years at a company younger than that, expert skill with 0 months) by their contradictions, not their keywords.
+3. **Weighs hireability.** Schema-driven behavioral signals down-weight stale, unresponsive candidates — and adapt to whatever signal fields a dataset has.
+4. **Proves itself.** A first-class evaluation suite (NDCG@10/@50, MAP, P@10 over labeled data across many JDs) measures every change — not guesswork. On labeled multi-JD eval the hybrid engine scores composite **0.96** with **0%** honeypots in the top-10 and zero-keyword paraphrase fits at **10/10** in the top-10.
+5. **JD-agnostic, by measurement.** Cross-JD top-10 overlap ~0.06 — it surfaces genuinely different people for different roles.
+6. **Extensible.** A signal-plugin framework means new intelligence (background verification, GitHub-repo analysis) is added without touching the core.
+
+## Surfaces (quickstart)
+
+```bash
+# Product UI — upload any JD + resumes, see a ranked explainable shortlist
+python product_ui.py            # http://127.0.0.1:8800
+
+# REST API + SDK — integrate into a portal/ATS
+python api_server.py            # POST /rank, /ingest/jd, /ingest/resume, /audit
+
+# MCP server — expose the engine as agentic tools
+python mcp_server.py            # see docs/mcp.md
+
+# Python — embed the engine directly
+python -c "from talentsignal.api import rank; print(rank('Senior AI Engineer ...', candidates)[:3])"
+```
+
+```python
+# Ingest ANY format, then rank — one clean call
+from talentsignal.ingest import ingest
+from talentsignal.api import rank
+candidates = ingest(["alice.pdf", "bob.docx", "team.csv"])   # mixed formats
+result = rank("Senior AI Engineer: embeddings, retrieval, ranking. 5-9 years.", candidates, top_n=10)
+for c in result.ranked:
+    print(c.rank, c.title, round(c.score, 3), "—", c.reasoning)
+```
 
 ## Architecture (JD-agnostic hybrid engine)
 
@@ -178,14 +218,27 @@ The raw `candidates.jsonl` is ignored by git because it is large. For external r
 
 ## Project Structure
 
-- `rank.py`: final ranking command.
-- `app.py`: live REST API and recruiter cockpit UI.
-- `src/talentsignal/`: core package.
-- `job_specs/`: machine-readable JD scorecards.
-- `scripts/`: profiling, audit, validation, comparison.
-- `docs/`: challenge brief, methodology support, audit evidence, interview prep.
-- `outputs/`: generated submission/audit artifacts.
-- `tests/`: focused pipeline, REST, and Playwright UI tests.
+Surfaces (all over one engine facade `talentsignal.api.rank`):
+- `rank.py`: hackathon ranking CLI (spine + hybrid engines).
+- `product_ui.py`: the product UI — upload any JD + resumes → ranked shortlist.
+- `api_server.py`: REST API; `src/talentsignal/client.py`: Python SDK client.
+- `mcp_server.py`: MCP server exposing the engine as agentic tools.
+- `precompute.py`: offline embedding-index builder (hybrid engine).
+- `app.py`: original recruiter cockpit (legacy demo).
+
+Engine (`src/talentsignal/`):
+- `api/`: public facade + typed results (the one contract every surface uses).
+- `ingest/`: universal ingest — adapters for PDF/DOCX/TXT/CSV/JSON/LinkedIn + hybrid resume parser.
+- `jd_ingest.py`, `jd_parser.py`: JD → weighted requirement model.
+- `semantic_match.py`, `artifacts.py`: hybrid retrieval + numpy-only index loading.
+- `scoring.py`, `consistency_audit.py`, `schema_profile.py`, `reasoning.py`: the brain.
+- `eval/`: metrics, labeled datasets, role library, JD library.
+- `signals/`: extensible signal-plugin framework (+ roadmap stubs).
+
+Support:
+- `job_specs/`: machine-readable JD scorecards. `demo/data/`: generated demo datasets.
+- `scripts/`: eval harness, data factory, demo, audits. `docs/`: methodology, MCP, architecture/defense.
+- `outputs/`: generated submission + `index/` (git-lfs embedding index). `tests/`: 104 tests.
 
 ## Important Docs
 
