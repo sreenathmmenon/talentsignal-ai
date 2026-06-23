@@ -27,6 +27,25 @@ from .types import (
 )
 
 
+def _safe_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Defensively normalize incoming candidate records so a partial/malformed
+    record (missing profile/career/skills/signals, or no candidate_id) never
+    crashes ranking. A production engine must degrade, not throw."""
+    out: list[dict[str, Any]] = []
+    for i, rec in enumerate(records):
+        if not isinstance(rec, dict):
+            continue
+        rec = dict(rec)
+        rec.setdefault("candidate_id", f"CAND_{i:07d}")
+        rec.setdefault("profile", {})
+        rec.setdefault("career_history", [])
+        rec.setdefault("education", [])
+        rec.setdefault("skills", [])
+        rec.setdefault("redrob_signals", {})
+        out.append(rec)
+    return out
+
+
 def _resolve_job(jd: Any, *, category: str, title: str) -> JobSpec:
     """Turn any JD form into a JobSpec."""
     if isinstance(jd, JobSpec):
@@ -128,7 +147,7 @@ class TalentSignal:
 
         start = time.perf_counter()
         job = _resolve_job(jd, category=category, title=title)
-        records = list(candidates)
+        records = _safe_records(list(candidates))
         notes: list[str] = []
 
         if engine == "hybrid":
