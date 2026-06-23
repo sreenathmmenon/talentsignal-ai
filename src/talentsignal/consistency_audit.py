@@ -75,6 +75,19 @@ def _evidence_tokens(candidate: dict[str, Any]) -> set[str]:
     return set(re.findall(r"[a-z0-9+#./\-]{3,}", text))
 
 
+def _evidence_blob(candidate: dict[str, Any]) -> str:
+    """Full lowercased evidence text (summary + headline + career), normalized so
+    punctuation/spacing differences don't cause false 'skill missing' matches."""
+    profile = candidate.get("profile", {})
+    parts = [profile.get("summary", ""), profile.get("headline", ""), profile.get("current_title", "")]
+    for job in candidate.get("career_history", []):
+        parts.append(job.get("title", ""))
+        parts.append(job.get("description", ""))
+    blob = " ".join(str(p) for p in parts).lower()
+    # collapse separators so "scikit-learn" and "scikit learn" both contain "scikit"+"learn"
+    return re.sub(r"[/\-.]", " ", blob)
+
+
 def audit_candidate(candidate: dict[str, Any]) -> ConsistencyReport:
     report = ConsistencyReport()
     profile = candidate.get("profile", {})
@@ -136,17 +149,24 @@ def audit_candidate(candidate: dict[str, Any]) -> ConsistencyReport:
     #    we only want the keyword-stuffing pattern (many claimed experts, none
     #    evidenced), so this fires as a SOFT signal and only when most expert
     #    skills are ghosts.
-    tokens = _evidence_tokens(candidate)
+    # Normalize the full evidence text once; match a skill if ANY of its
+    # significant words appears (punctuation/spacing-insensitive), so
+    # "Sentence Transformers" matches "sentence-transformers" and "scikit-learn"
+    # matches either form. We only flag the keyword-stuffing pattern: many
+    # 'expert' skills with NONE of them traceable to the candidate's own text.
+    evidence_blob = _evidence_blob(candidate)
     expert_skills = [s for s in skills if _norm(s.get("proficiency")) == "expert"]
     ghost = []
     for s in expert_skills:
-        name_tokens = set(re.findall(r"[a-z0-9+#./\-]{3,}", _norm(s.get("name"))))
-        if name_tokens and not (name_tokens & tokens):
+        words = [w for w in re.split(r"[\s/\-.]+", _norm(s.get("name"))) if len(w) >= 3]
+        if words and not any(w in evidence_blob for w in words):
             ghost.append(str(s.get("name")))
-    if len(expert_skills) >= 4 and len(ghost) >= max(4, int(0.8 * len(expert_skills))):
+    # Require essentially ALL expert skills to be ghosts before flagging (true
+    # keyword-stuffing), not a fuzzy 80% that catches honest candidates.
+    if len(expert_skills) >= 5 and len(ghost) == len(expert_skills):
         report.flags.append(ConsistencyFlag(
             "skill_not_in_evidence",
-            f"{len(ghost)} of {len(expert_skills)} 'expert' skills never appear in career text "
+            f"all {len(expert_skills)} 'expert' skills are absent from the candidate's own text "
             f"(e.g. {', '.join(ghost[:3])})",
             0.10,
         ))
