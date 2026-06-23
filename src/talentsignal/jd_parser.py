@@ -26,6 +26,10 @@ class JobSpec:
     category_core_signals: tuple[str, ...]
     category_evidence_priorities: tuple[str, ...]
     category_common_risks: tuple[str, ...]
+    # Structured requirement model (from free-text ingestion or derived from the
+    # YAML must/nice/disqualifier lists). Additive; defaults to empty so existing
+    # construction paths and consumers are unaffected.
+    requirements: tuple = ()
 
 
 def _parse_scalar(value: str) -> Any:
@@ -106,4 +110,75 @@ def load_job_spec(path: str | Path) -> JobSpec:
         category_core_signals=category_profile.core_signals,
         category_evidence_priorities=category_profile.evidence_priorities,
         category_common_risks=category_profile.common_risks,
+        requirements=_requirements_from_lists(
+            tuple(data["must_have"]), tuple(data["nice_to_have"]), tuple(data["disqualifiers"])
+        ),
     )
+
+
+def _requirements_from_lists(must, nice, disq) -> tuple:
+    """Build a structured requirement model from the YAML scorecard lists so a
+    hand-written spec and an ingested free-text JD expose the SAME requirements."""
+    from .jd_ingest import Requirement, _keywords, MUST_HAVE, NICE_TO_HAVE, DISQUALIFIER, KIND_WEIGHT
+
+    reqs = []
+    for kind, items in ((MUST_HAVE, must), (NICE_TO_HAVE, nice), (DISQUALIFIER, disq)):
+        for text in items:
+            reqs.append(Requirement(text=str(text), kind=kind, weight=KIND_WEIGHT[kind],
+                                    keywords=_keywords(str(text))))
+    return tuple(reqs)
+
+
+def job_spec_from_jd_text(
+    text: str,
+    *,
+    job_id: str = "ingested_jd",
+    category: str = "ai_ml_search_ranking",
+    country_preferred: str = "India",
+    title: str = "",
+) -> JobSpec:
+    """Build a JobSpec directly from a free-text job description.
+
+    This is the general-product front door: any JD becomes a scorable spec with
+    no YAML authoring. Uses jd_ingest for the requirement model, falls back to
+    the category taxonomy for weights/seniority defaults where the text is silent.
+    """
+    from .jd_ingest import ingest_text, must_have_phrases, disqualifier_phrases, NICE_TO_HAVE
+
+    model = ingest_text(text, title=title)
+    category_profile = get_category_profile(category)
+    weights = dict(category_profile.default_weights)
+
+    pmin = model.min_years if model.min_years is not None else 5.0
+    pmax = model.max_years if model.max_years is not None else 9.0
+    # "strongest" band = the inner ~60% of the preferred band.
+    span = max(0.0, pmax - pmin)
+    smin = round(pmin + span * 0.2, 1)
+    smax = round(pmax - span * 0.2, 1)
+
+    nice = tuple(r.text for r in model.requirements if r.kind == NICE_TO_HAVE)
+    return JobSpec(
+        id=job_id,
+        title=model.title or title or "Ingested Role",
+        category=category,
+        preferred_min_years=float(pmin),
+        preferred_max_years=float(pmax),
+        strongest_min_years=float(smin),
+        strongest_max_years=float(smax),
+        preferred_locations=model.preferred_locations or category_profile_locations(category),
+        country_preferred=country_preferred,
+        must_have=must_have_phrases(model),
+        nice_to_have=nice,
+        disqualifiers=disqualifier_phrases(model),
+        weights=weights,
+        category_label=category_profile.label,
+        category_core_signals=category_profile.core_signals,
+        category_evidence_priorities=category_profile.evidence_priorities,
+        category_common_risks=category_profile.common_risks,
+        requirements=tuple(model.requirements),
+    )
+
+
+def category_profile_locations(category: str) -> tuple[str, ...]:
+    """Sensible default preferred locations when a JD names none."""
+    return ("Bangalore", "Pune", "Hyderabad", "Mumbai", "Delhi", "Noida", "Gurgaon")
