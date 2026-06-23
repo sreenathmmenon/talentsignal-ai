@@ -166,6 +166,29 @@ function render(data){
 </script></body></html>"""
 
 
+_EMBEDDER = {"model": None, "tried": False}
+
+
+def _get_embedder():
+    """Return a cached callable(list[str]) -> np.ndarray, or None if sentence-
+    transformers isn't available. Lets the UI use the hybrid engine on small
+    samples for best quality, with a clean spine fallback."""
+    if _EMBEDDER["tried"]:
+        return _EMBEDDER["model"]
+    _EMBEDDER["tried"] = True
+    try:
+        import os
+        os.environ.setdefault("HF_HUB_OFFLINE", "1")
+        os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+        from sentence_transformers import SentenceTransformer
+        m = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
+        _EMBEDDER["model"] = lambda texts: m.encode(texts, convert_to_numpy=True,
+                                                    normalize_embeddings=True)
+    except Exception:  # noqa: BLE001 - no model -> spine fallback
+        _EMBEDDER["model"] = None
+    return _EMBEDDER["model"]
+
+
 def _ingest_inputs(files, paste):
     """Turn UI inputs (uploaded files + pasted text) into candidate records."""
     import base64
@@ -240,8 +263,13 @@ class Handler(BaseHTTPRequestHandler):
             if not records:
                 self._send(HTTPStatus.OK, {"error": "no candidates parsed from the provided files/text"})
                 return
+            # Small samples -> use the best (hybrid) engine with a live embedder if
+            # available; fall back to the zero-dependency spine engine otherwise.
+            embedder = _get_embedder() if len(records) <= 200 else None
+            engine = "hybrid" if embedder else "spine"
             res = rank(body.get("jd", ""), records, top_n=int(body.get("top_n", 10)),
-                       engine="spine", category=body.get("category", "ai_ml_search_ranking"))
+                       engine=engine, embedder=embedder,
+                       category=body.get("category", "ai_ml_search_ranking"))
             self._send(HTTPStatus.OK, res.to_dict())
         except Exception as exc:  # noqa: BLE001
             self._send(HTTPStatus.OK, {"error": f"{type(exc).__name__}: {exc}"})

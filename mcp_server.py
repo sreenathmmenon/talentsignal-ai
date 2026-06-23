@@ -112,11 +112,33 @@ def _coerce_candidates(items: list) -> list[dict]:
     return out
 
 
+_EMBEDDER = {"model": None, "tried": False}
+
+
+def _embedder():
+    """Cached embedder for hybrid ranking on small samples; None -> spine fallback."""
+    if _EMBEDDER["tried"]:
+        return _EMBEDDER["model"]
+    _EMBEDDER["tried"] = True
+    try:
+        import os
+        os.environ.setdefault("HF_HUB_OFFLINE", "1")
+        os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+        from sentence_transformers import SentenceTransformer
+        m = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
+        _EMBEDDER["model"] = lambda t: m.encode(t, convert_to_numpy=True, normalize_embeddings=True)
+    except Exception:  # noqa: BLE001
+        _EMBEDDER["model"] = None
+    return _EMBEDDER["model"]
+
+
 def tool_rank_candidates(args: dict) -> dict:
     from talentsignal.api import rank
     cands = _coerce_candidates(args["candidates"])
+    emb = _embedder() if len(cands) <= 200 else None
     res = rank(args["jd"], cands, top_n=int(args.get("top_n", 10)),
-               engine="spine", category=args.get("category", "ai_ml_search_ranking"))
+               engine="hybrid" if emb else "spine", embedder=emb,
+               category=args.get("category", "ai_ml_search_ranking"))
     return res.to_dict()
 
 
