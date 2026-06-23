@@ -1,96 +1,96 @@
 {
-  "engine": "hybrid",
+  "engine": "spine",
   "suites": {
     "per_role": {
       "per_role": {
         "ai_search": {
-          "ndcg@10": 0.9448191871522936,
-          "ndcg@50": 0.9722986288208327,
-          "map": 0.9721626103715656,
+          "ndcg@10": 0.9733323042090073,
+          "ndcg@50": 0.8879617492497694,
+          "map": 0.8265438915848319,
           "p@5": 1.0,
           "p@10": 1.0,
           "honeypot_rate@10": 0.0,
           "honeypot_rate@100": 0.4444444444444444,
-          "composite": 0.9599235737781315
+          "composite": 0.9270362606171592
         },
         "sales": {
           "ndcg@10": 0.9733323042090073,
-          "ndcg@50": 0.9761199410995514,
-          "map": 0.8990248335774597,
+          "ndcg@50": 0.8505377482195444,
+          "map": 0.7824483188049017,
           "p@5": 1.0,
           "p@10": 1.0,
           "honeypot_rate@10": 0.0,
           "honeypot_rate@100": 0.4444444444444444,
-          "composite": 0.9643558594709881
+          "composite": 0.9091947243911023
         },
         "data_analytics": {
-          "ndcg@10": 0.9733323042090073,
-          "ndcg@50": 0.9473308881791684,
-          "map": 0.8911695998019463,
+          "ndcg@10": 0.8556057364939506,
+          "ndcg@50": 0.6487693789050586,
+          "map": 0.4768899354674658,
           "p@5": 1.0,
-          "p@10": 1.0,
+          "p@10": 0.7,
           "honeypot_rate@10": 0.0,
           "honeypot_rate@100": 0.4444444444444444,
-          "composite": 0.9545408585285462
+          "composite": 0.7289671722386127
         },
         "backend": {
-          "ndcg@10": 0.9733323042090073,
-          "ndcg@50": 0.8721951287341382,
-          "map": 0.8138990033120168,
+          "ndcg@10": 0.9199969126270218,
+          "ndcg@50": 0.8241589377287318,
+          "map": 0.6330706763045064,
           "p@5": 1.0,
-          "p@10": 1.0,
+          "p@10": 0.8,
           "honeypot_rate@10": 0.0,
           "honeypot_rate@100": 0.4444444444444444,
-          "composite": 0.9204095412215477
+          "composite": 0.8422067390778064
         },
         "product": {
-          "ndcg@10": 0.9733323042090073,
-          "ndcg@50": 0.947593170922096,
-          "map": 0.848057491500354,
+          "ndcg@10": 0.9720276155244293,
+          "ndcg@50": 0.8445409887765984,
+          "map": 0.8258701284882581,
           "p@5": 1.0,
           "p@10": 1.0,
           "honeypot_rate@10": 0.0,
           "honeypot_rate@100": 0.4444444444444444,
-          "composite": 0.9481527271061856
+          "composite": 0.913256623668433
         },
         "design": {
-          "ndcg@10": 1.0,
-          "ndcg@50": 0.9863965458138537,
-          "map": 0.8695796906998698,
+          "ndcg@10": 0.9863957858139322,
+          "ndcg@50": 0.9149444545184162,
+          "map": 0.8685160266578229,
           "p@5": 1.0,
           "p@10": 1.0,
           "honeypot_rate@10": 0.0,
           "honeypot_rate@100": 0.4444444444444444,
-          "composite": 0.9763559173491367
+          "composite": 0.9479586332611645
         }
       },
-      "mean_composite": 0.954
+      "mean_composite": 0.8781
     },
     "honeypot": {
-      "honeypot_rate@10": 0.0,
+      "honeypot_rate@10": 0.2,
       "honeypot_rate@100": 0.78125,
-      "ndcg@10": 1.0
+      "ndcg@10": 0.9178049603131235
     },
     "paraphrase": {
-      "ndcg@10": 1.0,
-      "paraphrase_ideal_mean_rank": 5.5,
-      "paraphrase_ideal_in_top10": 10,
+      "ndcg@10": 0.5411830395752433,
+      "paraphrase_ideal_mean_rank": 16.9,
+      "paraphrase_ideal_in_top10": 3,
       "total_paraphrase_ideals": 10
     },
     "perturbation": {
       "strong_rank": 1,
-      "paraphrase_rank": 2,
-      "contradicted_rank": 43,
+      "paraphrase_rank": 5,
+      "contradicted_rank": 2,
       "contradicted_below_strong": true
     },
     "generality": {
-      "mean_top10_jaccard_overlap": 0.065,
-      "max_top10_jaccard_overlap": 0.429
+      "mean_top10_jaccard_overlap": 0.058,
+      "max_top10_jaccard_overlap": 0.25
     },
     "schema": {
       "ran_without_error": true,
-      "ndcg@10": 0.9733323042090073,
-      "composite": 0.9627409006046851
+      "ndcg@10": 0.946509999116795,
+      "composite": 0.9030642739854545
     }
   }
 }
