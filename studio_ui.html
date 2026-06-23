@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>TalentSignal Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#07070b; --panel:#12131d; --panel2:#171927; --ink:#f4f5fb; --mut:#8b91ad; --line:#21243a;
+  --lime:#c6f24e; --violet:#9b6cff; --cyan:#43e7ff; --red:#ff5c7c; --green:#3ce592; --amber:#ffb454;
+  --grad:linear-gradient(100deg,#c6f24e,#43e7ff 45%,#9b6cff);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:'JetBrains Mono',monospace}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(620px 340px at 8% -8%,rgba(155,108,255,.16),transparent 60%),
+            radial-gradient(560px 320px at 100% 0%,rgba(67,231,255,.10),transparent 60%)}
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(7,7,11,.7);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:16px;height:60px;max-width:1280px;margin:0 auto;padding:0 24px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.3px}
+.dot{width:12px;height:12px;border-radius:4px;background:var(--grad);box-shadow:0 0 16px rgba(198,242,78,.6)}
+.tabs{display:flex;gap:6px;margin-left:18px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px}
+.tab{padding:7px 15px;border-radius:9px;font-size:14px;color:var(--mut);cursor:pointer;border:none;background:none;font-family:inherit;transition:.18s}
+.tab.active{background:var(--panel2);color:var(--ink)}
+.live{margin-left:auto;font-size:12px;color:var(--green);display:flex;align-items:center;gap:7px}
+.live .b{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(60,229,146,.6);animation:p 2s infinite}
+@keyframes p{0%{box-shadow:0 0 0 0 rgba(60,229,146,.5)}70%{box-shadow:0 0 0 8px rgba(60,229,146,0)}100%{box-shadow:0 0 0 0 rgba(60,229,146,0)}}
+.app{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:24px;display:grid;grid-template-columns:380px 1fr;gap:22px;min-height:calc(100vh - 60px)}
+.col{display:flex;flex-direction:column;gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px}
+label{display:block;font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1.2px;margin:0 0 9px;font-weight:600}
+textarea,select,input{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);
+  border-radius:11px;padding:12px;font:inherit;font-size:14px;resize:vertical}
+textarea{min-height:130px;line-height:1.5}
+textarea:focus,select:focus{outline:none;border-color:var(--violet)}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.drop{border:1.5px dashed var(--line);border-radius:13px;padding:22px 16px;text-align:center;color:var(--mut);
+  background:var(--panel2);cursor:pointer;transition:.2s;font-size:14px}
+.drop.hi{border-color:var(--cyan);color:var(--ink);background:rgba(67,231,255,.05)}
+.files{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.files span{font-size:12px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:4px 9px;color:var(--ink)}
+.go{margin-top:4px;width:100%;background:var(--grad);color:#07070b;font-weight:700;border:none;padding:14px;border-radius:13px;
+  font-size:15px;cursor:pointer;font-family:inherit;text-shadow:0 1px 1px rgba(255,255,255,.3);box-shadow:0 6px 22px rgba(155,108,255,.3);transition:.18s}
+.go:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 30px rgba(67,231,255,.4)}
+.go:disabled{opacity:.6;cursor:wait}
+.hint{font-size:12px;color:var(--mut);margin-top:10px;line-height:1.5}
+/* results */
+.bar-top{display:flex;align-items:center;gap:14px;margin-bottom:4px}
+.bar-top h2{font-size:20px;font-weight:700;letter-spacing:-.5px}
+.bar-top .meta{color:var(--mut);font-size:13px}
+.bar-top .eng{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);
+  border:1px solid var(--line);background:var(--panel);border-radius:20px;padding:5px 12px}
+.empty{display:grid;place-items:center;height:70vh;text-align:center;color:var(--mut)}
+.empty .big{font-size:46px;margin-bottom:14px}
+.empty h3{font-size:20px;color:var(--ink);margin-bottom:8px;letter-spacing:-.5px}
+.cand{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:12px;
+  opacity:0;transform:translateY(12px);animation:rise .4s forwards;transition:border-color .2s}
+.cand:hover{border-color:var(--violet)}
+@keyframes rise{to{opacity:1;transform:none}}
+.cand.t1{border-left:3px solid var(--lime)} .cand.t2{border-left:3px solid var(--cyan)} .cand.t3{border-left:3px solid var(--violet)}
+.cand.flagged{border-left:3px solid var(--red)}
+.ch{display:flex;align-items:baseline;gap:13px}
+.ch .rk{font-size:26px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--lime);min-width:46px}
+.cand.flagged .ch .rk{color:var(--red)}
+.ch .nm{font-size:17px;font-weight:600}
+.ch .sc{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--ink)}
+.sub{color:var(--mut);font-size:13px;margin:3px 0 11px 59px}
+.rsn{font-size:14px;line-height:1.55;margin:0 0 12px 59px;color:#dfe3f1}
+.facs{display:flex;gap:7px;margin:0 0 4px 59px;flex-wrap:wrap}
+.fac{flex:1;min-width:78px}
+.fac .l{font-size:9.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
+.fac .tr{height:6px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-top:3px}
+.fac .fl{height:100%;border-radius:4px;background:var(--grad);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.tags{margin:11px 0 0 59px;display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11.5px;font-family:'JetBrains Mono',monospace;background:rgba(60,229,146,.1);border:1px solid rgba(60,229,146,.3);
+  color:#bff5dc;border-radius:7px;padding:3px 9px}
+.flag{font-size:11.5px;background:rgba(255,92,124,.12);border:1px solid rgba(255,92,124,.3);color:#ffd2da;border-radius:7px;padding:3px 9px}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid var(--line);border-top-color:var(--cyan);border-radius:50%;animation:s .7s linear infinite;vertical-align:-2px}
+@keyframes s{to{transform:rotate(360deg)}}
+.stat-row{display:flex;gap:12px;margin-bottom:16px}
+.kpi{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}
+.kpi .n{font-size:24px;font-weight:700;letter-spacing:-1px}
+.kpi .l{font-size:11.5px;color:var(--mut);margin-top:4px}
+@media(max-width:920px){.app{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-in">
+    <div class="logo"><span class="dot"></span> TalentSignal <span style="color:var(--mut);font-weight:400">Studio</span></div>
+    <div class="tabs">
+      <button class="tab active" data-view="rank" onclick="switchView('rank')">Rank candidates</button>
+      <button class="tab" data-view="challenge" onclick="switchView('challenge')">Challenge result</button>
+    </div>
+    <div class="live"><span class="b"></span> live engine</div>
+  </div>
+</nav>
+
+<div class="app">
+  <!-- LEFT: controls (only on rank view) -->
+  <div class="col" id="leftcol">
+    <div class="card">
+      <label>Job description — paste any role</label>
+      <textarea id="jd" placeholder="Senior AI Engineer. Must have production embeddings/retrieval, agent systems, evaluation (NDCG/MAP)... We will not move forward with keyword-only AI experience. 5-9 years.">Senior AI Engineer — Founding Team
+
+We need someone who has shipped retrieval and ranking systems to real users. You must have production experience with embeddings-based retrieval and vector/hybrid search, strong Python, and you must have designed evaluation frameworks for ranking (NDCG, MRR, MAP).
+
+We will not move forward with: pure research with no production deployment; careers entirely at services companies with no product evidence; AI keyword-stuffing without real production work.
+
+5-9 years.</textarea>
+      <div class="row" style="margin-top:14px">
+        <div><label>Role type</label>
+          <select id="cat">
+            <option value="ai_ml_search_ranking">AI / ML / Search</option>
+            <option value="sales_gtm">Sales / GTM</option>
+            <option value="data_analytics">Data / Analytics</option>
+            <option value="backend_engineering">Backend</option>
+            <option value="product_management">Product</option>
+            <option value="design_product">Design</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <label>Candidates — drop resumes (pdf · docx · txt · csv · json)</label>
+      <div class="drop" id="drop">⬇ Drag &amp; drop resume files, or click to choose</div>
+      <input id="file" type="file" multiple style="display:none"/>
+      <div class="files" id="files"></div>
+      <label style="margin-top:16px">…or paste one or more resumes</label>
+      <textarea id="paste" placeholder="Paste resumes here (separate multiple with a blank line) — any format, even rough text."></textarea>
+    </div>
+    <button class="go" id="go" onclick="runRank()">Rank with the live engine →</button>
+    <div class="hint">Real ranking: universal ingest → hybrid semantic match → consistency auditor → grounded reasoning. Every score and sentence comes from the engine.</div>
+  </div>
+
+  <!-- RIGHT: results -->
+  <div class="col" id="results" style="grid-column:span 1">
+    <div class="empty" id="empty">
+      <div>
+        <div class="big">⚡</div>
+        <h3>Drop a JD and some resumes</h3>
+        <div>The live engine will rank them by real evidence — and show you why.</div>
+      </div>
+    </div>
+    <div id="out" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let view='rank', pending=[];
+const drop=$('drop'),file=$('file');
+drop.onclick=()=>file.click();
+['dragover','dragenter'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add('hi')}));
+['dragleave','drop'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove('hi')}));
+drop.addEventListener('drop',ev=>add(ev.dataTransfer.files));
+file.onchange=()=>add(file.files);
+function add(fl){for(const f of fl)pending.push(f);$('files').innerHTML=pending.map(f=>`<span>${f.name}</span>`).join('')}
+async function readFiles(){
+  const out=[];
+  for(const f of pending){
+    const ext=f.name.split('.').pop().toLowerCase();
+    if(['txt','csv','json','jsonl','md'].includes(ext)) out.push({name:f.name,ext,text:await f.text()});
+    else{const b=await f.arrayBuffer();out.push({name:f.name,ext,b64:btoa(String.fromCharCode(...new Uint8Array(b)))})}
+  }
+  return out;
+}
+function switchView(v){
+  view=v;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
+  $('leftcol').style.display = v==='rank'?'flex':'none';
+  $('results').style.gridColumn = v==='rank'?'span 1':'1 / -1';
+  if(v==='challenge') loadChallenge();
+  else{$('out').style.display='none';$('empty').style.display='grid'}
+}
+async function runRank(){
+  const btn=$('go');btn.disabled=true;
+  $('empty').style.display='grid';$('out').style.display='none';
+  $('empty').innerHTML='<div><div class="big"><span class="spin"></span></div><h3>Running the engine…</h3><div>Ingesting & ranking on real evidence.</div></div>';
+  try{
+    const files=await readFiles();
+    const r=await fetch('/api/rank',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({jd:$('jd').value,category:$('cat').value,files,paste:$('paste').value})});
+    const d=await r.json();
+    if(d.error){$('empty').innerHTML=`<div><div class="big">⚠️</div><h3>${d.error}</h3></div>`;btn.disabled=false;return}
+    renderRank(d);
+  }catch(e){$('empty').innerHTML=`<div><div class="big">⚠️</div><h3>${e.message}</h3></div>`}
+  btn.disabled=false;
+}
+function fac(l,v){return `<div class="fac"><div class="l">${l}</div><div class="tr"><div class="fl" style="width:${Math.round(v*100)}%"></div></div></div>`}
+function renderRank(d){
+  $('empty').style.display='none';$('out').style.display='block';
+  let h=`<div class="bar-top"><h2>${d.job_title||'Ranked shortlist'}</h2>
+    <span class="meta">${d.candidate_count} candidates · ${d.ranked.length} ranked · ${d.elapsed}s</span>
+    <span class="eng">engine: ${d.engine}</span></div>`;
+  d.ranked.forEach(c=>{
+    const tier=c.flags.length?'flagged':c.rank<=3?'t1':c.rank<=8?'t2':'t3';
+    const f=c.factors;
+    const tags=(c.matched||[]).map(m=>`<span class="tag">${(m.kw||[]).join(', ')||m.req.slice(0,30)}</span>`).join('');
+    const flags=(c.flags||[]).map(x=>`<span class="flag" title="${(x.detail||'').replace(/"/g,'&quot;')}">⚑ ${x.code}</span>`).join('');
+    h+=`<div class="cand ${tier}">
+      <div class="ch"><div class="rk">#${c.rank}</div><div class="nm">${c.title||c.name}</div><div class="sc">${c.score.toFixed(3)}</div></div>
+      <div class="sub">${c.candidate_id} · ${(c.years||0).toFixed?c.years.toFixed(1):c.years} yrs · ${c.location||'—'} · coverage ${(c.coverage*100).toFixed(0)}%</div>
+      <div class="rsn">${c.reasoning||''}</div>
+      <div class="facs">${fac('tech',f.technical||0)}${fac('career',f.career||0)}${fac('senior',f.seniority||0)}${fac('behav',f.behavioral||0)}${fac('trust',f.trust||0)}${fac('semantic',f.semantic||0)}</div>
+      ${tags?`<div class="tags">${tags}</div>`:''}
+      ${flags?`<div class="tags">${flags}</div>`:''}
+    </div>`;
+  });
+  $('out').innerHTML=h;
+}
+async function loadChallenge(){
+  $('empty').style.display='grid';$('out').style.display='none';
+  $('empty').innerHTML='<div><div class="big"><span class="spin"></span></div><h3>Loading official result…</h3></div>';
+  try{
+    const r=await fetch('/api/challenge',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+    const d=await r.json();
+    if(d.error){$('empty').innerHTML=`<div><div class="big">📦</div><h3>${d.error}</h3></div>`;return}
+    $('empty').style.display='none';$('out').style.display='block';
+    let h=`<div class="bar-top"><h2>Hackathon result — one part of the product</h2><span class="eng">official</span></div>
+      <div class="stat-row">
+        <div class="kpi"><div class="n" style="color:var(--cyan)">${d.total.toLocaleString()}</div><div class="l">candidates ranked</div></div>
+        <div class="kpi"><div class="n" style="color:var(--green)">VALID</div><div class="l">official validator</div></div>
+        <div class="kpi"><div class="n" style="color:var(--lime)">${d.honeypots}</div><div class="l">honeypots in top-100</div></div>
+      </div>
+      <div class="sub" style="margin:0 0 14px 0">${d.jd}</div>`;
+    d.top.forEach(c=>{
+      h+=`<div class="cand ${c.rank<=3?'t1':c.rank<=8?'t2':'t3'}">
+        <div class="ch"><div class="rk">#${c.rank}</div><div class="nm">${c.title} @ ${c.company}</div><div class="sc">${c.score.toFixed(3)}</div></div>
+        <div class="sub">${c.candidate_id} · ${c.years} yrs · ${c.location}</div>
+        <div class="rsn">${c.reasoning}</div></div>`;
+    });
+    $('out').innerHTML=h;
+  }catch(e){$('empty').innerHTML=`<div><div class="big">⚠️</div><h3>${e.message}</h3></div>`}
+}
+</script>
+</body>
+</html>
