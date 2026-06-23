@@ -20,13 +20,21 @@ def test_dockerfile_is_offline_configured() -> None:
     assert "requirements.txt" in text  # installs only the rank-time dep
 
 
+def _deps(path: Path) -> list[str]:
+    """Non-comment, non-blank requirement lines (package specs only)."""
+    return [ln.strip() for ln in path.read_text().splitlines()
+            if ln.strip() and not ln.strip().startswith("#")]
+
+
 def test_requirements_split_keeps_rank_light() -> None:
-    rank_reqs = (ROOT / "requirements.txt").read_text()
-    assert "numpy" in rank_reqs
-    # heavy deps must NOT be in the rank-time requirements
-    assert "torch" not in rank_reqs and "sentence-transformers" not in rank_reqs
-    pre = (ROOT / "requirements-precompute.txt").read_text()
-    assert "sentence-transformers" in pre and "torch" in pre  # they live here instead
+    rank_deps = _deps(ROOT / "requirements.txt")
+    assert any("numpy" in d for d in rank_deps)
+    # heavy deps must NOT be actual rank-time requirements (comments don't count)
+    assert not any("torch" in d for d in rank_deps)
+    assert not any("sentence-transformers" in d for d in rank_deps)
+    pre = _deps(ROOT / "requirements-precompute.txt")
+    assert any("sentence-transformers" in d for d in pre)
+    assert any("torch" in d for d in pre)  # they live here instead
 
 
 def test_verifier_no_network_import_check() -> None:
