@@ -945,6 +945,35 @@ class AppHandler(BaseHTTPRequestHandler):
             return
         self._json(HTTPStatus.NOT_FOUND, {"error": "not found"})
 
+    def _rank_hybrid(self, candidates_path, job, analysis_n):
+        """Rank a (small) sample with the hybrid engine, live-embedding the
+        sample and the JD's requirements. Intended for the sandbox/demo path on
+        <=~100 candidates; the full 100K run uses the precomputed index instead.
+        """
+        from talentsignal import artifacts
+        from talentsignal.io import iter_candidates
+        from talentsignal.ranking import score_pool_hybrid, _rows_from_scored
+        records = list(iter_candidates(candidates_path))
+        req_emb = cand_index = None
+        try:
+            import os
+            os.environ.setdefault("HF_HUB_OFFLINE", "1")
+            os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+            from sentence_transformers import SentenceTransformer
+            model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
+            texts = [artifacts.evidence_text_of(c) for c in records]
+            ids = [c["candidate_id"] for c in records]
+            emb = model.encode(texts, batch_size=128, convert_to_numpy=True, normalize_embeddings=True)
+            cand_index = ({cid: i for i, cid in enumerate(ids)}, emb)
+            req_texts = [r.text for r in getattr(job, "requirements", ()) or ()]
+            if req_texts:
+                req_emb = model.encode(req_texts, convert_to_numpy=True, normalize_embeddings=True)
+        except Exception:
+            # No model available -> hybrid degrades to lexical-only, still works.
+            cand_index = None
+        scored = score_pool_hybrid(records, job, candidate_embeddings=cand_index, req_embeddings=req_emb)
+        return _rows_from_scored(scored, job, analysis_n), scored
+
     def do_POST(self) -> None:
         parsed = urlparse(self.path)
         if parsed.path != "/api/rank":
@@ -955,17 +984,29 @@ class AppHandler(BaseHTTPRequestHandler):
             payload = json.loads(self.rfile.read(length).decode("utf-8") or "{}")
             candidates_path = payload.get("candidates_path") or DEFAULT_CANDIDATES
             job_spec_path = payload.get("job_spec") or DEFAULT_JOB_SPEC
+            jd_text = (payload.get("jd_text") or "").strip()
+            engine = (payload.get("engine") or "spine").lower()
             top_n = int(payload.get("top_n") or 100)
             if top_n < 1 or top_n > 100:
                 raise ValueError("top_n must be between 1 and 100")
             if not Path(candidates_path).exists():
                 raise ValueError(f"candidate file not found: {candidates_path}")
-            if not Path(job_spec_path).exists():
-                raise ValueError(f"job spec not found: {job_spec_path}")
             start = time.perf_counter()
-            job = load_job_spec(job_spec_path)
+            # JD: free text (any role, no YAML needed) OR a structured spec file.
+            if jd_text:
+                from talentsignal.jd_parser import job_spec_from_jd_text
+                job = job_spec_from_jd_text(
+                    jd_text, job_id=payload.get("job_id") or "ingested_jd",
+                    category=payload.get("category") or "ai_ml_search_ranking")
+            else:
+                if not Path(job_spec_path).exists():
+                    raise ValueError(f"job spec not found: {job_spec_path}")
+                job = load_job_spec(job_spec_path)
             analysis_n = 110 if top_n == 100 else max(top_n, min(110, top_n + 10))
-            analysis_rows, scored_pool = rank_candidates_with_pool(candidates_path, job, top_n=analysis_n)
+            if engine == "hybrid":
+                analysis_rows, scored_pool = self._rank_hybrid(candidates_path, job, analysis_n)
+            else:
+                analysis_rows, scored_pool = rank_candidates_with_pool(candidates_path, job, top_n=analysis_n)
             rows = analysis_rows[:top_n]
             UI_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
             submission = UI_OUTPUT_DIR / "ui_submission.csv"
