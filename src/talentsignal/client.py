@@ -61,3 +61,15 @@ class TalentSignalClient:
 
     def audit(self, candidate: dict) -> dict[str, Any]:
         return self._post("/audit", {"candidate": candidate})
+
+    def compliance(self, ranked_ids: list, group_attributes: dict, *, top_k: int = 10) -> dict[str, Any]:
+        """EEOC four-fifths adverse-impact report on a ranking. group_attributes is
+        {attribute: {candidate_id: group}} from your OWN HR data."""
+        return self._post("/compliance", {"ranked_ids": ranked_ids,
+                                          "group_attributes": group_attributes, "top_k": top_k})
+
+    def candidate_report(self, candidate: dict, jd: str, *,
+                         category: str = "ai_ml_search_ranking") -> dict[str, Any]:
+        """Transparency report for one candidate: what was used, what matched with
+        proof, what wasn't, and concerns — the no-black-box report."""
+        return self._post("/candidate_report", {"candidate": candidate, "jd": jd, "category": category})

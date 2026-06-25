@@ -26,7 +26,7 @@ def test_initialize_and_list():
     assert init["result"]["serverInfo"]["name"] == "talentsignal"
     tools = M.handle({"jsonrpc": "2.0", "id": 2, "method": "tools/list"})["result"]["tools"]
     names = {t["name"] for t in tools}
-    assert {"rank_candidates", "ingest_jd", "screen_resume", "audit_candidate", "explain_ranking"} <= names
+    assert {"rank_candidates", "ingest_jd", "screen_resume", "audit_candidate", "explain_ranking", "candidate_report", "compliance"} <= names
 
 
 def test_ingest_jd_tool():

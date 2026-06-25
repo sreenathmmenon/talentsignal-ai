@@ -82,6 +82,34 @@ TOOLS = [
         },
     },
     {
+        "name": "candidate_report",
+        "description": "Transparency report for ONE candidate against a JD: what the "
+                       "engine used (only their own data; identity-blind), what matched "
+                       "with proof from their own words, what wasn't evidenced (so they "
+                       "can correct the record), concerns, and the factor breakdown. "
+                       "Human-in-the-loop, no black box.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {"candidate": {"type": ["object", "string"]}, "jd": {"type": "string"}},
+            "required": ["candidate", "jd"],
+        },
+    },
+    {
+        "name": "compliance",
+        "description": "EEOC four-fifths (80%) adverse-impact report on a ranking, given "
+                       "customer-supplied protected-group labels. The engine never infers "
+                       "protected attributes.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "ranked_ids": {"type": "array", "items": {"type": "string"}},
+                "group_attributes": {"type": "object"},
+                "top_k": {"type": "integer", "default": 10},
+            },
+            "required": ["ranked_ids", "group_attributes"],
+        },
+    },
+    {
         "name": "explain_ranking",
         "description": "Rank candidates against a JD and return the grounded reasoning "
                        "for each of the top picks (why they ranked where they did).",
@@ -170,6 +198,27 @@ def tool_audit_candidate(args: dict) -> dict:
     }
 
 
+def tool_candidate_report(args: dict) -> dict:
+    """Transparency report for ONE candidate: what the engine used/concluded, with
+    proof, unmet requirements, and concerns — the human-in-the-loop, no-black-box
+    answer an agent can give a candidate or an auditor."""
+    from talentsignal.candidate_report import candidate_report
+    cand = args["candidate"]
+    if isinstance(cand, str):
+        from talentsignal.ingest import ingest
+        recs = ingest(cand, fmt="text")
+        cand = recs[0] if recs else {}
+    return candidate_report(cand, args["jd"], category=args.get("category", "ai_ml_search_ranking"))
+
+
+def tool_compliance(args: dict) -> dict:
+    """Adverse-impact (EEOC four-fifths) report on a ranking given customer-supplied
+    protected-group labels. The engine never infers protected attributes."""
+    from talentsignal.eval.compliance import compliance_summary
+    return compliance_summary(args["ranked_ids"], args["group_attributes"],
+                              top_k=int(args.get("top_k", 10)))
+
+
 def tool_explain_ranking(args: dict) -> dict:
     from talentsignal.api import rank
     cands = _coerce_candidates(args["candidates"])
@@ -184,6 +233,8 @@ TOOL_FUNCS = {
     "screen_resume": tool_screen_resume,
     "audit_candidate": tool_audit_candidate,
     "explain_ranking": tool_explain_ranking,
+    "candidate_report": tool_candidate_report,
+    "compliance": tool_compliance,
 }
 
 
