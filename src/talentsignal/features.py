@@ -134,7 +134,7 @@ def build_evidence(candidate: dict[str, Any]) -> CandidateEvidence:
         for skill in dict_skills
         if norm(skill.get("proficiency")) == "expert" and int(skill.get("duration_months") or 0) == 0
     )
-    return CandidateEvidence(
+    ev = CandidateEvidence(
         candidate_id=str(candidate["candidate_id"]),
         title=str(title),
         title_norm=title_norm,
@@ -184,3 +184,7 @@ def build_evidence(candidate: dict[str, Any]) -> CandidateEvidence:
         preferred_work_mode=str(signals.get("preferred_work_mode", "")),
         skill_assessment_max=max([float(v) for v in assessments.values()], default=0.0),
     )
+    # Keep a reference to the raw record so downstream scoring can run the general
+    # consistency auditor (honeypot veto) without re-plumbing every call site.
+    ev._raw = candidate  # type: ignore[attr-defined]
+    return ev

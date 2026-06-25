@@ -249,6 +249,29 @@ def score_candidate(ev: CandidateEvidence, job: JobSpec) -> ScoreBreakdown:
     )
     if ai_search_role and not ev.career_retrieval_terms and not ev.ai_title and ev.non_tech_title:
         penalty += 0.08
+
+    # GENERAL honeypot veto (role-independent): run the consistency auditor and, if
+    # the profile is internally IMPOSSIBLE (fabricated tenure, expert-with-zero-
+    # duration, etc.), apply a hard demotion so it can never reach the top of any
+    # ranking. This is the same protection the hybrid path has; the spine path was
+    # missing it, letting impossible profiles leak into AI/ML top-10s.
+    try:
+        from .consistency_audit import audit_candidate
+        raw_record = getattr(ev, "_raw", None)
+        consistency = audit_candidate(raw_record) if raw_record is not None else None
+        if consistency is None:
+            raise RuntimeError("no raw record")
+        if consistency.is_impossible:
+            penalty += 0.60          # hard veto: cannot survive into the shortlist
+            top10_eligible = False
+        else:
+            penalty += consistency.penalty
+        for code in consistency.codes:
+            if code not in flags:
+                flags.append(code)
+    except Exception:  # noqa: BLE001 - auditing must never break scoring
+        consistency = None
+
     final = clamp(raw - penalty)
     return ScoreBreakdown(
         candidate_id=ev.candidate_id,
