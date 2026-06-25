@@ -21,10 +21,14 @@ from .types import (
     RiskFlagView,
 )
 from .facade import rank, TalentSignal
+from .batch import rank_file, rank_many_jds, rank_to_csv
 
 __all__ = [
     "rank",
     "TalentSignal",
+    "rank_file",
+    "rank_many_jds",
+    "rank_to_csv",
     "RankResult",
     "RankedCandidate",
     "FactorBreakdown",
