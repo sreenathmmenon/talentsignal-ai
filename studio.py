@@ -144,30 +144,29 @@ def do_rank(body):
 
 
 def do_challenge(body):
-    """Load the official 100K hackathon result (one part of the product)."""
-    if not OFFICIAL_CSV.exists():
-        return {"error": "Official submission not generated yet. Run `make rank-hybrid`."}
-    rows = list(csv.DictReader(open(OFFICIAL_CSV)))[:10]
-    ids = {r["candidate_id"] for r in rows}
-    recs = {}
-    if OFFICIAL_CANDIDATES.exists():
-        for line in open(OFFICIAL_CANDIDATES):
-            if line.strip():
-                c = json.loads(line)
-                if c["candidate_id"] in ids:
-                    recs[c["candidate_id"]] = c
-    out = []
-    for r in rows:
-        c = recs.get(r["candidate_id"], {})
-        p = c.get("profile", {})
-        out.append({
-            "rank": int(r["rank"]), "candidate_id": r["candidate_id"],
-            "score": float(r["score"]), "reasoning": r["reasoning"],
-            "title": p.get("current_title", ""), "company": p.get("current_company", ""),
-            "years": p.get("years_of_experience", ""), "location": p.get("location", ""),
-        })
-    return {"jd": "Senior AI Engineer — Founding Team @ Redrob",
-            "total": 100000, "valid": True, "honeypots": 0, "top": out}
+    """Rank the real 100K LIVE for the standing challenge JD (NOT a frozen CSV).
+
+    Uses the in-memory live cache: ranked once by the real engine, served instantly
+    after, and automatically re-ranked if the candidate pool changes (so a new
+    strong applicant is never hidden by a stale result)."""
+    from talentsignal import live_cache
+    engine = body.get("engine", "spine")  # spine = fast+deterministic on full 100K
+    res = live_cache.rank_live(live_cache.CHALLENGE_JD, engine=engine, top_n=10,
+                               category="ai_ml_search_ranking")
+    if res.get("error"):
+        return {"error": res["error"]}
+    return {
+        "jd": "Senior AI Engineer — Founding Team @ Redrob",
+        "total": res["total"], "valid": True,
+        "honeypots": res.get("honeypots_in_top", 0),
+        "engine": res["engine"], "elapsed": res["elapsed"],
+        "from_cache": res["from_cache"], "live": True,
+        "top": [{
+            "rank": c["rank"], "candidate_id": c["candidate_id"], "score": c["score"],
+            "reasoning": c["reasoning"], "title": c["title"], "company": "",
+            "years": c["years"], "location": c["location"],
+        } for c in res["top"]],
+    }
 
 
 def do_transparency(body):
@@ -211,7 +210,8 @@ def do_top10detail(body):
         "Senior AI Engineer. Build candidate-JD matching at scale. Must have embeddings, "
         "retrieval, ranking models, hybrid search, evaluation frameworks (NDCG), strong "
         "Python. 5-9 years.")
-    res = rank(jd, rows, top_n=10, engine="spine", category="ai_ml_search_ranking")
+    res = rank(jd, rows, top_n=10, engine=body.get("engine", "spine"),
+               category="ai_ml_search_ranking")
     by_id = {r["candidate_id"]: r for r in rows}
     old_rank = _old_substring_rank(rows)
     out = []
