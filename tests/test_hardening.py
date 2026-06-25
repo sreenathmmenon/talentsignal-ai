@@ -24,6 +24,21 @@ def test_rank_handles_partial_records() -> None:
         assert res.ranked[0].reasoning is not None
 
 
+def test_rank_handles_explicitly_null_and_mistyped_fields() -> None:
+    # real-world exports have keys present with null values, or wrong types —
+    # these must degrade, not crash (regression test for a found bug).
+    cases = [
+        [{"candidate_id": "CAND_0000001", "profile": {"summary": None, "years_of_experience": None},
+          "career_history": None, "skills": None, "redrob_signals": None}],
+        [{"candidate_id": None, "profile": None}],
+        [{"candidate_id": "CAND_0000001", "profile": "oops"}],   # profile wrong type
+        [{"candidate_id": "CAND_0000001", "skills": {"a": 1}}],   # skills wrong type
+    ]
+    for recs in cases:
+        res = rank("AI Engineer", recs, top_n=3, engine="spine")
+        assert len(res.ranked) >= 1
+
+
 def test_rank_empty_pool() -> None:
     res = rank("AI Engineer", [], top_n=10)
     assert res.ranked == []

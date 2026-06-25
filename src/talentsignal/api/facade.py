@@ -36,12 +36,18 @@ def _safe_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
         if not isinstance(rec, dict):
             continue
         rec = dict(rec)
-        rec.setdefault("candidate_id", f"CAND_{i:07d}")
-        rec.setdefault("profile", {})
-        rec.setdefault("career_history", [])
-        rec.setdefault("education", [])
-        rec.setdefault("skills", [])
-        rec.setdefault("redrob_signals", {})
+        # Coerce missing OR explicitly-null fields to safe defaults. A real-world
+        # export commonly has keys present with null values (career_history:null),
+        # which setdefault would leave as None and crash downstream iteration.
+        if not isinstance(rec.get("candidate_id"), str):
+            rec["candidate_id"] = f"CAND_{i:07d}"
+        if not isinstance(rec.get("profile"), dict):
+            rec["profile"] = {}
+        for key in ("career_history", "education", "skills"):
+            if not isinstance(rec.get(key), list):
+                rec[key] = []
+        if not isinstance(rec.get("redrob_signals"), dict):
+            rec["redrob_signals"] = {}
         out.append(rec)
     return out
 
