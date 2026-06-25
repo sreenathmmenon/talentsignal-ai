@@ -339,7 +339,8 @@ def score_candidate_hybrid(
          if m.kind in {"must_have", "nice_to_have"} and m.score >= 0.30),
         key=lambda m: -m.score,
     )
-    matched_requirements = tuple((m.req_text, m.matched_keywords) for m in pos_matches[:4])
+    matched_requirements = tuple(
+        (m.req_text, m.matched_keywords, getattr(m, "evidence_span", "")) for m in pos_matches[:4])
     concern_notes = tuple(c.detail for c in consistency.flags[:3])
 
     # Top-10 eligibility: real requirement coverage AND no internal impossibility.

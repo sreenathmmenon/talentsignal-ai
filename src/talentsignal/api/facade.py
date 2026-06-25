@@ -70,10 +70,12 @@ def _map_requirement_matches(score) -> list[RequirementMatchView]:
     """Map the matched-requirement tuples on a ScoreBreakdown to views."""
     out: list[RequirementMatchView] = []
     for item in getattr(score, "matched_requirements", ()) or ():
-        req_text, kws = item
+        # tuples are (req_text, keywords) or (req_text, keywords, evidence_span)
+        req_text, kws = item[0], item[1]
+        span = item[2] if len(item) > 2 else ""
         out.append(RequirementMatchView(
             requirement=req_text, kind="must_have", score=0.0, dense=0.0, lexical=0.0,
-            matched_keywords=list(kws),
+            matched_keywords=list(kws), evidence_span=span,
         ))
     return out
 

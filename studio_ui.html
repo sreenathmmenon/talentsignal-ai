@@ -79,6 +79,11 @@ textarea:focus,select:focus{outline:none;border-color:var(--violet)}
 .tag{font-size:11.5px;font-family:'JetBrains Mono',monospace;background:rgba(60,229,146,.1);border:1px solid rgba(60,229,146,.3);
   color:#bff5dc;border-radius:7px;padding:3px 9px}
 .flag{font-size:11.5px;background:rgba(255,92,124,.12);border:1px solid rgba(255,92,124,.3);color:#ffd2da;border-radius:7px;padding:3px 9px}
+.tag[title]{cursor:help}
+.proofs{margin:10px 0 0 59px;display:flex;flex-direction:column;gap:6px}
+.proof{font-size:12.5px;line-height:1.5;border-left:2px solid var(--cyan);padding-left:11px}
+.proof .pq{color:#cfe9ff;font-style:italic}
+.proof .pr{color:var(--mut);margin-left:6px;font-family:'JetBrains Mono',monospace;font-size:11px}
 .spin{display:inline-block;width:15px;height:15px;border:2px solid var(--line);border-top-color:var(--cyan);border-radius:50%;animation:s .7s linear infinite;vertical-align:-2px}
 @keyframes s{to{transform:rotate(360deg)}}
 .stat-row{display:flex;gap:12px;margin-bottom:16px}
@@ -200,7 +205,12 @@ function renderRank(d){
   d.ranked.forEach(c=>{
     const tier=c.flags.length?'flagged':c.rank<=3?'t1':c.rank<=8?'t2':'t3';
     const f=c.factors;
-    const tags=(c.matched||[]).map(m=>`<span class="tag">${(m.kw||[]).join(', ')||m.req.slice(0,30)}</span>`).join('');
+    const tags=(c.matched||[]).map(m=>{
+      const ev=m.evidence?` title="proof: ${m.evidence.replace(/"/g,'&quot;')}"`:'';
+      return `<span class="tag"${ev}>${(m.kw||[]).join(', ')||m.req.slice(0,30)}${m.evidence?' ⓘ':''}</span>`;
+    }).join('');
+    const proofs=(c.matched||[]).filter(m=>m.evidence).map(m=>
+      `<div class="proof"><span class="pq">"${m.evidence}"</span><span class="pr">→ ${m.req.slice(0,40)}</span></div>`).join('');
     const flags=(c.flags||[]).map(x=>`<span class="flag" title="${(x.detail||'').replace(/"/g,'&quot;')}">⚑ ${x.code}</span>`).join('');
     h+=`<div class="cand ${tier}">
       <div class="ch"><div class="rk">#${c.rank}</div><div class="nm">${c.title||c.name}</div><div class="sc">${c.score.toFixed(3)}</div></div>
@@ -208,6 +218,7 @@ function renderRank(d){
       <div class="rsn">${c.reasoning||''}</div>
       <div class="facs">${fac('tech',f.technical||0)}${fac('career',f.career||0)}${fac('senior',f.seniority||0)}${fac('behav',f.behavioral||0)}${fac('trust',f.trust||0)}${fac('semantic',f.semantic||0)}</div>
       ${tags?`<div class="tags">${tags}</div>`:''}
+      ${proofs?`<div class="proofs">${proofs}</div>`:''}
       ${flags?`<div class="tags">${flags}</div>`:''}
     </div>`;
   });

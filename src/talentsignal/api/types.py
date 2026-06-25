@@ -20,6 +20,7 @@ class RequirementMatchView:
     dense: float         # 0..1 semantic
     lexical: float       # 0..1 keyword
     matched_keywords: list[str] = field(default_factory=list)
+    evidence_span: str = ""   # the candidate's own sentence proving this requirement
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

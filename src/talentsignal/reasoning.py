@@ -69,7 +69,8 @@ def _who(ev: CandidateEvidence) -> str:
 def _strengths_from_matches(score: ScoreBreakdown) -> list[str]:
     """Build grounded strength clauses from the hybrid requirement matches."""
     out: list[str] = []
-    for req_text, matched_kw in (score.matched_requirements or ()):
+    for item in (score.matched_requirements or ()):
+        req_text, matched_kw = item[0], item[1]  # item may also carry an evidence span
         snippet = req_text.strip().rstrip(".")
         if len(snippet) > 90:
             snippet = snippet[:87] + "..."

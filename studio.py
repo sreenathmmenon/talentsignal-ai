@@ -115,7 +115,8 @@ def _candidate_view(rec, ranked):
             "semantic": round(f.semantic_fit, 2) if f else 0,
         } if f else {},
         "coverage": round(f.requirement_coverage, 2) if f else 0,
-        "matched": [{"req": mm.requirement, "kw": list(mm.matched_keywords)}
+        "matched": [{"req": mm.requirement, "kw": list(mm.matched_keywords),
+                     "evidence": getattr(mm, "evidence_span", "")}
                     for mm in (ranked.requirement_matches or [])[:4]],
         "flags": [{"code": fl.code, "detail": fl.detail} for fl in (ranked.risk_flags or [])],
         "confidence": round(getattr(ranked, "confidence", 0), 2),

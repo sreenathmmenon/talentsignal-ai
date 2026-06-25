@@ -48,6 +48,30 @@ class RequirementMatch:
     lexical: float     # 0..1 keyword overlap
     score: float       # combined req_score
     matched_keywords: tuple[str, ...]
+    evidence_span: str = ""   # the candidate's own sentence that best proves this match
+
+
+def best_evidence_span(req_keywords, evidence_text: str, max_len: int = 160) -> str:
+    """Pick the candidate's own sentence that best evidences a requirement — the
+    'why' a recruiter can read. Chooses the sentence with the most matched
+    keywords (ties broken by length), so the drill-down quotes real text, never
+    a fabricated summary."""
+    if not evidence_text:
+        return ""
+    kws = {k.lower() for k in (req_keywords or ())}
+    sentences = re.split(r"(?<=[.!?])\s+|\n+", evidence_text)
+    best, best_hits = "", 0
+    for s in sentences:
+        s = s.strip()
+        if len(s) < 12:
+            continue
+        toks = set(re.findall(r"[a-z0-9+#./\-]{3,}", s.lower()))
+        hits = len(kws & toks)
+        if hits > best_hits or (hits == best_hits and hits > 0 and len(s) < len(best or " " * 999)):
+            best, best_hits = s, hits
+    if best_hits == 0:
+        return ""
+    return (best[:max_len - 1] + "…") if len(best) > max_len else best
 
 
 @dataclass
@@ -145,10 +169,13 @@ def match(
             req_score = lex  # lexical-only fallback
         kind = getattr(req, "kind", "must_have")
         weight = float(getattr(req, "weight", 1.0))
+        # Drill-down evidence: the candidate's own sentence proving this match,
+        # only when there's a real match (so we never quote irrelevant text).
+        span = best_evidence_span(matched_kw, evidence_text) if req_score >= 0.30 else ""
         matches.append(RequirementMatch(
             req_text=getattr(req, "text", ""), kind=kind, weight=weight,
             dense=round(dense, 4), lexical=round(lex, 4), score=round(req_score, 4),
-            matched_keywords=matched_kw,
+            matched_keywords=matched_kw, evidence_span=span,
         ))
 
         if kind == "disqualifier":
