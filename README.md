@@ -91,14 +91,26 @@ python3 scripts/demo_rank.py --jd demo/data/sales_jd.md \
 
 ## Status
 
-The engine and all four surfaces are implemented, tested (115 tests), and validated end-to-end:
+The engine and all four surfaces are implemented, tested (137 tests), and validated end-to-end:
 
-- **Engine**: JD ingestion, hybrid semantic matching, schema-driven signals, role-independent consistency auditor, unified scoring, grounded reasoning — with a labeled evaluation suite (composite 0.96, paraphrase 10/10, honeypots 0%, JD-agnostic ~0.06).
+- **Engine**: JD ingestion, hybrid semantic matching, schema-driven signals, role-independent consistency auditor, unified scoring, grounded reasoning — with a labeled evaluation suite (composite 0.97, paraphrase 10/10, honeypots 0%, JD-agnostic ~0.06).
 - **Universal ingest**: PDF/DOCX/TXT/CSV/JSON/LinkedIn/paste → rankable; pluggable adapters.
-- **Surfaces**: clean `rank()` facade + SDK, MCP server (agentic), REST API + Python client, product UI.
+- **Surfaces**: clean `rank()` facade + SDK, MCP server (agentic), REST API + Python client, the Studio product UI (`studio.py`).
 - **Extensibility**: signal-plugin framework with roadmap stubs (background verification, GitHub-repo analysis).
 - **Hackathon submission**: valid top-100 CSV (hybrid engine), 0 honeypots, reproduces offline in budget; the spine engine is a zero-dependency fallback.
 - **Quality**: name/identity-blind (fairness audit, score delta 0.0), no reasoning hallucination (audited), Stage-3 reproduction verifier.
+
+## Enterprise-grade
+
+The capabilities a career portal, company, or enterprise needs before deploying an automated selection procedure:
+
+| Capability | What it does | Where |
+|---|---|---|
+| **Hiring compliance** | EEOC four-fifths (80%) adverse-impact analysis across customer-supplied protected groups; identity-blind by construction (the engine never infers protected attributes). | `eval/compliance.py`, `POST /compliance` |
+| **Explainability drill-down** | Every requirement match quotes the candidate's *own sentence* that proves it — a real quote, never fabricated. | evidence spans in `RankResult`, shown in Studio + API |
+| **Scale & batch** | 5,400 candidates rank in ~0.45s (spine, linear). `rank_file` streams a large `.jsonl/.gz`; `rank_many_jds` ranks one pool against many open roles; `rank_to_csv` writes the standard output. | `talentsignal.api.batch` |
+| **Robustness** | Degrades, never crashes, on hostile input — empty/injection/unicode JDs, null or mistyped candidate fields, 50KB blobs. | `_safe_records` + hardening tests |
+| **Reproducible & auditable** | Deterministic ranking; offline; the audit checks (consistency, fairness, compliance) export structured reports. | `scripts/ci_gate.py`, `verify_reproduction.py` |
 
 ## Requirements
 
