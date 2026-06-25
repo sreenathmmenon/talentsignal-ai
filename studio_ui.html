@@ -101,6 +101,7 @@ textarea:focus,select:focus{outline:none;border-color:var(--violet)}
       <button class="tab active" data-view="rank" onclick="switchView('rank')">Rank candidates</button>
       <button class="tab" data-view="transparency" onclick="switchView('transparency')">Candidate transparency</button>
       <button class="tab" data-view="challenge" onclick="switchView('challenge')">Challenge result</button>
+      <button class="tab" data-view="whatsnew" onclick="switchView('whatsnew')">What's new (top 10)</button>
     </div>
     <div class="live"><span class="b"></span> live engine</div>
   </div>
@@ -185,6 +186,7 @@ function switchView(v){
   $('go').textContent = v==='transparency' ? 'Generate transparency report →' : 'Rank with the live engine →';
   $('go').setAttribute('onclick', v==='transparency' ? 'runTransparency()' : 'runRank()');
   if(v==='challenge') loadChallenge();
+  else if(v==='whatsnew') loadWhatsNew();
   else{
     $('out').style.display='none';$('empty').style.display='grid';
     $('empty').innerHTML = v==='transparency'
@@ -292,6 +294,44 @@ async function loadChallenge(){
         <div class="ch"><div class="rk">#${c.rank}</div><div class="nm">${c.title} @ ${c.company}</div><div class="sc">${c.score.toFixed(3)}</div></div>
         <div class="sub">${c.candidate_id} · ${c.years} yrs · ${c.location}</div>
         <div class="rsn">${c.reasoning}</div></div>`;
+    });
+    $('out').innerHTML=h;
+  }catch(e){$('empty').innerHTML=`<div><div class="big">⚠️</div><h3>${e.message}</h3></div>`}
+}
+async function loadWhatsNew(){
+  $('empty').style.display='grid';$('out').style.display='none';
+  $('empty').innerHTML='<div><div class="big"><span class="spin"></span></div><h3>Ranking the real 100,000…</h3><div>Running the live engine + computing the change vs the old keyword engine.</div></div>';
+  try{
+    const r=await fetch('/api/top10detail',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+    const d=await r.json();
+    if(d.error){$('empty').innerHTML=`<div><div class="big">📦</div><h3>${d.error}</h3></div>`;return}
+    $('empty').style.display='none';$('out').style.display='block';
+    let h=`<div class="bar-top"><h2>What the recent iterations changed — on the real top 10</h2><span class="eng">engine: ${d.engine}</span></div>
+      <div class="stat-row">
+        <div class="kpi"><div class="n" style="color:var(--cyan)">${d.pool.toLocaleString()}</div><div class="l">real candidates ranked</div></div>
+        <div class="kpi"><div class="n" style="color:var(--lime)">${d.slots_changed}/10</div><div class="l">top-10 slots changed vs old engine</div></div>
+        <div class="kpi"><div class="n" style="color:var(--green)">${d.elapsed}s</div><div class="l">CPU · no network</div></div>
+      </div>
+      <div class="card" style="margin:0 0 14px 0"><label>What's new in these iterations (shown per candidate below)</label>
+        <ul style="color:var(--mut);font-size:13px;margin:6px 0 0 18px;line-height:1.7">${(d.iteration_notes||[]).map(n=>`<li>${n}</li>`).join('')}</ul></div>`;
+    d.top.forEach(c=>{
+      const tier=c.consistency_clean?(c.rank<=3?'t1':c.rank<=8?'t2':'t3'):'flagged';
+      const f=c.factors||{};
+      const up=c.delta>0, badge = c.was_outside_top10
+        ? `<span class="flag" style="background:rgba(52,211,153,.14);color:var(--green);border-color:rgba(52,211,153,.3)">▲ old engine ranked #${c.old_rank} (outside top 10) → now #${c.new_rank}</span>`
+        : `<span class="flag" style="background:rgba(110,168,254,.12);color:var(--cyan)">old #${c.old_rank} → now #${c.new_rank} (Δ ${up?'+':''}${c.delta})</span>`;
+      const cons = c.consistency_clean
+        ? `<span class="tag" style="color:var(--green)">✓ consistency: clean</span>`
+        : (c.flags||[]).map(x=>`<span class="flag">⚑ ${x}</span>`).join('');
+      h+=`<div class="cand ${tier}">
+        <div class="ch"><div class="rk">#${c.rank}</div><div class="nm">${c.title}</div><div class="sc">${c.score.toFixed(3)}</div></div>
+        <div class="sub">${c.candidate_id} · ${(c.years||0)} yrs</div>
+        <div class="rsn">${c.headline}</div>
+        <div class="rsn" style="color:var(--mut);font-style:italic">${c.reasoning}</div>
+        <div class="facs">${fac('tech',f.technical_evidence||0)}${fac('career',f.career_fit||0)}${fac('senior',f.seniority||0)}${fac('behav',f.behavioral||0)}${fac('trust',f.trust||0)}${fac('logist',f.logistics||0)}</div>
+        <div class="tags">${cons}</div>
+        <div class="tags" style="margin-top:8px">${badge}</div>
+      </div>`;
     });
     $('out').innerHTML=h;
   }catch(e){$('empty').innerHTML=`<div><div class="big">⚠️</div><h3>${e.message}</h3></div>`}

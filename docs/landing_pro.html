@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>TalentSignal — the right people for any role</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#07070b; --bg2:#0c0d14; --panel:#12131d; --panel2:#171927;
+  --ink:#f4f5fb; --mut:#8b91ad; --line:#21243a;
+  --lime:#c6f24e; --violet:#9b6cff; --cyan:#43e7ff; --pink:#ff6ad5; --red:#ff5c7c; --green:#3ce592;
+  --grad:linear-gradient(100deg,#c6f24e,#43e7ff 45%,#9b6cff);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+.mono{font-family:'JetBrains Mono',monospace}
+.wrap{max-width:1140px;margin:0 auto;padding:0 28px}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(700px 380px at 12% -6%,rgba(155,108,255,.20),transparent 60%),
+            radial-gradient(620px 360px at 92% 4%,rgba(67,231,255,.14),transparent 60%),
+            radial-gradient(720px 420px at 60% 108%,rgba(198,242,78,.10),transparent 60%);}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:64px 64px;mask-image:radial-gradient(900px 600px at 50% 0%,#000,transparent 75%);}
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
+  background:rgba(7,7,11,.62);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:14px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.3px;font-size:18px}
+.dot{width:13px;height:13px;border-radius:4px;background:var(--grad);box-shadow:0 0 18px rgba(198,242,78,.6)}
+.nav-links{margin-left:auto;display:flex;gap:26px;align-items:center}
+.nav-links a{color:var(--mut);text-decoration:none;font-size:14.5px;transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+.np{background:var(--grad);color:#07070b;font-weight:700;padding:9px 18px;border-radius:11px;font-size:14px;
+  letter-spacing:.2px;text-shadow:0 1px 1px rgba(255,255,255,.35);box-shadow:0 4px 16px rgba(155,108,255,.35);
+  transition:transform .15s,box-shadow .2s}
+.np:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(67,231,255,.45)}
+.hero{position:relative;z-index:1;padding:84px 0 30px;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:13px;color:var(--ink);
+  border:1px solid var(--line);background:var(--panel);padding:7px 15px;border-radius:30px;margin-bottom:30px}
+.eyebrow .pulse{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 0 rgba(198,242,78,.7);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(198,242,78,.6)}70%{box-shadow:0 0 0 9px rgba(198,242,78,0)}100%{box-shadow:0 0 0 0 rgba(198,242,78,0)}}
+h1{font-size:clamp(40px,7vw,82px);line-height:.98;letter-spacing:-2.5px;font-weight:700;text-wrap:balance}
+h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{max-width:660px;margin:26px auto 0;color:var(--mut);font-size:clamp(16px,2vw,20px);line-height:1.55;text-wrap:pretty}
+.cta{display:flex;gap:14px;justify-content:center;margin-top:38px;flex-wrap:wrap}
+.btn{padding:15px 26px;border-radius:14px;font-weight:600;font-size:15.5px;text-decoration:none;display:inline-flex;align-items:center;gap:9px;transition:transform .15s,box-shadow .2s}
+.btn.primary{background:var(--grad);color:#07070b;box-shadow:0 8px 30px rgba(155,108,255,.3)}
+.btn.primary:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(67,231,255,.4)}
+.btn.ghost{background:var(--panel);border:1px solid var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--violet);transform:translateY(-2px)}
+.stats{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:62px auto 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px 20px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s}
+.stat:hover{transform:translateY(-4px);border-color:var(--violet)}
+.stat .n{font-size:38px;font-weight:700;letter-spacing:-1.5px;line-height:1}
+.stat .n.lime{color:var(--lime)} .stat .n.cyan{color:var(--cyan)} .stat .n.violet{color:var(--violet)} .stat .n.green{color:var(--green)}
+.stat .l{color:var(--mut);font-size:13px;margin-top:9px;line-height:1.35}
+.stat .spark{position:absolute;right:-10px;bottom:-10px;width:64px;height:64px;border-radius:50%;filter:blur(26px);opacity:.5}
+section.blk{position:relative;z-index:1;padding:96px 0}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:14px}
+h2{font-size:clamp(28px,4vw,46px);letter-spacing:-1.4px;line-height:1.04;font-weight:700;text-wrap:balance}
+.lead{color:var(--mut);font-size:18px;margin-top:14px;max-width:620px;text-wrap:pretty}
+.judge{margin-top:42px;display:grid;grid-template-columns:280px 1fr;gap:22px;align-items:start}
+.jd-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px}
+.jd-card .tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);letter-spacing:1px}
+.jd-card h4{font-size:17px;margin:8px 0 12px;font-weight:600}
+.jd-card p{color:var(--mut);font-size:13.5px;line-height:1.55}
+.req{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+.req span{font-size:11.5px;font-family:'JetBrains Mono',monospace;color:var(--ink);background:var(--panel2);border:1px solid var(--line);padding:4px 9px;border-radius:7px}
+.ranklist{display:flex;flex-direction:column;gap:11px}
+.cand{display:grid;grid-template-columns:42px 1fr auto;gap:16px;align-items:center;
+  background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px 18px;
+  opacity:0;transform:translateX(18px);transition:transform .25s,border-color .25s}
+.cand:hover{transform:translateX(0) scale(1.01);border-color:var(--violet)}
+.cand.show{opacity:1;transform:translateX(0)}
+.cand .rk{font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--mut)}
+.cand.top .rk{color:var(--lime)}
+.cand.flag{border-color:rgba(255,92,124,.4)}
+.cand.flag .rk{color:var(--red)}
+.cand .nm{font-size:15.5px;font-weight:600}
+.cand .role{color:var(--mut);font-size:13px;margin-top:2px}
+.cand .verdict{font-size:12px;margin-top:5px;display:inline-flex;align-items:center;gap:6px}
+.cand .verdict.good{color:var(--green)} .cand .verdict.bad{color:var(--red)} .cand .verdict.mid{color:var(--mut)}
+.bar{width:118px;height:7px;border-radius:5px;background:var(--panel2);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:5px;background:var(--grad);width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.cand.flag .bar i{background:linear-gradient(90deg,#ff5c7c,#ff9a3c)}
+.score{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--mut);text-align:right;min-width:46px}
+.feat{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:42px}
+.fcard{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:28px;transition:transform .2s,border-color .2s;position:relative;overflow:hidden}
+.fcard:hover{transform:translateY(-5px);border-color:var(--violet)}
+.fcard .ic{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:22px;margin-bottom:18px;border:1px solid var(--line);background:var(--panel2)}
+.fcard h3{font-size:20px;letter-spacing:-.5px;margin-bottom:9px}
+.fcard p{color:var(--mut);font-size:14.5px;line-height:1.6}
+.fcard .accent{position:absolute;top:0;left:0;height:3px;width:54px;background:var(--grad)}
+.surf{display:flex;gap:13px;flex-wrap:wrap;margin-top:36px}
+.chip{display:inline-flex;align-items:center;gap:11px;background:var(--panel);border:1px solid var(--line);
+  padding:14px 20px;border-radius:14px;font-size:15px;transition:transform .18s,border-color .18s}
+.chip:hover{transform:translateY(-3px);border-color:var(--cyan)}
+.chip .k{font-size:20px}
+.chip .s{color:var(--mut);font-size:12.5px;display:block;margin-top:1px}
+.band{position:relative;z-index:1;margin:30px auto 80px;text-align:center;
+  background:var(--panel);border:1px solid var(--line);border-radius:26px;padding:60px 30px;overflow:hidden}
+.band::after{content:"";position:absolute;inset:0;background:var(--grad);opacity:.07}
+.band h2{position:relative}
+.band .sub{margin:16px auto 0}
+footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:34px 0;color:var(--mut);font-size:14px}
+.foot-in{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.foot-in a{color:var(--cyan);text-decoration:none}
+.foot-in .r{margin-left:auto;display:flex;gap:18px}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+@media(max-width:860px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .judge{grid-template-columns:1fr}
+  .feat{grid-template-columns:1fr}
+  .nav-links a:not(.np){display:none}
+}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<nav>
+  <div class="wrap nav-in">
+    <div class="logo"><span class="dot"></span> TalentSignal</div>
+    <div class="nav-links">
+      <a href="#how">How it judges</a>
+      <a href="#why">Why it's different</a>
+      <a href="#use">Use it</a>
+      <a class="np" href="#try">Try it →</a>
+    </div>
+  </div>
+</nav>
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><span class="pulse"></span> universal candidate intelligence</span>
+    <h1>The right people<br/>for <span class="g">any role.</span></h1>
+    <p class="sub">Drop in any job description and any pile of resumes — any format. TalentSignal ranks by the
+    <b style="color:var(--ink)">evidence of the work</b>, reasons past keywords, rejects fakes, and tells you who's actually hireable.</p>
+    <div class="cta">
+      <a class="btn primary" href="#try">Watch it rank →</a>
+      <a class="btn ghost" href="#how">See how it judges</a>
+    </div>
+    <div class="stats">
+      <div class="stat reveal"><div class="n lime">0.96</div><div class="l">eval composite<br/>vs 0.88 keyword baseline</div><div class="spark" style="background:var(--lime)"></div></div>
+      <div class="stat reveal"><div class="n cyan">10/10</div><div class="l">zero-keyword fits<br/>surfaced into the top 10</div><div class="spark" style="background:var(--cyan)"></div></div>
+      <div class="stat reveal"><div class="n violet">0%</div><div class="l">fake / honeypot profiles<br/>in the top 10</div><div class="spark" style="background:var(--violet)"></div></div>
+      <div class="stat reveal"><div class="n green">6 roles</div><div class="l">ranked correctly by one engine<br/>— genuinely JD-agnostic</div><div class="spark" style="background:var(--green)"></div></div>
+    </div>
+  </div>
+</header>
+<section class="blk" id="how">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="kicker">// see it judge</div>
+      <h2>Watch a real job description<br/>meet a real pile of resumes.</h2>
+      <p class="lead">A genuine Senior AI Engineer JD against seven candidates. The engine surfaces the real fits — and pushes the keyword-stuffer to the bottom.</p>
+    </div>
+    <div class="judge">
+      <div class="jd-card reveal" id="try">
+        <div class="tag">JOB DESCRIPTION</div>
+        <h4>Senior AI Engineer</h4>
+        <p>Production embeddings &amp; retrieval, hybrid search, agent systems, evaluation frameworks. Reasoning beyond keywords. 5–9 yrs.</p>
+        <div class="req"><span>embeddings</span><span>RAG</span><span>ranking</span><span>agents</span><span>NDCG eval</span><span>Python</span></div>
+      </div>
+      <div class="ranklist" id="ranklist"></div>
+    </div>
+  </div>
+</section>
+<section class="blk" id="why">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="kicker">// why it's different</div>
+      <h2>Most rankers count keywords.<br/>This one reads careers.</h2>
+    </div>
+    <div class="feat">
+      <div class="fcard reveal"><div class="accent"></div><div class="ic">🧠</div><h3>Beyond keywords</h3><p>“Built the recommendation engine serving the homepage” matches “shipped a ranking system” — with zero shared words. Hybrid embeddings + lexical, over the JD's own requirements.</p></div>
+      <div class="fcard reveal"><div class="accent"></div><div class="ic">🛡️</div><h3>Rejects fakes</h3><p>Catches the impossible — 8 years at a 3-year-old company, “expert” in a skill used 0 months — by internal contradiction, not keywords. Works for any role.</p></div>
+      <div class="fcard reveal"><div class="accent"></div><div class="ic">⚡</div><h3>Actually hireable</h3><p>Down-weights the stale, unresponsive “perfect on paper” candidate. Adapts to whatever signals a dataset carries — nothing hardcoded.</p></div>
+      <div class="fcard reveal"><div class="accent"></div><div class="ic">📊</div><h3>Provable</h3><p>NDCG, MAP, P@10 over labeled data across many JDs. Every change measured, identity-blind (fairness Δ = 0.0), reproducible offline.</p></div>
+    </div>
+  </div>
+</section>
+<section class="blk" id="use">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="kicker">// one engine, four ways</div>
+      <h2>Embed it. Call it. Agent it. Click it.</h2>
+      <div class="surf">
+        <div class="chip"><span class="k">🧩</span><div><b>Python SDK</b><span class="s">rank(jd, candidates)</span></div></div>
+        <div class="chip"><span class="k">🤖</span><div><b>MCP server</b><span class="s">agentic tools for any model</span></div></div>
+        <div class="chip"><span class="k">🌐</span><div><b>REST API</b><span class="s">plug into any ATS</span></div></div>
+        <div class="chip"><span class="k">🖥️</span><div><b>Product UI</b><span class="s">drop &amp; rank</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="wrap">
+  <div class="band reveal">
+    <h2>Find the people the keywords miss.</h2>
+    <p class="sub">Any JD. Any resume. Any format. Ranked, explained, and fair.</p>
+    <div class="cta"><a class="btn primary" href="#try">Try the live demo →</a></div>
+  </div>
+</div>
+<footer>
+  <div class="wrap foot-in">
+    <div class="logo" style="font-size:16px"><span class="dot"></span> TalentSignal</div>
+    <span style="color:var(--mut)">open · reproducible · fairness-audited</span>
+    <div class="r"><a href="https://github.com/sreenathmmenon">GitHub</a><a href="#">Docs</a><a href="#">Demo</a></div>
+  </div>
+</footer>
+<script>
+const candidates=[
+ {nm:'Maya Rao',role:'Senior AI Engineer · 7y · Bangalore',v:'Production agents, RAG, eval — full requirement coverage',cls:'good',w:96,s:'0.96',top:true},
+ {nm:'Leon Vogt',role:'ML Engineer · 8y · Berlin',v:'Shipped ranking + retrieval at scale; strong evidence',cls:'good',w:90,s:'0.91',top:true},
+ {nm:'Arjun Nair',role:'Staff AI Engineer · 8y · Pune',v:'Agent platform, MCP, multi-LLM — described in plain words, surfaced anyway',cls:'good',w:84,s:'0.84',top:true},
+ {nm:'Sana Iyer',role:'AI Engineer · 6y · Pune',v:'Terse résumé, real signal recovered — the under-marketed gem',cls:'mid',w:71,s:'0.71'},
+ {nm:'Tom Becker',role:'Backend Engineer · 6y · London',v:'Adjacent — some LLM exposure, not core',cls:'mid',w:49,s:'0.49'},
+ {nm:'Priya Das',role:'Frontend Developer · 5y · Chennai',v:'Weak fit for this role',cls:'mid',w:31,s:'0.31'},
+ {nm:'Vikram Reddy',role:'Marketing Manager · 9y · Hyderabad',v:'Listed every AI keyword — career says marketing. Caught.',cls:'bad',w:12,s:'0.12',flag:true},
+];
+const list=document.getElementById('ranklist');
+candidates.forEach((c,i)=>{
+  const el=document.createElement('div');
+  el.className='cand'+(c.top?' top':'')+(c.flag?' flag':'');
+  el.innerHTML=`<div class="rk">${c.flag?'✕':'#'+(i+1)}</div>
+    <div><div class="nm">${c.nm}</div><div class="role">${c.role}</div>
+    <div class="verdict ${c.cls}">${c.cls==='good'?'✓':c.cls==='bad'?'✕':'•'} ${c.v}</div></div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+      <div class="score mono">${c.s}</div><div class="bar"><i data-w="${c.w}"></i></div></div>`;
+  list.appendChild(el);
+});
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in')}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const rio=new IntersectionObserver((es,obs)=>{es.forEach(e=>{if(e.isIntersecting){
+  const cards=[...document.querySelectorAll('.cand')];
+  cards.forEach((c,i)=>setTimeout(()=>{c.classList.add('show');
+    const b=c.querySelector('.bar i');if(b)b.style.width=b.dataset.w+'%';},i*140));
+  obs.disconnect();
+}})},{threshold:.25});
+rio.observe(document.getElementById('ranklist'));
+</script>
+</body>
+</html>

@@ -81,14 +81,26 @@ class CandidateEvidence:
     skill_assessment_max: float
 
 
+def _skill_name(s: Any) -> str:
+    """A skill entry may be {"name": "Python"} or just "Python". Normalize both."""
+    if isinstance(s, dict):
+        return str(s.get("name", "") or "")
+    if isinstance(s, str):
+        return s
+    return ""
+
+
 def build_evidence(candidate: dict[str, Any]) -> CandidateEvidence:
-    profile = candidate["profile"]
-    signals = candidate["redrob_signals"]
-    career = candidate.get("career_history", [])
-    skills = candidate.get("skills", [])
+    profile = candidate.get("profile", {}) or {}
+    signals = candidate.get("redrob_signals", {}) or {}
+    career = candidate.get("career_history", []) or []
+    skills = candidate.get("skills", []) or []
     title = profile.get("current_title", "")
     title_norm = norm(title)
-    skill_names = [str(s.get("name", "")) for s in skills if s.get("name")]
+    # Skills may be objects ({"name": ...}) OR plain strings, depending on the
+    # customer's data shape. Handle both so a real applicant pool never crashes.
+    skill_names = [_skill_name(s) for s in skills]
+    skill_names = [s for s in skill_names if s]
     skill_text = " ".join(skill_names).lower()
     career_text = " ".join(
         " ".join(
@@ -100,6 +112,7 @@ def build_evidence(candidate: dict[str, Any]) -> CandidateEvidence:
             ]
         )
         for job in career
+        if isinstance(job, dict)
     ).lower()
     profile_text = " ".join(
         [
@@ -110,13 +123,15 @@ def build_evidence(candidate: dict[str, Any]) -> CandidateEvidence:
         ]
     ).lower()
     all_text = " ".join([profile_text, career_text, skill_text])
-    companies = [norm(job.get("company")) for job in career]
+    companies = [norm(job.get("company")) for job in career if isinstance(job, dict)]
     service_count = sum(1 for c in companies if c in tg.SERVICE_COMPANIES)
     product_count = sum(1 for c in companies if c in tg.PRODUCT_COMPANIES)
     assessments = signals.get("skill_assessment_scores") or {}
+    # Only structured (dict) skills carry proficiency/duration; string skills skip.
+    dict_skills = [s for s in skills if isinstance(s, dict)]
     expert_zero = sum(
         1
-        for skill in skills
+        for skill in dict_skills
         if norm(skill.get("proficiency")) == "expert" and int(skill.get("duration_months") or 0) == 0
     )
     return CandidateEvidence(

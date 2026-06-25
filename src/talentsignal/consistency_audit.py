@@ -92,7 +92,10 @@ def audit_candidate(candidate: dict[str, Any]) -> ConsistencyReport:
     report = ConsistencyReport()
     profile = candidate.get("profile", {})
     career = candidate.get("career_history", []) or []
-    skills = candidate.get("skills", []) or []
+    # Skills may be objects or plain strings; the consistency checks below only
+    # apply to structured (dict) skills (duration/proficiency). Keep dicts only so
+    # a string-skill applicant never crashes the auditor.
+    skills = [s for s in (candidate.get("skills", []) or []) if isinstance(s, dict)]
     signals = candidate.get("redrob_signals", {}) or {}
 
     stated_years = float(profile.get("years_of_experience") or 0.0)
