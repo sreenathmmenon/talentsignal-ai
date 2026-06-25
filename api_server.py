@@ -124,9 +124,20 @@ def do_compliance(body: dict) -> dict:
                               top_k=int(body.get("top_k", 10)))
 
 
+def do_candidate_report(body: dict) -> dict:
+    """Candidate-facing transparency report: what the engine used and concluded
+    about ONE candidate against a JD, with proof, unmet requirements they can
+    dispute, and concerns -- the human-in-the-loop, no-black-box answer to the
+    FCRA-style 'I was scored and rejected and never told why' grievance."""
+    from talentsignal.candidate_report import candidate_report
+    return candidate_report(body["candidate"], body["jd"],
+                            category=body.get("category", "ai_ml_search_ranking"))
+
+
 ROUTES = {
     "/rank": do_rank,
     "/compliance": do_compliance,
+    "/candidate_report": do_candidate_report,
     "/ingest/jd": do_ingest_jd,
     "/ingest/resume": do_ingest_resume,
     "/audit": do_audit,
