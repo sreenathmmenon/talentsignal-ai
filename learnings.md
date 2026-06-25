@@ -212,3 +212,13 @@ resumes." Build a fixture suite of messy real-world inputs and gate on it.
 - **Premortem early.** The biggest risks (semantic mis-ranking honeypots up,
   Stage-3 reproduction, over-scoping) were all predicted by adversarial premortem
   before they could bite.
+
+## 12. Self-review: hybrid is best-in-class; spine fallback has an adjacent-role ceiling
+
+**Found via stress-test.** Scale is a non-issue (quality *improves* at 270/540-candidate pools). The real weakness was the SPINE engine's mid-rank precision (MAP 0.48 on data_analytics): weak "Data Engineer" candidates ranked #6/#9/#10 interleaved with strong analysts, because flat term-overlap scores a data engineer's generic "SQL/data" match nearly as high as a strong analyst's, while the analyst's distinguishing "experimentation/metrics/decisions" evidence isn't weighted enough.
+
+**Verified:** the HYBRID engine already fixes this decisively (data_analytics composite 0.729 -> 0.967, MAP 0.477 -> 0.946; mean composite across 6 roles 0.878 -> 0.969, MAP 0.92-1.0 everywhere). All interactive surfaces (Studio, MCP, product UI) already default to hybrid when a model is available.
+
+**Tried and reverted:** a nonlinear must-have completeness bonus on the spine -- it didn't move data_analytics (0.729 -> 0.724) because the underlying coverage values are already too close (coarse term matching). Over-tuning the spine is the wrong lever.
+
+**Lesson.** The spine is the zero-dependency fallback with an inherent ceiling on adjacent-role separation that only semantics fixes; that's acceptable because hybrid ships everywhere it matters. Don't over-tune the fallback; ensure the semantic path is the default and is robust. Best ROI now is product/enterprise features + broader robustness, not more spine tuning.
