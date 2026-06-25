@@ -273,6 +273,28 @@ def score_candidate(ev: CandidateEvidence, job: JobSpec) -> ScoreBreakdown:
         consistency = None
 
     final = clamp(raw - penalty)
+
+    # ROLE-RELEVANCE GATE (generality fix): a candidate who does not actually match
+    # the JD's own requirements must not be carried into the top by generic strength
+    # (seniority, trust, behavioral). Without this, a keyword-dense ML profile could
+    # win a Sales or Design JD purely on availability/trust signals. We gate the
+    # final score on how well the candidate covers THIS JD's must-haves — measured
+    # in their career evidence first, then anywhere in the profile. The gate is a
+    # smooth multiplier so genuine matches are untouched and irrelevant profiles are
+    # pushed down hard. Role-independent: it uses the JD's own parsed requirements.
+    relevance = max(career_must_have_coverage, 0.65 * must_have_coverage,
+                    0.5 * title_coverage)
+    if ai_search_role:
+        # AI path already has strong career-evidence gating above; relevance also
+        # credits direct retrieval/ML career evidence so it isn't double-penalized.
+        relevance = max(relevance,
+                        1.0 if ev.career_retrieval_terms else 0.0,
+                        0.7 if (ev.ai_title or ev.adjacent_title) else 0.0)
+    if relevance < 0.5:
+        # Map relevance in [0, 0.5) to a multiplier in [0.45, 1.0): little/no match
+        # is capped well below a genuine fit, so generic factors can't dominate.
+        gate = 0.45 + (relevance / 0.5) * 0.55
+        final = clamp(final * gate)
     return ScoreBreakdown(
         candidate_id=ev.candidate_id,
         final_score=round(final, 6),
