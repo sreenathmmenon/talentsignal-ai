@@ -51,3 +51,15 @@ def test_summary_multi_attribute_serializes():
 def test_identity_blind_note_present():
     s = compliance_summary(["a"], {"g": {"a": "x"}}, top_k=1)
     assert "identity-blind" in s["engine_property"]
+
+
+def test_discloses_incomplete_label_coverage():
+    # candidate 'c' is ranked but unlabeled -> the report must say so (an unlabeled
+    # ranked candidate silently dropped could mask adverse impact)
+    r = adverse_impact(["a", "b", "c"], {"a": "x", "b": "y"}, top_k=2)
+    assert any("coverage" in n.lower() and "unlabeled" in n.lower() for n in r.notes)
+
+
+def test_no_coverage_warning_when_complete():
+    r = adverse_impact(["a", "b"], {"a": "x", "b": "y"}, top_k=2)
+    assert not any("coverage:" in n.lower() for n in r.notes)

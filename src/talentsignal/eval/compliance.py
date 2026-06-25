@@ -87,7 +87,19 @@ def adverse_impact(
             selected[grp] = selected.get(grp, 0) + 1
 
     rates = [GroupRate(g, selected.get(g, 0), totals[g]) for g in sorted(totals)]
-    notes: list[str] = []
+    notes_pre: list[str] = []
+    # INTEGRITY: disclose label coverage. Candidates in the ranking but missing a
+    # group label are NOT analyzed -- silently dropping them could mask adverse
+    # impact, so the report must state how complete the analysis is.
+    ranked_total = len(set(ranked_ids))
+    labeled_in_ranking = sum(1 for cid in set(ranked_ids) if cid in group_of)
+    if ranked_total and labeled_in_ranking < ranked_total:
+        gap = ranked_total - labeled_in_ranking
+        notes_pre.append(
+            f"label coverage: {labeled_in_ranking}/{ranked_total} ranked candidates have a "
+            f"group label; {gap} are unlabeled and excluded from this analysis -- provide "
+            f"labels for full coverage (an incomplete analysis can mask adverse impact).")
+    notes: list[str] = list(notes_pre)
     # Only groups with enough members are statistically meaningful.
     eligible = [r for r in rates if r.total >= min_group_size]
     small = [r.group for r in rates if r.total < min_group_size]
