@@ -59,12 +59,36 @@ def _coerce_candidates(items):
     return out
 
 
+_EMBEDDER = {"model": None, "tried": False}
+
+
+def _embedder():
+    """Cached embedder so REST /rank uses the best (hybrid) engine on small pools,
+    consistent with the Studio and MCP surfaces; None -> spine fallback."""
+    if _EMBEDDER["tried"]:
+        return _EMBEDDER["model"]
+    _EMBEDDER["tried"] = True
+    try:
+        os.environ.setdefault("HF_HUB_OFFLINE", "1")
+        os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+        from sentence_transformers import SentenceTransformer
+        m = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
+        _EMBEDDER["model"] = lambda t: m.encode(t, convert_to_numpy=True, normalize_embeddings=True)
+    except Exception:
+        _EMBEDDER["model"] = None
+    return _EMBEDDER["model"]
+
+
 def do_rank(body: dict) -> dict:
     from talentsignal.api import rank
     cands = _coerce_candidates(body.get("candidates", []))
+    # Default to the best engine: hybrid (live-embed) on small pools when a model
+    # is available; honor an explicit engine override; index_dir uses precomputed.
+    requested = body.get("engine")
+    emb = _embedder() if (requested != "spine" and not body.get("index_dir") and len(cands) <= 200) else None
+    engine = requested or ("hybrid" if (emb or body.get("index_dir")) else "spine")
     res = rank(body["jd"], cands, top_n=int(body.get("top_n", 10)),
-               engine=body.get("engine", "spine"),
-               index_dir=body.get("index_dir"),
+               engine=engine, embedder=emb, index_dir=body.get("index_dir"),
                category=body.get("category", "ai_ml_search_ranking"))
     return res.to_dict()
 

@@ -43,10 +43,15 @@ class TalentSignalClient:
     def health(self) -> dict[str, Any]:
         return self._get("/health")
 
-    def rank(self, jd: str, candidates: list, *, top_n: int = 10, engine: str = "spine",
+    def rank(self, jd: str, candidates: list, *, top_n: int = 10, engine: str | None = None,
              category: str = "ai_ml_search_ranking", index_dir: str | None = None) -> dict[str, Any]:
-        return self._post("/rank", {"jd": jd, "candidates": candidates, "top_n": top_n,
-                                    "engine": engine, "category": category, "index_dir": index_dir})
+        # engine=None lets the server pick the best available engine (hybrid when a
+        # model is present, spine otherwise). Pass engine="spine"/"hybrid" to force.
+        payload = {"jd": jd, "candidates": candidates, "top_n": top_n,
+                   "category": category, "index_dir": index_dir}
+        if engine is not None:
+            payload["engine"] = engine
+        return self._post("/rank", payload)
 
     def ingest_jd(self, jd: str) -> dict[str, Any]:
         return self._post("/ingest/jd", {"jd": jd})
