@@ -99,6 +99,7 @@ textarea:focus,select:focus{outline:none;border-color:var(--violet)}
     <div class="logo"><span class="dot"></span> TalentSignal <span style="color:var(--mut);font-weight:400">Studio</span></div>
     <div class="tabs">
       <button class="tab active" data-view="rank" onclick="switchView('rank')">Rank candidates</button>
+      <button class="tab" data-view="transparency" onclick="switchView('transparency')">Candidate transparency</button>
       <button class="tab" data-view="challenge" onclick="switchView('challenge')">Challenge result</button>
     </div>
     <div class="live"><span class="b"></span> live engine</div>
@@ -177,10 +178,57 @@ async function readFiles(){
 function switchView(v){
   view=v;
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
-  $('leftcol').style.display = v==='rank'?'flex':'none';
-  $('results').style.gridColumn = v==='rank'?'span 1':'1 / -1';
+  // rank + transparency both use the left controls; challenge is full-width
+  const usesControls = (v==='rank'||v==='transparency');
+  $('leftcol').style.display = usesControls?'flex':'none';
+  $('results').style.gridColumn = usesControls?'span 1':'1 / -1';
+  $('go').textContent = v==='transparency' ? 'Generate transparency report →' : 'Rank with the live engine →';
+  $('go').setAttribute('onclick', v==='transparency' ? 'runTransparency()' : 'runRank()');
   if(v==='challenge') loadChallenge();
-  else{$('out').style.display='none';$('empty').style.display='grid'}
+  else{
+    $('out').style.display='none';$('empty').style.display='grid';
+    $('empty').innerHTML = v==='transparency'
+      ? '<div><div class="big">🔍</div><h3>Candidate transparency</h3><div>Paste one candidate + a JD. See exactly what the engine used and concluded — with proof. The report no black-box scorer can give.</div></div>'
+      : '<div><div class="big">⚡</div><h3>Drop a JD and some resumes</h3><div>The live engine will rank them by real evidence — and show you why.</div></div>';
+  }
+}
+async function runTransparency(){
+  const btn=$('go');btn.disabled=true;
+  $('empty').style.display='grid';$('out').style.display='none';
+  $('empty').innerHTML='<div><div class="big"><span class="spin"></span></div><h3>Generating report…</h3></div>';
+  try{
+    const files=await readFiles();
+    const r=await fetch('/api/transparency',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({jd:$('jd').value,category:$('cat').value,files,paste:$('paste').value})});
+    const d=await r.json();
+    if(d.error){$('empty').innerHTML=`<div><div class="big">⚠️</div><h3>${d.error}</h3></div>`;btn.disabled=false;return}
+    renderTransparency(d);
+  }catch(e){$('empty').innerHTML=`<div><div class="big">⚠️</div><h3>${e.message}</h3></div>`}
+  btn.disabled=false;
+}
+function renderTransparency(d){
+  $('empty').style.display='none';$('out').style.display='block';
+  const res=d.result||{}, f=res.factor_breakdown||{};
+  const matched=(d.matched_with_proof||[]).map(m=>
+    `<div class="proof"><span class="pq">"${(m.your_evidence||'').replace(/</g,'&lt;')}"</span><span class="pr">→ ${(m.requirement||'').slice(0,46)}</span></div>`).join('');
+  const unmet=(d.not_evidenced?.requirements||[]).map(r=>`<li>${r}</li>`).join('');
+  const concerns=(d.concerns_flagged||[]).map(c=>`<div class="flag" style="display:block;margin-top:6px">⚑ ${c.concern}: ${c.the_two_facts}</div>`).join('');
+  $('out').innerHTML=`
+    <div class="bar-top"><h2>Transparency report</h2><span class="eng">human-in-the-loop</span></div>
+    <div class="card" style="margin-bottom:14px"><div style="color:var(--mut);font-size:13.5px;line-height:1.55">${d.disclosure||''}</div>
+      <div style="margin-top:12px;font-size:13px"><b style="color:var(--green)">Identity used:</b> ${d.data_used?.identity_used||''}</div></div>
+    <div class="cand t1">
+      <div class="ch"><div class="rk">✓</div><div class="nm">${res.title_read||'Candidate'} · ${res.years_read||0} yrs</div><div class="sc">${(res.fit_score||0).toFixed(3)}</div></div>
+      <div class="sub" style="margin-left:59px">coverage ${Math.round((res.requirement_coverage||0)*100)}% · ${res.reasoning||''}</div>
+      <div class="facs">${['technical','career','seniority','behavioral','trust','semantic'].map(k=>`<div class="fac"><div class="l">${k.slice(0,6)}</div><div class="tr"><div class="fl" style="width:${Math.round((f[k]||0)*100)}%"></div></div></div>`).join('')}</div>
+    </div>
+    <div class="card" style="margin-top:14px"><label>What matched — with proof from your own words</label>
+      <div class="proofs" style="margin-left:0">${matched||'<span style="color:var(--mut)">No strong matches found.</span>'}</div></div>
+    ${unmet?`<div class="card" style="margin-top:14px"><label>Not evidenced — your chance to correct the record</label>
+      <ul style="color:var(--mut);font-size:13.5px;margin:0 0 0 18px;line-height:1.7">${unmet}</ul>
+      <div style="color:var(--cyan);font-size:12.5px;margin-top:8px">${d.not_evidenced?.note||''}</div></div>`:''}
+    ${concerns?`<div class="card" style="margin-top:14px"><label>Concerns flagged (with the two facts)</label>${concerns}</div>`:''}
+    <div class="card" style="margin-top:14px;font-size:13px;color:var(--mut)">${d.your_rights||''}</div>`;
 }
 async function runRank(){
   const btn=$('go');btn.disabled=true;

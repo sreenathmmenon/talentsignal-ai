@@ -170,7 +170,22 @@ def do_challenge(body):
             "total": 100000, "valid": True, "honeypots": 0, "top": out}
 
 
-ROUTES = {"/api/rank": do_rank, "/api/challenge": do_challenge}
+def do_transparency(body):
+    """Candidate-facing transparency report — what the engine saw and concluded
+    about ONE candidate (from paste/upload), with proof and unmet requirements.
+    The trust feature the incumbents' FCRA lawsuits are about."""
+    from talentsignal.candidate_report import candidate_report
+    records = _ingest_inputs(body.get("files"), body.get("paste"))
+    if not records:
+        return {"error": "No candidate could be parsed."}
+    embedder = _get_embedder()
+    return candidate_report(records[0], body.get("jd", ""),
+                            engine="hybrid" if embedder else "spine", embedder=embedder,
+                            category=body.get("category", "ai_ml_search_ranking"))
+
+
+ROUTES = {"/api/rank": do_rank, "/api/challenge": do_challenge,
+          "/api/transparency": do_transparency}
 
 
 class Handler(BaseHTTPRequestHandler):

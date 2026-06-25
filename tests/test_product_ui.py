@@ -69,3 +69,18 @@ def test_rank_endpoint_with_pasted_resumes():
         assert all("reasoning" in c for c in data["ranked"])
     finally:
         srv.shutdown()
+
+
+def test_studio_transparency_endpoint():
+    import importlib.util
+    ROOT = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location("studio", ROOT / "studio.py")
+    studio = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(studio)
+    out = studio.do_transparency({
+        "jd": "Senior AI Engineer. Must have embeddings retrieval ranking evaluation. 5-9y.",
+        "paste": "Maya. Senior AI Engineer 7y. Built embeddings retrieval and ranking. Skills: Python, Ranking",
+        "files": [],
+    })
+    assert "disclosure" in out and "matched_with_proof" in out
+    assert "never reads your name" in out["data_used"]["identity_used"].lower()
