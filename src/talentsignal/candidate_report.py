@@ -42,6 +42,18 @@ def candidate_report(candidate: dict[str, Any], jd: Any, *,
     unmet = [r["text"] for r in (res.requirements or [])
              if r.get("kind") == "must_have" and r["text"] not in matched_reqs][:6]
 
+    # Optional public-evidence enrichment from the candidate's OWN linked GitHub
+    # (consented, public API, offline-safe). Only included if a profile was linked.
+    github = None
+    try:
+        from .github_analysis import find_github_username, analyze_github
+        if find_github_username(candidate):
+            gp = analyze_github(candidate)
+            github = {"linked_profile": gp.username, "fetched": gp.fetched,
+                      "evidence": gp.evidence, "engineering_signal": gp.score}
+    except Exception:  # noqa: BLE001 - enrichment must never break the report
+        github = None
+
     return {
         "disclosure": (
             "This report shows everything the ranking engine used and concluded about "
@@ -79,6 +91,7 @@ def candidate_report(candidate: dict[str, Any], jd: Any, *,
             {"concern": f.code, "the_two_facts": f.detail}
             for f in (c.risk_flags or [])
         ],
+        "public_evidence": github,  # GitHub analysis if the candidate linked a profile; else null
         "your_rights": (
             "You can request this report, dispute anything inaccurate, and a human "
             "reviews the final decision. The scoring is deterministic and reproducible."

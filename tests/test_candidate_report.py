@@ -55,3 +55,17 @@ def test_human_in_the_loop_not_auto_reject():
     r = candidate_report(CAND, JD, engine="spine")
     assert "human" in r["disclosure"].lower()
     assert "not auto-rejected" in r["disclosure"].lower() or "human reviewer" in r["disclosure"].lower()
+
+
+def test_report_includes_public_evidence_field(monkeypatch):
+    # transparency report carries a public_evidence slot: null without a linked
+    # GitHub, populated when the candidate linked one (offline-safe).
+    import talentsignal.github_analysis as g
+    monkeypatch.setattr(g, "_get", lambda url, timeout: {"public_repos": 10, "followers": 5}
+                        if "/repos" not in url else [{"fork": False, "stargazers_count": 50, "language": "Python"}])
+    no_gh = candidate_report(CAND, JD, engine="spine")
+    assert no_gh["public_evidence"] is None
+    with_gh = candidate_report(ingest("Maya. AI Engineer 7y. github.com/octocat ranking embeddings", fmt="text")[0],
+                               JD, engine="spine")
+    assert with_gh["public_evidence"] is not None
+    assert with_gh["public_evidence"]["linked_profile"] == "octocat"
