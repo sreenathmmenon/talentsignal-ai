@@ -86,22 +86,22 @@ class BackgroundVerificationSignal(Signal):
 
 @register_signal
 class GithubRepoAnalysisSignal(Signal):
-    """ROADMAP: deep analysis of a candidate's GitHub repos (languages, project
-    depth, real contribution vs forks). Stub detects a github URL if present and
-    flags it ready for analysis."""
+    """Real GitHub-repo analysis of a candidate's OWN linked public profile:
+    public repos, total stars (peer validation), followers, languages, and recent
+    activity → an explainable engineering-evidence score. Offline-safe (degrades
+    to a clear 'not fetched' note). Weight 0.0 by default so it's a surfaced
+    evidence signal a customer can opt to blend, not an automatic score change.
+    """
     name = "github_repo_analysis"
     weight = 0.0
 
-    def _find_github(self, candidate: dict[str, Any]) -> str:
-        import re
-        text = str(candidate.get("profile", {}).get("summary", "")) + " " + \
-            " ".join(str(j.get("description", "")) for j in candidate.get("career_history", []))
-        m = re.search(r"github\.com/[\w-]+", text, re.IGNORECASE)
-        return m.group(0) if m else ""
+    def applies_to(self, candidate: dict[str, Any], jd: Any = None) -> bool:
+        from ..github_analysis import find_github_username
+        return bool(find_github_username(candidate))
 
     def score(self, candidate: dict[str, Any], jd: Any = None) -> SignalResult:
-        url = self._find_github(candidate)
-        if url:
-            return SignalResult(self.name, 0.5, f"GitHub profile found ({url}) — deep analysis not yet connected",
-                                self.weight, details={"status": "stub", "url": url})
-        return SignalResult(self.name, 0.0, "no GitHub profile detected", self.weight)
+        from ..github_analysis import analyze_github
+        # offline-safe: never fetches more than a few seconds, never raises.
+        p = analyze_github(candidate, timeout=float(
+            (candidate.get("_opts") or {}).get("github_timeout", 6.0)))
+        return SignalResult(self.name, p.score, p.evidence, self.weight, details=p.to_dict())

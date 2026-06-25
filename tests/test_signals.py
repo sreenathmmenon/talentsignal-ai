@@ -36,10 +36,22 @@ def test_hireability_signal_present_and_bounded() -> None:
 
 
 def test_roadmap_stubs_have_zero_weight() -> None:
-    # stubs are wired but must not affect scoring until connected
+    # background_verification is still a wired stub (weight 0 until connected)
     rec = D.make_candidate(AI_SEARCH, D.STRONG, 3).record
     res = compute_signals(rec)
     assert res["background_verification"].weight == 0.0
+
+
+def test_github_signal_is_real_and_zero_weight_when_applicable(monkeypatch) -> None:
+    # github_repo_analysis is now a REAL signal; it only applies when the candidate
+    # links a GitHub profile, and stays weight 0 (surfaced evidence, opt-in to blend).
+    # Force offline so the test never hits the network (deterministic/CI-safe).
+    import talentsignal.github_analysis as g
+    monkeypatch.setattr(g, "_get", lambda url, timeout: (_ for _ in ()).throw(OSError("offline")))
+    rec = D.make_candidate(AI_SEARCH, D.STRONG, 3).record
+    rec["profile"]["summary"] = rec["profile"].get("summary", "") + " github.com/dev"
+    res = compute_signals(rec, only=["github_repo_analysis"])
+    assert "github_repo_analysis" in res
     assert res["github_repo_analysis"].weight == 0.0
 
 
