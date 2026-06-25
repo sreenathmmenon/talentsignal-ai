@@ -42,6 +42,7 @@ OPENAPI = {
         "/ingest/jd": {"post": {"summary": "Parse a JD into requirements"}},
         "/ingest/resume": {"post": {"summary": "Parse a resume into a profile"}},
         "/audit": {"post": {"summary": "Audit a candidate for contradictions"}},
+        "/compliance": {"post": {"summary": "Adverse-impact (four-fifths) report on a ranking"}},
         "/health": {"get": {"summary": "Health check"}},
     },
 }
@@ -89,8 +90,19 @@ def do_audit(body: dict) -> dict:
             "flags": [{"code": f.code, "detail": f.detail} for f in rep.flags]}
 
 
+def do_compliance(body: dict) -> dict:
+    """Adverse-impact (four-fifths rule) report on a ranking. The caller supplies
+    ranked_ids and per-attribute group labels from their OWN HR data; the engine
+    never infers protected attributes. This is the report legal/compliance needs
+    before deploying an automated selection procedure."""
+    from talentsignal.eval.compliance import compliance_summary
+    return compliance_summary(body["ranked_ids"], body["group_attributes"],
+                              top_k=int(body.get("top_k", 10)))
+
+
 ROUTES = {
     "/rank": do_rank,
+    "/compliance": do_compliance,
     "/ingest/jd": do_ingest_jd,
     "/ingest/resume": do_ingest_resume,
     "/audit": do_audit,
