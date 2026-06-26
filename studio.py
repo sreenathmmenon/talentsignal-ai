@@ -23,6 +23,8 @@ import json
 import os
 import sys
 import tempfile
+import threading
+import time
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -315,6 +317,22 @@ def main():
     args = ap.parse_args()
     srv = ThreadingHTTPServer((args.host, args.port), Handler)
     print(f"TalentSignal Studio → http://{args.host}:{args.port}  (live engine)")
+
+    # Warm the 100K challenge ranking in the BACKGROUND so the server is usable
+    # immediately (paste-JD product loop works at once) and the Challenge tab is
+    # already computed by the time a user clicks it — no 30s wait on first click.
+    def _warm():
+        try:
+            from talentsignal import live_cache
+            t0 = time.perf_counter()
+            res = live_cache.warm()
+            if not res.get("error"):
+                print(f"[warm] 100K challenge ranking ready in "
+                      f"{time.perf_counter() - t0:.0f}s (Challenge tab now instant)")
+        except Exception as exc:  # noqa: BLE001 - warming is best-effort
+            print(f"[warm] skipped: {exc}")
+    threading.Thread(target=_warm, daemon=True).start()
+
     srv.serve_forever()
 
 

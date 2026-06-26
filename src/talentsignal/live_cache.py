@@ -184,10 +184,14 @@ def rank_live(jd: str | None = None, *, category: str = "ai_ml_search_ranking",
     return dict(payload)
 
 
-def warm(embedder=None) -> dict[str, Any]:
+def warm(embedder=None, engine: str = "spine", top_n: int = 10) -> dict[str, Any]:
     """Precompute the standing challenge ranking at boot so the first customer
-    request is instant. Returns the payload (also cached)."""
-    return rank_live(CHALLENGE_JD, embedder=embedder, force=True)
+    request is instant. Uses the SPINE engine by default — it ranks the 100K in
+    ~30s deterministically and, crucially, does NOT hold the embedder model, so
+    the interactive paste-a-JD product loop keeps the hybrid engine available while
+    the 100K warms. Must match the engine/top_n the challenge route requests so the
+    cache key actually hits."""
+    return rank_live(CHALLENGE_JD, engine=engine, top_n=top_n, embedder=embedder, force=True)
 
 
 def invalidate() -> None:
