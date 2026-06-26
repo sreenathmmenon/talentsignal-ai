@@ -112,6 +112,8 @@ def _to_ranked_candidate(row: dict[str, Any], rank_i: int) -> RankedCandidate:
             semantic_fit=getattr(score, "semantic_fit", 0.0),
             lexical_fit=getattr(score, "lexical_fit", 0.0),
             requirement_coverage=getattr(score, "requirement_coverage", 0.0),
+            role_relevance=getattr(score, "role_relevance", 0.0),
+            general_quality=getattr(score, "general_quality", 0.0),
         )
     return RankedCandidate(
         candidate_id=row["candidate_id"],

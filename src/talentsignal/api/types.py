@@ -48,6 +48,8 @@ class FactorBreakdown:
     semantic_fit: float = 0.0
     lexical_fit: float = 0.0
     requirement_coverage: float = 0.0
+    role_relevance: float = 0.0
+    general_quality: float = 0.0
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

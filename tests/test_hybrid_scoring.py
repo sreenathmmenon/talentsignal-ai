@@ -25,8 +25,12 @@ def test_substring_bug_fixed_whole_token_only() -> None:
     # real standalone token must match.
     assert _term_coverage("i maintain the html and xml templates", ("ranking",)) == 0.0
     assert _term_coverage("i built a ranking system", ("ranking",)) == 1.0
-    # 'python' present as a whole token matches; absent does not
-    assert _term_coverage("strong python and sql", ("python skills",)) == 1.0
+    # Graded coverage: a single-word term present is full (1.0); a multi-word term
+    # with only ONE of its words present gets PARTIAL credit (0.4), so coincidental
+    # single-word overlaps can't fully "cover" a requirement (the off-role leak fix).
+    assert _term_coverage("strong python and sql", ("python",)) == 1.0
+    assert _term_coverage("strong python and sql", ("python skills",)) == 0.4
+    assert _term_coverage("python skills are strong", ("python skills",)) == 1.0  # both words
     assert _term_coverage("i streamline reports", ("ml",)) == 0.0  # 'ml' inside streamline must not match
 
 

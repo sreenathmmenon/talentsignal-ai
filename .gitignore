@@ -19,3 +19,6 @@ playwright-report/
 # Temporary reproduction outputs.
 outputs/repro_*
 outputs/ui/
+
+# transient workflow scripts (not part of the product)
+.workflow_*.js

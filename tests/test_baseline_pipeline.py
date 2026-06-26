@@ -89,7 +89,11 @@ def test_evidence_and_scoring_for_sample_candidate() -> None:
     spec = load_job_spec("job_specs/redrob_senior_ai_engineer.yaml")
     score = score_candidate(ev, spec)
     assert ev.career_retrieval_terms
-    assert score.final_score > 0.5
+    # Gated model: absolute scores are relevance-gated (lower than the old additive
+    # model by design). A genuinely relevant candidate clears a meaningful bar and
+    # has high role_relevance; an irrelevant one would be ~0.
+    assert score.final_score > 0.3
+    assert score.role_relevance > 0.5
     assert not score.risk_flags
 
 

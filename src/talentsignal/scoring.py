@@ -21,22 +21,36 @@ def _tokenize(text: str) -> frozenset:
 
 
 def _term_coverage(text: str, terms: tuple[str, ...]) -> float:
-    """Fraction of `terms` whose salient words appear as WHOLE TOKENS in `text`.
+    """Graded coverage of `terms` by WHOLE TOKENS in `text`.
 
     Whole-token matching (not substring) eliminates the bug where 'ml' matched
-    inside 'html'/'xml' and 'ai' inside 'maintain' — which silently corrupted
-    scores for ~half the pool. A term is covered if any of its >=3-char words is
-    present as a standalone token.
+    inside 'html'/'xml'. Each term contributes the FRACTION of its salient words
+    that match, not a binary hit — so a multi-word requirement like "account
+    management" is only fully covered when BOTH words appear, and "account" alone
+    (e.g. inside "Accountant" on a Customer-Success JD) contributes ~0.5, not 1.0.
+    This raises the bar for coincidental single-word overlaps that let off-role
+    candidates leak in, while staying fully role-agnostic (no keyword lists).
     """
     if not terms:
         return 0.0
     tokens = _tokenize(text)
-    matched = 0
+    total = 0.0
     for term in terms:
         words = [w for w in re.split(r"[\s/\-]+", term.lower()) if len(w) >= 3]
-        if words and any(w in tokens for w in words):
-            matched += 1
-    return matched / len(terms)
+        if not words:
+            continue
+        hits = sum(1 for w in words if w in tokens)
+        if hits == 0:
+            continue
+        if len(words) == 1:
+            total += 1.0                      # single-word term: binary
+        elif hits >= 2 or hits / len(words) >= 0.6:
+            total += 1.0                      # solid match: 2+ words or most of them
+        else:
+            total += 0.4                      # only 1 word of a multi-word term:
+                                              # partial credit, can't fully "cover"
+                                              # (stops coincidental single-word leaks)
+    return total / len(terms)
 
 
 @dataclass
@@ -63,6 +77,39 @@ class ScoreBreakdown:
     # Top matched requirements (text, matched keywords) for grounded reasoning.
     matched_requirements: tuple = ()
     concern_notes: tuple = ()
+    # Relevance-gate fields (council architecture): R = relevance to THIS JD's own
+    # requirements (the dominant signal); Q = generic quality (seniority/logistics/
+    # behavioral/trust). final = R^GAMMA * (Q_FLOOR + (1-Q_FLOOR)*Q) * soft * veto.
+    role_relevance: float = 0.0
+    general_quality: float = 0.0
+
+
+# Relevance-gate constants (tuned once, role-agnostic — NOT per category).
+# GAMMA super-linear so weak relevance is punished harder than rewarded; Q_FLOOR
+# guarantees a perfectly-relevant candidate still scores meaningfully on generic
+# signals alone. These make "matches THIS JD" dominate "is generically strong"
+# for ANY role, by construction — no per-category code anywhere.
+RELEVANCE_GAMMA = 1.1
+QUALITY_FLOOR = 0.45
+
+
+def _quality_blend(seniority: float, logistics: float, behavioral: float,
+                   trust: float, weights: dict) -> float:
+    """Generic quality Q in [0,1]: blend of ONLY the four generic factors,
+    renormalized over them (technical/career never enter Q — they carry no
+    independent score mass in the gated model)."""
+    keys = ("seniority", "logistics", "behavioral", "trust")
+    vals = {"seniority": seniority, "logistics": logistics,
+            "behavioral": behavioral, "trust": trust}
+    total = sum(float(weights.get(k, 0.0)) for k in keys) or 1.0
+    return clamp(sum(float(weights.get(k, 0.0)) * vals[k] for k in keys) / total)
+
+
+def _gate(relevance: float, quality: float, *, soft_multiplier: float = 1.0,
+          hard_veto: float = 1.0) -> float:
+    """The one JD-agnostic scoring law shared by both engines."""
+    base = (clamp(relevance) ** RELEVANCE_GAMMA) * (QUALITY_FLOOR + (1.0 - QUALITY_FLOOR) * clamp(quality))
+    return clamp(base) * clamp(soft_multiplier, 0.0, 1.0) * (1.0 if hard_veto else 0.0)
 
 
 def _seniority_score(ev: CandidateEvidence, job: JobSpec) -> float:
@@ -204,97 +251,60 @@ def score_candidate(ev: CandidateEvidence, job: JobSpec) -> ScoreBreakdown:
 
     flags = risk_flags(ev)
     penalty = risk_penalty(flags)
-    if disqualifier_coverage >= 0.34 and must_have_coverage < 0.34:
-        penalty += 0.06
-    direct_career_evidence = bool(ev.career_retrieval_terms and (ev.career_production_terms or ev.eval_terms or ev.vector_terms))
-    role_career_evidence = career_must_have_coverage >= 0.34 or (must_have_coverage >= 0.50 and career_must_have_coverage >= 0.20)
-    top10_eligible = direct_career_evidence and not any(
-        flag in flags
-        for flag in {
-            "non_tech_ai_keyword_stuffing",
-            "ai_terms_without_career_evidence",
-            "expert_skills_zero_duration",
-            "shallow_ai_tool_interest",
-        }
-    )
-    if not ai_search_role:
-        top10_eligible = role_career_evidence and not any(
-            flag in flags for flag in {"expert_skills_zero_duration", "stale_low_response"}
-        )
-    confidence = 0.0
-    if ai_search_role:
-        confidence += 0.30 if ev.career_retrieval_terms else 0.0
-        confidence += 0.20 if ev.career_production_terms else 0.0
-        confidence += 0.15 if ev.ai_title or ev.adjacent_title else 0.0
-        confidence += 0.10 if ev.vector_terms else 0.0
-        confidence += 0.10 if ev.eval_terms else 0.0
-    else:
-        confidence += 0.35 * career_must_have_coverage
-        confidence += 0.20 * must_have_coverage
-        confidence += 0.15 * title_coverage
-        confidence += 0.15 if ev.career_production_terms else 0.0
-    confidence += 0.10 if ev.response_rate >= 0.5 and ev.open_to_work else 0.0
-    confidence += 0.05 if not flags else 0.0
-    confidence = clamp(confidence)
-    if not top10_eligible:
-        penalty += 0.04
     weights = job.weights
-    raw = (
-        weights["technical_evidence"] * technical
-        + weights["career_fit"] * career
-        + weights["seniority"] * seniority
-        + weights["logistics"] * logistics
-        + weights["behavioral"] * behavioral
-        + weights["trust"] * trust
-    )
-    if ai_search_role and not ev.career_retrieval_terms and not ev.ai_title and ev.non_tech_title:
-        penalty += 0.08
 
-    # GENERAL honeypot veto (role-independent): run the consistency auditor and, if
-    # the profile is internally IMPOSSIBLE (fabricated tenure, expert-with-zero-
-    # duration, etc.), apply a hard demotion so it can never reach the top of any
-    # ranking. This is the same protection the hybrid path has; the spine path was
-    # missing it, letting impossible profiles leak into AI/ML top-10s.
+    # ---- RELEVANCE GATE (council architecture; one law, no per-category code) ----
+    # R = how well the candidate satisfies THIS JD's OWN parsed requirements.
+    # Computed identically for every role (nurse, welder, AI engineer): must-have
+    # coverage in career evidence first, then anywhere, plus a title-match credit.
+    # A small nice-to-have credit rewards depth without lifting an off-role profile.
+    relevance = max(
+        career_must_have_coverage,
+        0.85 * must_have_coverage,
+        0.5 * title_coverage,
+    )
+    relevance = clamp(relevance + 0.10 * nice_to_have_coverage)
+    if not job.must_have:
+        # No parseable must-haves -> degrade gracefully to broad text coverage so we
+        # still rank, rather than zeroing everyone.
+        relevance = clamp(max(must_have_coverage, title_coverage,
+                              0.5 * nice_to_have_coverage, 0.4))
+
+    # Q = generic quality (ONLY seniority/logistics/behavioral/trust). Never carries
+    # technical/career mass — those are display-only now.
+    quality = _quality_blend(seniority, logistics, behavioral, trust, weights)
+
+    # Penalties split into a hard veto (zeroes the score) and ONE soft multiplier.
+    flags_set = set(flags)
+    soft_penalty = risk_penalty(flags)
+    if disqualifier_coverage >= 0.34 and must_have_coverage < 0.34:
+        soft_penalty += 0.06
+    hard_veto = 1.0
     try:
         from .consistency_audit import audit_candidate
         raw_record = getattr(ev, "_raw", None)
         consistency = audit_candidate(raw_record) if raw_record is not None else None
-        if consistency is None:
-            raise RuntimeError("no raw record")
-        if consistency.is_impossible:
-            penalty += 0.60          # hard veto: cannot survive into the shortlist
-            top10_eligible = False
-        else:
-            penalty += consistency.penalty
-        for code in consistency.codes:
-            if code not in flags:
-                flags.append(code)
+        if consistency is not None:
+            if consistency.is_impossible:
+                hard_veto = 0.0
+            else:
+                soft_penalty += consistency.penalty
+            for code in consistency.codes:
+                if code not in flags:
+                    flags.append(code)
     except Exception:  # noqa: BLE001 - auditing must never break scoring
         consistency = None
+    soft_multiplier = clamp(1.0 - soft_penalty, 0.6, 1.0)
 
-    final = clamp(raw - penalty)
+    final = _gate(relevance, quality, soft_multiplier=soft_multiplier, hard_veto=hard_veto)
 
-    # ROLE-RELEVANCE GATE (generality fix): a candidate who does not actually match
-    # the JD's own requirements must not be carried into the top by generic strength
-    # (seniority, trust, behavioral). Without this, a keyword-dense ML profile could
-    # win a Sales or Design JD purely on availability/trust signals. We gate the
-    # final score on how well the candidate covers THIS JD's must-haves — measured
-    # in their career evidence first, then anywhere in the profile. The gate is a
-    # smooth multiplier so genuine matches are untouched and irrelevant profiles are
-    # pushed down hard. Role-independent: it uses the JD's own parsed requirements.
-    relevance = max(career_must_have_coverage, 0.65 * must_have_coverage,
-                    0.5 * title_coverage)
-    if ai_search_role:
-        # AI path already has strong career-evidence gating above; relevance also
-        # credits direct retrieval/ML career evidence so it isn't double-penalized.
-        relevance = max(relevance,
-                        1.0 if ev.career_retrieval_terms else 0.0,
-                        0.7 if (ev.ai_title or ev.adjacent_title) else 0.0)
-    if relevance < 0.5:
-        # Map relevance in [0, 0.5) to a multiplier in [0.45, 1.0): little/no match
-        # is capped well below a genuine fit, so generic factors can't dominate.
-        gate = 0.45 + (relevance / 0.5) * 0.55
-        final = clamp(final * gate)
+    # top-10 eligibility: must clear a minimum relevance and not be vetoed.
+    top10_eligible = bool(hard_veto) and relevance >= 0.34
+    # confidence tracks relevance + evidence depth (display/back-compat).
+    confidence = clamp(0.6 * relevance + 0.25 * career_must_have_coverage
+                       + 0.10 * (1.0 if ev.career_production_terms else 0.0)
+                       + 0.05 * (1.0 if not flags else 0.0))
+    penalty = round(soft_penalty if hard_veto else 1.0, 6)
     return ScoreBreakdown(
         candidate_id=ev.candidate_id,
         final_score=round(final, 6),
@@ -309,6 +319,9 @@ def score_candidate(ev: CandidateEvidence, job: JobSpec) -> ScoreBreakdown:
         penalty=round(penalty, 6),
         risk_flags=flags,
         engine="spine",
+        role_relevance=round(relevance, 6),
+        general_quality=round(quality, 6),
+        requirement_coverage=round(must_have_coverage, 6),
     )
 
 
