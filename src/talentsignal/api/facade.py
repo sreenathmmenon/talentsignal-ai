@@ -152,6 +152,8 @@ class TalentSignal:
         engine: str = "hybrid",
         category: str = "ai_ml_search_ranking",
         title: str = "",
+        rerank: bool = False,
+        rerank_top_k: int = 50,
     ) -> RankResult:
         from ..ranking import rank_records, score_pool_hybrid, _rows_from_scored
 
@@ -159,6 +161,11 @@ class TalentSignal:
         job = _resolve_job(jd, category=category, title=title)
         records = _safe_records(list(candidates))
         notes: list[str] = []
+
+        # When reranking, RETRIEVE a larger shortlist first so the cross-encoder can
+        # promote good candidates the fast retriever ranked just outside top_n. The
+        # final cut to top_n happens AFTER rerank.
+        retrieve_n = max(top_n, rerank_top_k) if rerank else top_n
 
         if engine == "hybrid":
             req_emb = None
@@ -175,15 +182,42 @@ class TalentSignal:
                     req_emb = self.embedder(req_texts)
             scored = score_pool_hybrid(records, job, index_dir=self.index_dir,
                                        candidate_embeddings=cand_index, req_embeddings=req_emb)
-            rows = _rows_from_scored(scored, job, top_n)
+            rows = _rows_from_scored(scored, job, retrieve_n)
             used_engine = "hybrid"
             if self.index_dir is None and self.embedder is None:
                 notes.append("no embedding index/embedder provided; hybrid ran lexical-only")
         else:
-            rows = rank_records(records, job, top_n=top_n)
+            rows = rank_records(records, job, top_n=retrieve_n)
             used_engine = "spine"
 
         ranked = [_to_ranked_candidate(r, i + 1) for i, r in enumerate(rows)]
+
+        # Optional cross-encoder rerank: the production-grade accuracy stage. Runs
+        # only on the shortlist (rerank_top_k) so it stays in budget, and degrades
+        # to the original order if the model is unavailable. This is what lifts the
+        # vocabulary-overlapping categories (IT vs consultant, automotive vs
+        # aviation) that bi-encoder/lexical matching confuses.
+        if rerank and ranked:
+            try:
+                from ..reranker import rerank as _rerank, available
+                if available():
+                    jd_text = job.title + ". " + " ".join(
+                        r.text for r in (getattr(job, "requirements", ()) or ()))
+                    id_to_cand = {c["candidate_id"]: c for c in records}
+                    ranked = _rerank(jd_text, ranked, id_to_cand, top_k=rerank_top_k)
+                    used_engine = used_engine + "+rerank"
+                    notes.append("cross-encoder rerank applied to shortlist")
+                else:
+                    notes.append("rerank requested but cross-encoder unavailable; "
+                                 "returned retrieval order")
+            except Exception as exc:  # noqa: BLE001 - rerank must never break ranking
+                notes.append(f"rerank skipped ({exc})")
+        # final cut to top_n (after any rerank promoted candidates into view)
+        if len(ranked) > top_n:
+            ranked = ranked[:top_n]
+            for i, rc in enumerate(ranked, 1):
+                rc.rank = i
+
         requirements = [
             {"text": r.text, "kind": r.kind, "weight": r.weight}
             for r in (getattr(job, "requirements", ()) or ())
@@ -210,7 +244,10 @@ def rank(
     embedder=None,
     category: str = "ai_ml_search_ranking",
     title: str = "",
+    rerank: bool = False,
+    rerank_top_k: int = 50,
 ) -> RankResult:
     """One-shot ranking facade. See TalentSignal.rank for details."""
     return TalentSignal(index_dir=index_dir, embedder=embedder).rank(
-        jd, candidates, top_n=top_n, engine=engine, category=category, title=title)
+        jd, candidates, top_n=top_n, engine=engine, category=category, title=title,
+        rerank=rerank, rerank_top_k=rerank_top_k)

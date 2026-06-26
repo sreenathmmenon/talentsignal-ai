@@ -69,6 +69,7 @@ class RankedCandidate:
     risk_flags: list[RiskFlagView] = field(default_factory=list)
     top10_eligible: bool = True
     confidence: float = 0.0
+    cross_encoder_score: float = 0.0  # set when the rerank stage runs
 
     def to_dict(self) -> dict[str, Any]:
         d = asdict(self)
