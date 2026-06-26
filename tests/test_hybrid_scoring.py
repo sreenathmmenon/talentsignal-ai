@@ -80,9 +80,12 @@ def test_hybrid_dense_lifts_paraphrase_over_lexical() -> None:
     dim = 8
     aligned = np.ones(dim, dtype="float32")
     ortho = np.zeros(dim, dtype="float32"); ortho[0] = 1.0
-    # requirements all point to 'aligned'; para embeds aligned, irrelevant orthogonal
-    nreq = len(job.requirements)
-    req_emb = np.tile(aligned, (nreq, 1)).astype("float32")
+    # must/nice requirements point to 'aligned' (para matches them); DISQUALIFIER
+    # requirements point orthogonal so the paraphrase does NOT trip the (now hard)
+    # disqualifier veto — we are testing semantic lift, not the veto.
+    req_emb = np.stack([
+        aligned if r.kind != "disqualifier" else ortho for r in job.requirements
+    ]).astype("float32")
     id_to_row = {para["candidate_id"]: 0, irr["candidate_id"]: 1}
     emb = np.stack([aligned, ortho]).astype("float32")
     rows = rank_records_hybrid(records, job, top_n=2,

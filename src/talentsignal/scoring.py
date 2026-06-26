@@ -372,23 +372,16 @@ def score_candidate_hybrid(
     # risk_audit term/title lists, so it stays genuinely JD-agnostic (a sales or
     # design JD is scored with no AI-keyword assumptions).
     flags = list(consistency.codes)
-    penalty = consistency.penalty
+    soft_penalty = consistency.penalty
     disq_hits: tuple = ()
+    hard_veto = 1.0
     if match_result.disqualifier_hit >= 0.5:
-        penalty += 0.12 * match_result.disqualifier_hit
+        hard_veto = 0.0          # a real disqualifier hit is a hard veto
         disq_hits = tuple(m.req_text for m in match_result.requirement_matches
                           if m.kind == "disqualifier" and m.score >= 0.5)
         flags.append("semantic_disqualifier_overlap")
-
-    # Low-relevance penalty: a candidate who genuinely doesn't match the role's
-    # must-haves (low coverage AND low semantic fit) must not ride seniority +
-    # behavioral defaults into a high rank. This separates clearly-irrelevant
-    # candidates from real fits, which matters most on terse resumes where all the
-    # other factors compress. Scaled so a borderline-adjacent candidate is nudged,
-    # an off-role candidate is pushed firmly down.
-    if match_result.coverage < 0.34 and semantic_fit < 0.30:
-        penalty += 0.10 + 0.20 * (0.30 - semantic_fit)  # up to ~0.16
-        flags.append("low_role_relevance")
+    if consistency.is_impossible:
+        hard_veto = 0.0          # internally-impossible profile is a hard veto
 
     # Top matched must/nice requirements (grounded evidence for reasoning): the
     # best-scoring requirements with the candidate's actually-matched keywords.
@@ -401,35 +394,32 @@ def score_candidate_hybrid(
         (m.req_text, m.matched_keywords, getattr(m, "evidence_span", "")) for m in pos_matches[:4])
     concern_notes = tuple(c.detail for c in consistency.flags[:3])
 
-    # Top-10 eligibility: real requirement coverage AND no internal impossibility.
-    # Uses only the GENERAL consistency signals (role-independent), not AI-specific
-    # flags, so eligibility means the same thing for any JD.
-    top10_eligible = (
-        match_result.coverage >= 0.34
-        and not consistency.is_impossible
-        and "semantic_disqualifier_overlap" not in flags
-    )
-    if not top10_eligible:
-        penalty += 0.04
+    # ---- RELEVANCE GATE (same law as the spine path; one architecture) ----
+    # R = relevance to THIS JD's OWN parsed requirements, using the GRADED semantic
+    # must-fit (already a weighted aggregate of per-requirement scores) + coverage +
+    # career-grounded lexical evidence. No category branch, no keyword lists.
+    if job.must_have:
+        relevance = clamp(
+            0.55 * semantic_fit          # graded must/nice semantic aggregate
+            + 0.30 * match_result.coverage  # fraction of must-haves genuinely matched
+            + 0.15 * career_lexical       # exact-term evidence in career history
+        )
+    else:
+        relevance = clamp(max(semantic_fit, 0.4))  # no must-haves -> graceful degrade
+    # Q = generic quality (seniority/logistics/behavioral/trust ONLY).
+    quality = _quality_blend(seniority, logistics, behavioral, trust, job.weights)
+    soft_multiplier = clamp(1.0 - soft_penalty, 0.6, 1.0)
+    final = _gate(relevance, quality, soft_multiplier=soft_multiplier, hard_veto=hard_veto)
 
+    top10_eligible = bool(hard_veto) and relevance >= 0.34
+    penalty = round(soft_penalty if hard_veto else 1.0, 6)
     confidence = clamp(
-        0.40 * match_result.coverage
-        + 0.25 * semantic_fit
+        0.50 * relevance
+        + 0.20 * match_result.coverage
         + 0.15 * (1.0 if career_lexical >= 0.34 else 0.0)
         + 0.10 * schema_sig.get("engagement", 0.5)
-        + (0.10 if not flags else 0.0)
+        + (0.05 if not flags else 0.0)
     )
-
-    weights = job.weights
-    raw = (
-        weights["technical_evidence"] * technical
-        + weights["career_fit"] * career
-        + weights["seniority"] * seniority
-        + weights["logistics"] * logistics
-        + weights["behavioral"] * behavioral
-        + weights["trust"] * trust
-    )
-    final = clamp(raw - penalty)
     return ScoreBreakdown(
         candidate_id=ev.candidate_id,
         final_score=round(final, 6),
@@ -450,4 +440,6 @@ def score_candidate_hybrid(
         engine="hybrid",
         matched_requirements=matched_requirements,
         concern_notes=concern_notes,
+        role_relevance=round(relevance, 6),
+        general_quality=round(quality, 6),
     )
