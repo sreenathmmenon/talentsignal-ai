@@ -105,11 +105,16 @@ def evidence_text_of(candidate: dict[str, Any]) -> str:
     descriptions + skill names. Kept in one place so precompute and any live
     embedding use the EXACT same text (otherwise vectors wouldn't be comparable).
     """
-    profile = candidate.get("profile", {})
+    profile = candidate.get("profile", {}) or {}
     parts = [str(profile.get("summary", "")), str(profile.get("headline", ""))]
-    for job in candidate.get("career_history", []):
-        parts.append(str(job.get("title", "")))
-        parts.append(str(job.get("description", "")))
-    for skill in candidate.get("skills", []):
-        parts.append(str(skill.get("name", "")))
+    for job in candidate.get("career_history", []) or []:
+        if isinstance(job, dict):
+            parts.append(str(job.get("title", "")))
+            parts.append(str(job.get("description", "")))
+    for skill in candidate.get("skills", []) or []:
+        # skills may be {"name": ...} objects OR plain strings
+        if isinstance(skill, dict):
+            parts.append(str(skill.get("name", "")))
+        elif isinstance(skill, str):
+            parts.append(skill)
     return " ".join(p for p in parts if p).strip()
