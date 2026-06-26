@@ -104,11 +104,13 @@ def _strengths_from_spine(ev: CandidateEvidence) -> list[str]:
     return uniq
 
 
-def _strength_sentence(skills: list[str], band: str) -> str:
-    """Turn matched skills into a human strength sentence (not a keyword dump)."""
+def _strength_sentence(skills: list[str], relevance: float) -> str:
+    """Turn matched skills into a human strength sentence, calibrated to ABSOLUTE
+    role relevance (not rank). A #1 in a weak pool must NOT read as a perfect fit —
+    honesty is the product's trust signal."""
     if not skills:
         return "Adjacent technical signals, but limited direct evidence for the must-haves."
-    n = 4 if band in ("top", "high") else 3
+    n = 4 if relevance >= 0.45 else 3
     picks = skills[:n]
     if len(picks) == 1:
         core = picks[0]
@@ -116,13 +118,13 @@ def _strength_sentence(skills: list[str], band: str) -> str:
         core = f"{picks[0]} and {picks[1]}"
     else:
         core = ", ".join(picks[:-1]) + f", and {picks[-1]}"
-    leads = {
-        "top": f"Direct, hands-on evidence for {core} — the core of what this role needs.",
-        "high": f"Real evidence for {core}.",
-        "mid": f"Shows {core}, though not the full depth the top candidates have.",
-        "low": f"Some signal on {core}, but thin against the role's must-haves.",
-    }
-    return leads[band]
+    if relevance >= 0.7:
+        return f"Direct, hands-on evidence for {core} — the core of what this role needs."
+    if relevance >= 0.45:
+        return f"Real evidence for {core}."
+    if relevance >= 0.25:
+        return f"Shows {core}, though not the full depth this role really needs."
+    return f"Some signal on {core}, but a weak match to the role's must-haves — best of this pool rather than a strong fit."
 
 
 def _concerns(ev: CandidateEvidence, score: ScoreBreakdown, rank: int) -> list[str]:
@@ -172,7 +174,7 @@ def generate_reasoning(ev: CandidateEvidence, score: ScoreBreakdown, rank: int,
     opener = _OPENERS[band][seed % len(_OPENERS[band])].format(rank=rank, who=_who(ev))
 
     skills = _matched_skill_phrases(score) or _strengths_from_spine(ev)
-    strength = _strength_sentence(skills, band)
+    strength = _strength_sentence(skills, score.role_relevance)
 
     avail = ""
     if ev.open_to_work and ev.response_rate >= 0.5 and band in ("top", "high"):

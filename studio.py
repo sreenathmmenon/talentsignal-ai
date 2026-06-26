@@ -106,6 +106,10 @@ def _candidate_view(rec, ranked):
         "location": ranked.location or prof.get("location", ""),
         "score": round(ranked.score, 3),
         "reasoning": ranked.reasoning,
+        # role_relevance is the TRUST signal: how well this person matches THIS JD's
+        # own requirements (0-1). Low => "best of a weak pool", surfaced honestly.
+        "role_relevance": round(f.role_relevance, 2) if f else 0,
+        "fit_label": _fit_label(f.role_relevance if f else 0),
         "factors": {
             "technical": round(f.technical_evidence, 2) if f else 0,
             "career": round(f.career_fit, 2) if f else 0,
@@ -115,12 +119,26 @@ def _candidate_view(rec, ranked):
             "semantic": round(f.semantic_fit, 2) if f else 0,
         } if f else {},
         "coverage": round(f.requirement_coverage, 2) if f else 0,
+        # "rescued by meaning": strong semantic fit but low keyword overlap — the
+        # candidate a keyword filter would miss. The product's signature trust signal.
+        "rescued": bool(f and f.semantic_fit >= 0.5 and f.lexical_fit < 0.3),
         "matched": [{"req": mm.requirement, "kw": list(mm.matched_keywords),
                      "evidence": getattr(mm, "evidence_span", "")}
                     for mm in (ranked.requirement_matches or [])[:4]],
         "flags": [{"code": fl.code, "detail": fl.detail} for fl in (ranked.risk_flags or [])],
         "confidence": round(getattr(ranked, "confidence", 0), 2),
     }
+
+
+def _fit_label(relevance: float) -> str:
+    """Honest fit label from absolute role relevance — so a weak pool reads as weak."""
+    if relevance >= 0.7:
+        return "Strong fit"
+    if relevance >= 0.45:
+        return "Good fit"
+    if relevance >= 0.25:
+        return "Partial fit"
+    return "Weak fit (best available)"
 
 
 def do_rank(body):
