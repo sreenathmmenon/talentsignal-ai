@@ -97,15 +97,18 @@ def rank_records_hybrid(records, job: JobSpec, top_n: int = 100, **kwargs) -> li
 
 def _rows_from_scored(scored: list[tuple[Any, Any, dict[str, Any]]], job: JobSpec, top_n: int) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
-    for rank, (score, ev, _candidate) in enumerate(scored[:top_n], start=1):
+    head = scored[:top_n]
+    for rank, (score, ev, _candidate) in enumerate(head, start=1):
         # Ensure strict non-increasing scores after rounding and deterministic ordering.
         display_score = max(0.0, score.final_score - (rank - 1) * 0.000001)
+        # neighbor = the next-ranked candidate, for comparative "edges out #N" prose
+        neighbor = head[rank][0] if rank < len(head) else None
         rows.append(
             {
                 "candidate_id": ev.candidate_id,
                 "rank": rank,
                 "score": f"{display_score:.6f}",
-                "reasoning": generate_reasoning(ev, score, rank, job),
+                "reasoning": generate_reasoning(ev, score, rank, job, neighbor=neighbor),
                 "_score": score,
                 "_evidence": ev,
             }
@@ -252,11 +255,17 @@ def write_evidence_packets(rows: list[dict[str, Any]], out_path: str | Path) -> 
                 "score": row["score"],
                 "reasoning": row["reasoning"],
                 "score_breakdown": asdict(score),
+                "matched_requirements": list(getattr(score, "matched_requirements", ()) or ()),
                 "evidence": {
                     "title": ev.title,
                     "years": ev.years,
                     "location": ev.location,
                     "country": ev.country,
+                    # raw evidence text so the grounding audit can verify any cited
+                    # term appears in the candidate's OWN profile (both engines).
+                    "all_text": getattr(ev, "all_text", ""),
+                    "career_text": getattr(ev, "career_text", ""),
+                    "skill_text": getattr(ev, "skill_text", ""),
                     "career_retrieval_terms": ev.career_retrieval_terms,
                     "career_production_terms": ev.career_production_terms,
                     "skill_retrieval_terms": ev.skill_retrieval_terms,

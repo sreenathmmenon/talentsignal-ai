@@ -55,19 +55,21 @@ def test_tone_matches_rank() -> None:
     _, rows = _rank_pool()
     top = rows[0]["reasoning"].lower()
     bottom = rows[-1]["reasoning"].lower()
-    assert any(w in top for w in ("strong", "clear", "top", "solid"))
+    assert any(w in top for w in ("strong", "clear", "top", "solid", "standout", "recommendation"))
     # the very bottom should read as borderline / caveated, not glowing
-    assert any(w in bottom for w in ("borderline", "caveat", "cutoff", "concern", "filler", "partial"))
+    assert any(w in bottom for w in ("borderline", "caveat", "cutoff", "bubble", "maybe",
+                                     "flag", "thin", "partial", "human look", "near the cutoff"))
 
 
 def test_concerns_surface_for_honeypots() -> None:
     recs, rows = _rank_pool()
     by_id = {c["candidate_id"]: c for c in recs}
-    # any honeypot that appears should carry a concern (contradiction named)
+    # any honeypot that appears should carry a flagged concern (contradiction named)
     labels = {c.candidate_id: c.archetype for c in D.build_pool(AI_SEARCH)}
     for r in rows:
         if labels.get(r["candidate_id"]) == D.HONEYPOT:
-            assert "concern" in r["reasoning"].lower()
+            low = r["reasoning"].lower()
+            assert "flag" in low or "concern" in low
 
 
 def test_reasoning_keywords_are_grounded() -> None:

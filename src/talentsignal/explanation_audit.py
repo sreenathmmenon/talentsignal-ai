@@ -58,18 +58,30 @@ def audit_packets(path: str | Path) -> list[str]:
             for key in ["title", "location", "country"]
             if evidence.get(key)
         )
-        # Hybrid-engine reasoning cites only keywords whole-token matched against
-        # the candidate's own text (semantic_match.lexical_overlap), so its
-        # grounding is guaranteed by construction and separately tested. The
-        # hardcoded spine-term whitelist below would false-flag those grounded
-        # terms, so it applies only to spine packets.
-        if score.get("engine") == "hybrid":
-            continue
-        # Terms inside parentheses or after "for/such as" should be evidence-backed.
+        # GROUNDING CHECK — runs on BOTH engines (the production path is hybrid).
+        # Build the set of whole tokens actually present in the candidate's own
+        # evidence text, plus the matched-requirement keywords the engine cited.
+        # Any technical term the reasoning mentions must appear in one of these,
+        # so reasoning can never claim a skill the candidate's profile doesn't show.
+        evidence_blob = " ".join(str(evidence.get(k, "")) for k in
+                                 ("all_text", "career_text", "skill_text", "title",
+                                  "summary", "headline")).lower()
+        import re as _re
+        evidence_tokens = set(_re.findall(r"[a-z0-9+#./]+", evidence_blob))
+        evidence_tokens |= supported_terms
+        # matched-requirement keywords the engine surfaced (grounded by construction)
+        for m in (packet.get("matched_requirements") or score.get("matched_requirements") or []):
+            kws = m[1] if isinstance(m, (list, tuple)) and len(m) > 1 else []
+            evidence_tokens.update(str(k).lower() for k in (kws or []))
+
         lowered = reasoning.lower()
-        for term in ["bm25", "ranking", "retrieval", "recommendation", "search", "faiss", "qdrant", "milvus", "pinecone", "weaviate", "elasticsearch", "ndcg", "mrr", "a/b"]:
-            if term in lowered and term not in supported_terms:
-                warnings.append(f"{cid}: reasoning mentions unsupported term '{term}'")
+        CHECK_TERMS = ["bm25", "ranking", "retrieval", "recommendation", "search",
+                       "faiss", "qdrant", "milvus", "pinecone", "weaviate",
+                       "elasticsearch", "ndcg", "mrr", "embeddings", "embedding",
+                       "kubernetes", "kafka", "pytorch", "tensorflow"]
+        for term in CHECK_TERMS:
+            if _re.search(r"\b" + _re.escape(term) + r"\b", lowered) and term not in evidence_tokens:
+                warnings.append(f"{cid}: reasoning mentions unsupported term '{term}' [{score.get('engine','?')}]")
     return warnings
 
 
