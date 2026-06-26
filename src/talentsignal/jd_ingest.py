@@ -137,6 +137,34 @@ _ROLE_WORD = re.compile(
     r"designer|director|specialist|lead|executive|representative)\b", re.IGNORECASE)
 
 
+_LEAD_CUE = re.compile(
+    r"^(must have|must|required?|requires?|need(s|ed)?|should have|"
+    r"proficien(t|cy)( in| with)?|experience (in|with)|expertise (in|with)|"
+    r"strong|deep|hands.?on|knowledge of|familiar(ity)? with)\b[:\s]*",
+    re.IGNORECASE)
+
+
+def _split_requirement_list(sent: str) -> list[str]:
+    """Split a list-style requirement sentence into individual requirements.
+
+    'Must have embeddings, retrieval, ranking models, hybrid search, NDCG, and
+    Python.' -> ['embeddings', 'retrieval', 'ranking models', 'hybrid search',
+    'NDCG', 'Python']. This is the difference between ONE mega-requirement that
+    every candidate trivially 'covers' (destroying relevance discrimination) and a
+    real per-skill requirement set. Role-agnostic: it splits on commas/'and'/'or'
+    after stripping a leading cue ('must have', 'proficiency in', ...). Returns the
+    original sentence as a single item when it isn't a list."""
+    core = _LEAD_CUE.sub("", sent).strip().rstrip(".")
+    # only treat as a list if it has >=2 separators (commas or ' and '/' or ')
+    parts = re.split(r",|\band\b|\bor\b|;|/", core)
+    parts = [p.strip(" .,:") for p in parts]
+    parts = [p for p in parts if len(p) >= 2 and len(_keywords(p)) >= 1]
+    # require a genuine list (2+ items) AND short-ish items (skills, not sentences)
+    if len(parts) >= 2 and all(len(p.split()) <= 5 for p in parts):
+        return parts
+    return [sent]
+
+
 def _is_title_or_intro(sent: str) -> bool:
     """True for a job-title / intro line that should not be a scored requirement:
     short, contains a role word, and has no requirement verb (so it reads like a
@@ -238,16 +266,22 @@ def ingest_text(text: str, title: str = "") -> RequirementModel:
         kws = _keywords(sent)
         if len(kws) < 2:
             continue
-        # Disqualifier sentences are often long; split on inner separators for clarity
-        # but keep as one requirement to preserve meaning.
-        key = low[:80]
-        if key in seen:
-            continue
-        seen.add(key)
         weight = KIND_WEIGHT[kind]
         if any(c in low for c in EMPHASIS_CUES) and kind == MUST_HAVE:
             weight *= 1.25
-        model.requirements.append(Requirement(text=sent, kind=kind, weight=round(weight, 3), keywords=kws))
+        # Split list-style requirements ("must have A, B, C, and D") into individual
+        # requirements so relevance is measured per skill, not over one mega-phrase
+        # that every candidate trivially covers.
+        for part in _split_requirement_list(sent):
+            pkey = part.lower()[:80]
+            if pkey in seen:
+                continue
+            seen.add(pkey)
+            pkws = _keywords(part)
+            if len(pkws) < 1:
+                continue
+            model.requirements.append(
+                Requirement(text=part, kind=kind, weight=round(weight, 3), keywords=pkws))
 
     return model
 
