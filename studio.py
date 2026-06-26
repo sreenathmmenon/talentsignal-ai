@@ -23,7 +23,6 @@ import json
 import os
 import sys
 import tempfile
-import threading
 import time
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -318,21 +317,12 @@ def main():
     srv = ThreadingHTTPServer((args.host, args.port), Handler)
     print(f"TalentSignal Studio → http://{args.host}:{args.port}  (live engine)")
 
-    # Warm the 100K challenge ranking in the BACKGROUND so the server is usable
-    # immediately (paste-JD product loop works at once) and the Challenge tab is
-    # already computed by the time a user clicks it — no 30s wait on first click.
-    def _warm():
-        try:
-            from talentsignal import live_cache
-            t0 = time.perf_counter()
-            res = live_cache.warm()
-            if not res.get("error"):
-                print(f"[warm] 100K challenge ranking ready in "
-                      f"{time.perf_counter() - t0:.0f}s (Challenge tab now instant)")
-        except Exception as exc:  # noqa: BLE001 - warming is best-effort
-            print(f"[warm] skipped: {exc}")
-    threading.Thread(target=_warm, daemon=True).start()
-
+    # NOTE: we deliberately do NOT eagerly warm the 100K at boot. Measured: a
+    # background warm competes for CPU and slows the interactive paste-a-JD product
+    # loop (the 99% use case) for its ~35s duration. Instead the Challenge tab warms
+    # LAZILY on first click (that one user waits ~35s, then it's cached and instant
+    # for everyone after) — so the product loop is never degraded. The live_cache
+    # already memoizes, so the second Challenge request is 0.00s.
     srv.serve_forever()
 
 
