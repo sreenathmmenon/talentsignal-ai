@@ -3,122 +3,211 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TalentSignal Studio</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+<title>TalentSignal Studio — the ranking engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* ============ AURORA ENGINE DESIGN SYSTEM ============ */
 :root{
-  --bg:#07070b; --panel:#12131d; --panel2:#171927; --ink:#f4f5fb; --mut:#8b91ad; --line:#21243a;
-  --lime:#c6f24e; --violet:#9b6cff; --cyan:#43e7ff; --red:#ff5c7c; --green:#3ce592; --amber:#ffb454;
-  --grad:linear-gradient(100deg,#c6f24e,#43e7ff 45%,#9b6cff);
+  --bg:#07070B; --bg-elevated:#0C0D14; --surface:#101220; --surface-2:#161927; --surface-3:#1E2133;
+  --surface-glass:rgba(18,20,34,0.55); --surface-glass-strong:rgba(22,25,40,0.72);
+  --line:#1E2138; --line-strong:#2A2E4A; --line-glow:rgba(140,120,255,0.35); --data-grid-line:#161A2C;
+  --ink:#F5F6FC; --ink-soft:#C7CBDD; --muted:#878DAB; --muted-dim:#5A5F7A;
+  --violet:#8B5CF6; --violet-bright:#A78BFA; --indigo:#6366F1; --cyan:#22D3EE; --cyan-bright:#67E8F9;
+  --accent-grad:linear-gradient(110deg,#8B5CF6 0%,#6366F1 38%,#22D3EE 100%);
+  --aurora-conic:conic-gradient(from 200deg at 50% 50%,#8B5CF6,#6366F1,#22D3EE,#8B5CF6);
+  --glow-violet:rgba(139,92,246,0.45); --glow-cyan:rgba(34,211,238,0.40);
+  --pos:#34E5A0; --pos-soft:rgba(52,229,160,0.12); --neg:#FF5C7C; --neg-soft:rgba(255,92,124,0.12);
+  --warn:#FFB454; --warn-soft:rgba(255,180,84,0.12);
+  --tier-1:#A78BFA; --tier-2:#22D3EE; --tier-3:#6366F1; --flag:#FF5C7C; --new-pill:#A78BFA;
+  --focus-ring:rgba(139,92,246,0.55); --on-accent:#0A0A12; --confidence-bar:linear-gradient(90deg,#8B5CF6,#22D3EE);
+  --shadow-card:0 1px 0 rgba(255,255,255,0.04) inset, 0 12px 40px rgba(0,0,0,0.45);
+  --shadow-glow:0 0 0 1px rgba(139,92,246,0.25), 0 8px 32px rgba(139,92,246,0.28);
+  --shadow-cta-hover:0 14px 40px rgba(34,211,238,0.32);
+  --r-xs:8px; --r-sm:11px; --r-md:14px; --r-lg:18px; --r-xl:24px; --r-pill:999px;
+  --maxw:1280px; --blur:14px;
+  --mono:'Geist Mono','SF Mono',ui-monospace,monospace;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-.mono{font-family:'JetBrains Mono',monospace}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:radial-gradient(620px 340px at 8% -8%,rgba(155,108,255,.16),transparent 60%),
-            radial-gradient(560px 320px at 100% 0%,rgba(67,231,255,.10),transparent 60%)}
-nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(7,7,11,.7);border-bottom:1px solid var(--line)}
-.nav-in{display:flex;align-items:center;gap:16px;height:60px;max-width:1280px;margin:0 auto;padding:0 24px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.3px}
-.dot{width:12px;height:12px;border-radius:4px;background:var(--grad);box-shadow:0 0 16px rgba(198,242,78,.6)}
-.tabs{display:flex;gap:6px;margin-left:18px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px}
-.tab{padding:7px 15px;border-radius:9px;font-size:14px;color:var(--mut);cursor:pointer;border:none;background:none;font-family:inherit;transition:.18s}
-.tab.active{background:var(--panel2);color:var(--ink)}
-.live{margin-left:auto;font-size:12px;color:var(--green);display:flex;align-items:center;gap:7px}
-.live .b{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(60,229,146,.6);animation:p 2s infinite}
-@keyframes p{0%{box-shadow:0 0 0 0 rgba(60,229,146,.5)}70%{box-shadow:0 0 0 8px rgba(60,229,146,0)}100%{box-shadow:0 0 0 0 rgba(60,229,146,0)}}
-.app{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:24px;display:grid;grid-template-columns:380px 1fr;gap:22px;min-height:calc(100vh - 60px)}
-.col{display:flex;flex-direction:column;gap:16px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px}
-label{display:block;font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1.2px;margin:0 0 9px;font-weight:600}
-textarea,select,input{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);
-  border-radius:11px;padding:12px;font:inherit;font-size:14px;resize:vertical}
-textarea{min-height:130px;line-height:1.5}
-textarea:focus,select:focus{outline:none;border-color:var(--violet)}
-.row{display:flex;gap:10px}.row>*{flex:1}
-.drop{border:1.5px dashed var(--line);border-radius:13px;padding:22px 16px;text-align:center;color:var(--mut);
-  background:var(--panel2);cursor:pointer;transition:.2s;font-size:14px}
-.drop.hi{border-color:var(--cyan);color:var(--ink);background:rgba(67,231,255,.05)}
-.files{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.files span{font-size:12px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:4px 9px;color:var(--ink)}
-.go{margin-top:4px;width:100%;background:var(--grad);color:#07070b;font-weight:700;border:none;padding:14px;border-radius:13px;
-  font-size:15px;cursor:pointer;font-family:inherit;text-shadow:0 1px 1px rgba(255,255,255,.3);box-shadow:0 6px 22px rgba(155,108,255,.3);transition:.18s}
-.go:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 30px rgba(67,231,255,.4)}
-.go:disabled{opacity:.6;cursor:wait}
-.hint{font-size:12px;color:var(--mut);margin-top:10px;line-height:1.5}
-/* results */
-.bar-top{display:flex;align-items:center;gap:14px;margin-bottom:4px}
-.bar-top h2{font-size:20px;font-weight:700;letter-spacing:-.5px}
-.bar-top .meta{color:var(--mut);font-size:13px}
-.bar-top .eng{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);
-  border:1px solid var(--line);background:var(--panel);border-radius:20px;padding:5px 12px}
-.empty{display:grid;place-items:center;height:70vh;text-align:center;color:var(--mut)}
-.empty .big{font-size:46px;margin-bottom:14px}
-.empty h3{font-size:20px;color:var(--ink);margin-bottom:8px;letter-spacing:-.5px}
-.cand{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:12px;
-  opacity:0;transform:translateY(12px);animation:rise .4s forwards;transition:border-color .2s}
-.cand:hover{border-color:var(--violet)}
-@keyframes rise{to{opacity:1;transform:none}}
-.cand.t1{border-left:3px solid var(--lime)} .cand.t2{border-left:3px solid var(--cyan)} .cand.t3{border-left:3px solid var(--violet)}
-.cand.flagged{border-left:3px solid var(--red)}
-.ch{display:flex;align-items:baseline;gap:13px}
-.ch .rk{font-size:26px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--lime);min-width:46px}
-.cand.flagged .ch .rk{color:var(--red)}
-.ch .nm{font-size:17px;font-weight:600}
-.ch .sc{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--ink)}
-.sub{color:var(--mut);font-size:13px;margin:3px 0 11px 59px}
-.rsn{font-size:14px;line-height:1.55;margin:0 0 12px 59px;color:#dfe3f1}
-.facs{display:flex;gap:7px;margin:0 0 4px 59px;flex-wrap:wrap}
-.fac{flex:1;min-width:78px}
-.fac .l{font-size:9.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
-.fac .tr{height:6px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-top:3px}
-.fac .fl{height:100%;border-radius:4px;background:var(--grad);transition:width .8s cubic-bezier(.2,.8,.2,1)}
-.tags{margin:11px 0 0 59px;display:flex;gap:6px;flex-wrap:wrap}
-.tag{font-size:11.5px;font-family:'JetBrains Mono',monospace;background:rgba(60,229,146,.1);border:1px solid rgba(60,229,146,.3);
-  color:#bff5dc;border-radius:7px;padding:3px 9px}
-.flag{font-size:11.5px;background:rgba(255,92,124,.12);border:1px solid rgba(255,92,124,.3);color:#ffd2da;border-radius:7px;padding:3px 9px}
-.tag[title]{cursor:help}
-.proofs{margin:10px 0 0 59px;display:flex;flex-direction:column;gap:6px}
-.proof{font-size:12.5px;line-height:1.5;border-left:2px solid var(--cyan);padding-left:11px}
-.proof .pq{color:#cfe9ff;font-style:italic}
-.proof .pr{color:var(--mut);margin-left:6px;font-family:'JetBrains Mono',monospace;font-size:11px}
-.spin{display:inline-block;width:15px;height:15px;border:2px solid var(--line);border-top-color:var(--cyan);border-radius:50%;animation:s .7s linear infinite;vertical-align:-2px}
-@keyframes s{to{transform:rotate(360deg)}}
-.stat-row{display:flex;gap:12px;margin-bottom:16px}
-.kpi{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}
-.kpi .n{font-size:24px;font-weight:700;letter-spacing:-1px}
-.kpi .l{font-size:11.5px;color:var(--mut);margin-top:4px}
-@media(max-width:920px){.app{grid-template-columns:1fr}}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--sans);
+  -webkit-font-smoothing:antialiased; font-size:14.5px; line-height:1.5;
+  min-height:100vh; overflow-x:hidden;
+}
+/* aurora ambient backdrop */
+body::before{
+  content:""; position:fixed; inset:-30vh -10vw auto -10vw; height:90vh; z-index:0;
+  background:radial-gradient(60% 60% at 30% 20%,rgba(139,92,246,0.16),transparent 70%),
+             radial-gradient(50% 50% at 80% 10%,rgba(34,211,238,0.12),transparent 70%);
+  pointer-events:none; filter:blur(10px);
+}
+.num{font-family:var(--mono); font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1}
+
+/* ============ NAV ============ */
+nav{position:sticky; top:0; z-index:50; backdrop-filter:blur(var(--blur));
+  background:rgba(7,7,11,0.72); border-bottom:1px solid var(--line)}
+.nav-in{max-width:var(--maxw); margin:0 auto; padding:14px 28px; display:flex; align-items:center; gap:28px}
+.logo{display:flex; align-items:center; gap:11px; font-weight:700; font-size:16px; letter-spacing:-0.01em}
+.logo .orb{width:22px; height:22px; border-radius:50%; background:var(--aurora-conic);
+  animation:spin 16s linear infinite; box-shadow:0 0 16px var(--glow-violet)}
+.logo .sub{color:var(--muted); font-weight:500}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tabs{display:flex; gap:4px; margin-left:8px}
+.tab{appearance:none; border:0; background:transparent; color:var(--muted); cursor:pointer;
+  font-family:var(--sans); font-size:13.5px; font-weight:600; padding:9px 15px; border-radius:var(--r-pill);
+  display:flex; align-items:center; gap:8px; transition:.18s}
+.tab:hover{color:var(--ink-soft); background:var(--surface)}
+.tab.active{color:var(--ink); background:var(--surface-2)}
+.tab.active .dot{width:7px; height:7px; border-radius:50%; background:var(--accent-grad); box-shadow:0 0 8px var(--glow-cyan)}
+.tab .dot{width:7px; height:7px; border-radius:50%; background:transparent}
+.live-badge{margin-left:auto; display:flex; align-items:center; gap:8px; color:var(--muted); font-size:12.5px; font-weight:500}
+.live-badge .pulse{width:8px; height:8px; border-radius:50%; background:var(--pos);
+  box-shadow:0 0 0 0 rgba(52,229,160,.5); animation:pulse 2.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(52,229,160,.5)}70%{box-shadow:0 0 0 7px rgba(52,229,160,0)}100%{box-shadow:0 0 0 0 rgba(52,229,160,0)}}
+
+/* ============ APP LAYOUT ============ */
+.app{max-width:var(--maxw); margin:0 auto; padding:28px; position:relative; z-index:1;
+  display:grid; grid-template-columns:minmax(380px,440px) 1fr; gap:24px; align-items:start}
+.app.wide{grid-template-columns:1fr}
+.col{display:flex; flex-direction:column; gap:18px}
+
+/* ============ CARD ============ */
+.card{background:var(--surface-glass); border:1px solid var(--line); border-radius:var(--r-lg);
+  padding:20px; box-shadow:var(--shadow-card); backdrop-filter:blur(var(--blur))}
+label{display:block; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--muted); margin-bottom:9px}
+textarea,select,input{width:100%; background:var(--surface); color:var(--ink); border:1px solid var(--line-strong);
+  border-radius:var(--r-sm); padding:12px 13px; font-family:var(--sans); font-size:13.5px; line-height:1.5;
+  transition:.2s; resize:vertical}
+textarea{min-height:120px}
+textarea:focus,select:focus,input:focus{outline:none; border-color:var(--violet);
+  box-shadow:0 0 0 4px var(--focus-ring)}
+.row{display:grid; grid-template-columns:1fr; gap:12px}
+.drop{border:1.5px dashed var(--line-strong); border-radius:var(--r-md); padding:22px; text-align:center;
+  color:var(--muted); font-size:13px; cursor:pointer; transition:.2s; background:var(--surface)}
+.drop:hover,.drop.hi{border-color:var(--violet); color:var(--ink-soft); background:var(--surface-2);
+  box-shadow:0 0 0 4px var(--focus-ring)}
+.files{display:flex; flex-wrap:wrap; gap:7px; margin-top:11px}
+.files span{font-size:12px; background:var(--surface-2); border:1px solid var(--line); border-radius:var(--r-pill);
+  padding:5px 11px; color:var(--ink-soft)}
+
+/* primary CTA — the one accent-gradient button */
+.go{appearance:none; border:0; width:100%; cursor:pointer; color:var(--on-accent); font-family:var(--sans);
+  font-weight:800; font-size:14.5px; padding:15px; border-radius:var(--r-md); background:var(--accent-grad);
+  box-shadow:var(--shadow-glow); transition:.2s; letter-spacing:-0.01em}
+.go:hover{transform:translateY(-1px); box-shadow:var(--shadow-cta-hover)}
+.go:disabled{opacity:.55; cursor:not-allowed; transform:none}
+.hint{font-size:12px; color:var(--muted-dim); line-height:1.6; padding:0 2px}
+
+/* ============ HERO (engine core) ============ */
+.hero{position:relative; border:1px solid var(--line); border-radius:var(--r-xl); overflow:hidden;
+  background:var(--surface-glass-strong); padding:40px; margin-bottom:22px; backdrop-filter:blur(var(--blur))}
+.hero-aurora{position:absolute; width:340px; height:340px; right:-60px; top:-90px; border-radius:50%;
+  background:var(--aurora-conic); filter:blur(38px); opacity:.55; animation:spin 18s linear infinite}
+.hero h1{font-size:34px; font-weight:800; letter-spacing:-0.025em; margin:0 0 12px; line-height:1.1; position:relative}
+.hero h1 .grad{background:var(--accent-grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
+.hero p{color:var(--ink-soft); font-size:15px; max-width:640px; margin:0 0 22px; position:relative; line-height:1.6}
+.hero .kpis{display:flex; gap:14px; flex-wrap:wrap; position:relative}
+.kpi{background:var(--surface-2); border:1px solid var(--line); border-radius:var(--r-md); padding:14px 18px; min-width:130px}
+.kpi .n{font-family:var(--mono); font-size:23px; font-weight:600; letter-spacing:-0.02em}
+.kpi .l{font-size:11.5px; color:var(--muted); margin-top:3px; text-transform:uppercase; letter-spacing:.05em}
+
+/* ============ RESULT HEADER ============ */
+.bar-top{display:flex; align-items:center; gap:14px; margin-bottom:18px; flex-wrap:wrap}
+.bar-top h2{font-size:19px; font-weight:700; letter-spacing:-0.02em; margin:0}
+.meta{color:var(--muted); font-size:12.5px}
+.chip{font-family:var(--mono); font-size:11.5px; padding:5px 11px; border-radius:var(--r-pill);
+  border:1px solid var(--line-strong); color:var(--ink-soft); background:var(--surface-2)}
+.chip.live{color:var(--cyan-bright); border-color:rgba(34,211,238,.3)}
+.chip.cache{color:var(--muted)}
+
+/* ============ STAT ROW (challenge) ============ */
+.stat-row{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px}
+.stat{background:var(--surface-glass); border:1px solid var(--line); border-radius:var(--r-md); padding:18px;
+  position:relative; overflow:hidden}
+.stat::after{content:""; position:absolute; inset:auto 0 0 0; height:2px; background:var(--data-grid-line)}
+.stat .n{font-family:var(--mono); font-size:26px; font-weight:600; letter-spacing:-0.02em}
+.stat .l{font-size:11.5px; color:var(--muted); margin-top:5px; text-transform:uppercase; letter-spacing:.05em}
+.stat.ok .n{color:var(--pos)} .stat.accent .n{color:var(--cyan-bright)}
+
+/* ============ CANDIDATE CARD ============ */
+.cand{position:relative; background:var(--surface-glass); border:1px solid var(--line);
+  border-radius:var(--r-md); padding:18px 20px 18px 24px; margin-bottom:12px; transition:.2s; overflow:hidden}
+.cand::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--tier-3)}
+.cand.t1::before{background:var(--tier-1)} .cand.t2::before{background:var(--tier-2)}
+.cand.t3::before{background:var(--tier-3)} .cand.flagged::before{background:var(--flag)}
+.cand:hover{border-color:var(--line-strong); box-shadow:var(--shadow-card)}
+.ch{display:flex; align-items:center; gap:14px}
+.rk{font-family:var(--mono); font-weight:600; font-size:14px; color:var(--muted); min-width:34px}
+.nm{font-weight:700; font-size:15px; letter-spacing:-0.01em; flex:1}
+.score-chip{font-family:var(--mono); font-weight:600; font-size:17px; padding:6px 14px 8px; border-radius:var(--r-pill);
+  background:var(--surface-2); border:1px solid var(--line-strong); position:relative; color:var(--ink)}
+.score-chip .ub{position:absolute; left:8px; right:8px; bottom:4px; height:2px; border-radius:2px; background:var(--confidence-bar)}
+.sub{color:var(--muted); font-size:12.5px; margin:8px 0 0 48px}
+.sub .num{color:var(--ink-soft)}
+.rsn{color:var(--ink-soft); font-size:13.5px; line-height:1.6; margin:11px 0 0 48px}
+.rsn.head{color:var(--ink); font-weight:600}
+.facs{display:grid; grid-template-columns:repeat(3,1fr); gap:9px 18px; margin:14px 0 0 48px}
+.fac .l{font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px; display:flex; justify-content:space-between}
+.fac .l .v{font-family:var(--mono); color:var(--ink-soft)}
+.tr{height:5px; border-radius:3px; background:var(--surface-3); overflow:hidden}
+.fl{height:100%; background:var(--confidence-bar); border-radius:3px}
+.tags{display:flex; flex-wrap:wrap; gap:7px; margin:13px 0 0 48px}
+.tag{font-size:11.5px; padding:4px 10px; border-radius:var(--r-pill); background:var(--surface-2);
+  border:1px solid var(--line); color:var(--ink-soft)}
+.tag.ok{color:var(--pos); border-color:rgba(52,229,160,.25); background:var(--pos-soft)}
+.flag-tag{font-size:11.5px; padding:4px 10px; border-radius:var(--r-pill); background:var(--neg-soft);
+  border:1px solid rgba(255,92,124,.3); color:var(--neg)}
+/* proof pull-quote */
+.proof{margin:11px 0 0 48px; border-left:2px solid var(--violet); padding:7px 0 7px 14px}
+.proof .pq{display:block; color:var(--ink-soft); font-size:13px; font-style:italic; line-height:1.5}
+.proof .pr{display:block; font-family:var(--mono); font-size:11.5px; color:var(--cyan); margin-top:5px}
+/* delta ledger */
+.delta{font-family:var(--mono); font-size:12.5px; padding:4px 10px; border-radius:var(--r-sm); font-weight:600}
+.delta.up{color:var(--pos); background:var(--pos-soft)} .delta.down{color:var(--neg); background:var(--neg-soft)}
+.delta.new{color:var(--new-pill); background:rgba(167,139,250,.12)}
+
+/* ============ STATES ============ */
+.empty{display:grid; place-items:center; min-height:62vh; text-align:center; color:var(--muted)}
+.empty .big{font-size:40px; margin-bottom:14px}
+.empty h3{color:var(--ink); font-weight:700; font-size:18px; margin:0 0 8px}
+.empty div.d{max-width:420px; font-size:13.5px; line-height:1.6}
+.spin{display:inline-block; width:34px; height:34px; border-radius:50%; background:var(--aurora-conic);
+  animation:spin 1s linear infinite; -webkit-mask:radial-gradient(circle 12px,transparent 98%,#000);
+          mask:radial-gradient(circle 12px,transparent 98%,#000)}
+.errbox{color:var(--neg)}
+
+@media (max-width:920px){.app{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}.facs{grid-template-columns:repeat(2,1fr)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
 </style>
 </head>
 <body>
 <nav>
   <div class="nav-in">
-    <div class="logo"><span class="dot"></span> TalentSignal <span style="color:var(--mut);font-weight:400">Studio</span></div>
+    <div class="logo"><span class="orb"></span> TalentSignal <span class="sub">Studio</span></div>
     <div class="tabs">
-      <button class="tab active" data-view="rank" onclick="switchView('rank')">Rank candidates</button>
-      <button class="tab" data-view="transparency" onclick="switchView('transparency')">Candidate transparency</button>
-      <button class="tab" data-view="challenge" onclick="switchView('challenge')">Challenge result</button>
-      <button class="tab" data-view="whatsnew" onclick="switchView('whatsnew')">What's new (top 10)</button>
+      <button class="tab active" data-view="rank" onclick="switchView('rank')"><span class="dot"></span>Rank candidates</button>
+      <button class="tab" data-view="transparency" onclick="switchView('transparency')"><span class="dot"></span>Transparency</button>
+      <button class="tab" data-view="challenge" onclick="switchView('challenge')"><span class="dot"></span>100K challenge</button>
+      <button class="tab" data-view="whatsnew" onclick="switchView('whatsnew')"><span class="dot"></span>What changed</button>
     </div>
-    <div class="live"><span class="b"></span> live engine</div>
+    <div class="live-badge"><span class="pulse"></span> live engine</div>
   </div>
 </nav>
 
-<div class="app">
-  <!-- LEFT: controls (only on rank view) -->
+<div class="app" id="app">
+  <!-- LEFT controls -->
   <div class="col" id="leftcol">
     <div class="card">
       <label>Job description — paste any role</label>
-      <textarea id="jd" placeholder="Senior AI Engineer. Must have production embeddings/retrieval, agent systems, evaluation (NDCG/MAP)... We will not move forward with keyword-only AI experience. 5-9 years.">Senior AI Engineer — Founding Team
+      <textarea id="jd" placeholder="Paste any JD...">Senior AI Engineer — Founding Team
 
-We need someone who has shipped retrieval and ranking systems to real users. You must have production experience with embeddings-based retrieval and vector/hybrid search, strong Python, and you must have designed evaluation frameworks for ranking (NDCG, MRR, MAP).
+You must have shipped retrieval and ranking systems to real users: production embeddings-based retrieval, vector/hybrid search, and ranking models. Strong Python. You must have designed evaluation frameworks for ranking (NDCG, MRR, MAP).
 
-We will not move forward with: pure research with no production deployment; careers entirely at services companies with no product evidence; AI keyword-stuffing without real production work.
-
-5-9 years.</textarea>
+We will not move forward with keyword-only AI experience or research with no production deployment. 5-9 years.</textarea>
       <div class="row" style="margin-top:14px">
         <div><label>Role type</label>
           <select id="cat">
@@ -133,24 +222,24 @@ We will not move forward with: pure research with no production deployment; care
       </div>
     </div>
     <div class="card">
-      <label>Candidates — drop resumes (pdf · docx · txt · csv · json)</label>
-      <div class="drop" id="drop">⬇ Drag &amp; drop resume files, or click to choose</div>
+      <label>Candidates — drop resumes</label>
+      <div class="drop" id="drop">⬇ Drag &amp; drop resumes (pdf · docx · txt · csv · json), or click</div>
       <input id="file" type="file" multiple style="display:none"/>
       <div class="files" id="files"></div>
-      <label style="margin-top:16px">…or paste one or more resumes</label>
-      <textarea id="paste" placeholder="Paste resumes here (separate multiple with a blank line) — any format, even rough text."></textarea>
+      <label style="margin-top:16px">…or paste resumes</label>
+      <textarea id="paste" placeholder="Paste one or more resumes (separate with a blank line)."></textarea>
     </div>
     <button class="go" id="go" onclick="runRank()">Rank with the live engine →</button>
-    <div class="hint">Real ranking: universal ingest → hybrid semantic match → consistency auditor → grounded reasoning. Every score and sentence comes from the engine.</div>
+    <div class="hint">Universal ingest → JD parsing → hybrid semantic match → consistency auditor → grounded reasoning. Every score and sentence comes from the engine on your data.</div>
   </div>
 
-  <!-- RIGHT: results -->
-  <div class="col" id="results" style="grid-column:span 1">
+  <!-- RIGHT results -->
+  <div class="col" id="results">
     <div class="empty" id="empty">
       <div>
         <div class="big">⚡</div>
         <h3>Drop a JD and some resumes</h3>
-        <div>The live engine will rank them by real evidence — and show you why.</div>
+        <div class="d">The live engine ranks them by real evidence — with factor breakdowns, proof quotes, and honest concerns.</div>
       </div>
     </div>
     <div id="out" style="display:none"></div>
@@ -165,177 +254,184 @@ drop.onclick=()=>file.click();
 ['dragover','dragenter'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add('hi')}));
 ['dragleave','drop'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove('hi')}));
 drop.addEventListener('drop',ev=>add(ev.dataTransfer.files));
-file.onchange=()=>add(file.files);
+file.addEventListener('change',()=>add(file.files));
 function add(fl){for(const f of fl)pending.push(f);$('files').innerHTML=pending.map(f=>`<span>${f.name}</span>`).join('')}
 async function readFiles(){
   const out=[];
   for(const f of pending){
-    const ext=f.name.split('.').pop().toLowerCase();
-    if(['txt','csv','json','jsonl','md'].includes(ext)) out.push({name:f.name,ext,text:await f.text()});
-    else{const b=await f.arrayBuffer();out.push({name:f.name,ext,b64:btoa(String.fromCharCode(...new Uint8Array(b)))})}
+    const ext=(f.name.split('.').pop()||'').toLowerCase();
+    if(['txt','csv','json','jsonl','md'].includes(ext)){out.push({ext,text:await f.text()})}
+    else{const b=await f.arrayBuffer();out.push({ext,b64:btoa(String.fromCharCode(...new Uint8Array(b)))})}
   }
   return out;
 }
+function tierOf(rank,flagged){return flagged?'flagged':rank<=3?'t1':rank<=8?'t2':'t3'}
+function esc(s){return (s||'').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
+
 function switchView(v){
   view=v;
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
-  // rank + transparency both use the left controls; challenge is full-width
-  const usesControls = (v==='rank'||v==='transparency');
-  $('leftcol').style.display = usesControls?'flex':'none';
-  $('results').style.gridColumn = usesControls?'span 1':'1 / -1';
-  $('go').textContent = v==='transparency' ? 'Generate transparency report →' : 'Rank with the live engine →';
-  $('go').setAttribute('onclick', v==='transparency' ? 'runTransparency()' : 'runRank()');
-  if(v==='challenge') loadChallenge();
-  else if(v==='whatsnew') loadWhatsNew();
+  const usesControls=(v==='rank'||v==='transparency');
+  $('leftcol').style.display=usesControls?'flex':'none';
+  $('app').classList.toggle('wide',!usesControls);
+  $('go').textContent=v==='transparency'?'Generate transparency report →':'Rank with the live engine →';
+  $('go').setAttribute('onclick',v==='transparency'?'runTransparency()':'runRank()');
+  if(v==='challenge')loadChallenge();
+  else if(v==='whatsnew')loadWhatsNew();
   else{
     $('out').style.display='none';$('empty').style.display='grid';
-    $('empty').innerHTML = v==='transparency'
-      ? '<div><div class="big">🔍</div><h3>Candidate transparency</h3><div>Paste one candidate + a JD. See exactly what the engine used and concluded — with proof. The report no black-box scorer can give.</div></div>'
-      : '<div><div class="big">⚡</div><h3>Drop a JD and some resumes</h3><div>The live engine will rank them by real evidence — and show you why.</div></div>';
+    $('empty').innerHTML=v==='transparency'
+      ?'<div><div class="big">🔍</div><h3>Candidate transparency</h3><div class="d">Paste one candidate + a JD. See exactly what the engine used and concluded — with proof. The report no black-box scorer can give.</div></div>'
+      :'<div><div class="big">⚡</div><h3>Drop a JD and some resumes</h3><div class="d">The live engine ranks them by real evidence — and shows you why.</div></div>';
   }
 }
-async function runTransparency(){
-  const btn=$('go');btn.disabled=true;
-  $('empty').style.display='grid';$('out').style.display='none';
-  $('empty').innerHTML='<div><div class="big"><span class="spin"></span></div><h3>Generating report…</h3></div>';
-  try{
-    const files=await readFiles();
-    const r=await fetch('/api/transparency',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({jd:$('jd').value,category:$('cat').value,files,paste:$('paste').value})});
-    const d=await r.json();
-    if(d.error){$('empty').innerHTML=`<div><div class="big">⚠️</div><h3>${d.error}</h3></div>`;btn.disabled=false;return}
-    renderTransparency(d);
-  }catch(e){$('empty').innerHTML=`<div><div class="big">⚠️</div><h3>${e.message}</h3></div>`}
-  btn.disabled=false;
-}
-function renderTransparency(d){
-  $('empty').style.display='none';$('out').style.display='block';
-  const res=d.result||{}, f=res.factor_breakdown||{};
-  const matched=(d.matched_with_proof||[]).map(m=>
-    `<div class="proof"><span class="pq">"${(m.your_evidence||'').replace(/</g,'&lt;')}"</span><span class="pr">→ ${(m.requirement||'').slice(0,46)}</span></div>`).join('');
-  const unmet=(d.not_evidenced?.requirements||[]).map(r=>`<li>${r}</li>`).join('');
-  const concerns=(d.concerns_flagged||[]).map(c=>`<div class="flag" style="display:block;margin-top:6px">⚑ ${c.concern}: ${c.the_two_facts}</div>`).join('');
-  $('out').innerHTML=`
-    <div class="bar-top"><h2>Transparency report</h2><span class="eng">human-in-the-loop</span></div>
-    <div class="card" style="margin-bottom:14px"><div style="color:var(--mut);font-size:13.5px;line-height:1.55">${d.disclosure||''}</div>
-      <div style="margin-top:12px;font-size:13px"><b style="color:var(--green)">Identity used:</b> ${d.data_used?.identity_used||''}</div></div>
-    <div class="cand t1">
-      <div class="ch"><div class="rk">✓</div><div class="nm">${res.title_read||'Candidate'} · ${res.years_read||0} yrs</div><div class="sc">${(res.fit_score||0).toFixed(3)}</div></div>
-      <div class="sub" style="margin-left:59px">coverage ${Math.round((res.requirement_coverage||0)*100)}% · ${res.reasoning||''}</div>
-      <div class="facs">${['technical','career','seniority','behavioral','trust','semantic'].map(k=>`<div class="fac"><div class="l">${k.slice(0,6)}</div><div class="tr"><div class="fl" style="width:${Math.round((f[k]||0)*100)}%"></div></div></div>`).join('')}</div>
-    </div>
-    <div class="card" style="margin-top:14px"><label>What matched — with proof from your own words</label>
-      <div class="proofs" style="margin-left:0">${matched||'<span style="color:var(--mut)">No strong matches found.</span>'}</div></div>
-    ${unmet?`<div class="card" style="margin-top:14px"><label>Not evidenced — your chance to correct the record</label>
-      <ul style="color:var(--mut);font-size:13.5px;margin:0 0 0 18px;line-height:1.7">${unmet}</ul>
-      <div style="color:var(--cyan);font-size:12.5px;margin-top:8px">${d.not_evidenced?.note||''}</div></div>`:''}
-    ${concerns?`<div class="card" style="margin-top:14px"><label>Concerns flagged (with the two facts)</label>${concerns}</div>`:''}
-    <div class="card" style="margin-top:14px;font-size:13px;color:var(--mut)">${d.your_rights||''}</div>`;
-}
+function loading(msg,sub){$('empty').style.display='grid';$('out').style.display='none';
+  $('empty').innerHTML=`<div><div class="big"><span class="spin"></span></div><h3>${msg}</h3>${sub?`<div class="d">${sub}</div>`:''}</div>`}
+function errState(m){$('empty').style.display='grid';$('out').style.display='none';
+  $('empty').innerHTML=`<div><div class="big">⚠️</div><h3 class="errbox">${esc(m)}</h3></div>`}
+
+function fac(l,v){return `<div class="fac"><div class="l">${l}<span class="v num">${(v||0).toFixed(2)}</span></div><div class="tr"><div class="fl" style="width:${Math.round((v||0)*100)}%"></div></div></div>`}
+function scoreChip(s){return `<div class="score-chip num">${(s||0).toFixed(3)}<span class="ub" style="width:${Math.round((s||0)*70)}%"></span></div>`}
+
 async function runRank(){
   const btn=$('go');btn.disabled=true;
-  $('empty').style.display='grid';$('out').style.display='none';
-  $('empty').innerHTML='<div><div class="big"><span class="spin"></span></div><h3>Running the engine…</h3><div>Ingesting & ranking on real evidence.</div></div>';
+  loading('Running the engine…','Ingesting & ranking on real evidence.');
   try{
     const files=await readFiles();
     const r=await fetch('/api/rank',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({jd:$('jd').value,category:$('cat').value,files,paste:$('paste').value})});
     const d=await r.json();
-    if(d.error){$('empty').innerHTML=`<div><div class="big">⚠️</div><h3>${d.error}</h3></div>`;btn.disabled=false;return}
+    if(d.error){errState(d.error);btn.disabled=false;return}
     renderRank(d);
-  }catch(e){$('empty').innerHTML=`<div><div class="big">⚠️</div><h3>${e.message}</h3></div>`}
+  }catch(e){errState(e.message)}
   btn.disabled=false;
 }
-function fac(l,v){return `<div class="fac"><div class="l">${l}</div><div class="tr"><div class="fl" style="width:${Math.round(v*100)}%"></div></div></div>`}
 function renderRank(d){
   $('empty').style.display='none';$('out').style.display='block';
-  let h=`<div class="bar-top"><h2>${d.job_title||'Ranked shortlist'}</h2>
-    <span class="meta">${d.candidate_count} candidates · ${d.ranked.length} ranked · ${d.elapsed}s</span>
-    <span class="eng">engine: ${d.engine}</span></div>`;
+  let h=`<div class="bar-top"><h2>${esc(d.job_title)||'Ranked shortlist'}</h2>
+    <span class="meta num">${d.candidate_count} candidates · ${d.ranked.length} ranked · ${d.elapsed}s</span>
+    <span class="chip live">engine: ${d.engine}</span></div>`;
   d.ranked.forEach(c=>{
-    const tier=c.flags.length?'flagged':c.rank<=3?'t1':c.rank<=8?'t2':'t3';
-    const f=c.factors;
-    const tags=(c.matched||[]).map(m=>{
-      const ev=m.evidence?` title="proof: ${m.evidence.replace(/"/g,'&quot;')}"`:'';
-      return `<span class="tag"${ev}>${(m.kw||[]).join(', ')||m.req.slice(0,30)}${m.evidence?' ⓘ':''}</span>`;
-    }).join('');
+    const flagged=(c.flags||[]).length>0;
+    const f=c.factors||{};
     const proofs=(c.matched||[]).filter(m=>m.evidence).map(m=>
-      `<div class="proof"><span class="pq">"${m.evidence}"</span><span class="pr">→ ${m.req.slice(0,40)}</span></div>`).join('');
-    const flags=(c.flags||[]).map(x=>`<span class="flag" title="${(x.detail||'').replace(/"/g,'&quot;')}">⚑ ${x.code}</span>`).join('');
-    h+=`<div class="cand ${tier}">
-      <div class="ch"><div class="rk">#${c.rank}</div><div class="nm">${c.title||c.name}</div><div class="sc">${c.score.toFixed(3)}</div></div>
-      <div class="sub">${c.candidate_id} · ${(c.years||0).toFixed?c.years.toFixed(1):c.years} yrs · ${c.location||'—'} · coverage ${(c.coverage*100).toFixed(0)}%</div>
-      <div class="rsn">${c.reasoning||''}</div>
-      <div class="facs">${fac('tech',f.technical||0)}${fac('career',f.career||0)}${fac('senior',f.seniority||0)}${fac('behav',f.behavioral||0)}${fac('trust',f.trust||0)}${fac('semantic',f.semantic||0)}</div>
-      ${tags?`<div class="tags">${tags}</div>`:''}
-      ${proofs?`<div class="proofs">${proofs}</div>`:''}
-      ${flags?`<div class="tags">${flags}</div>`:''}
+      `<div class="proof"><span class="pq">"${esc(m.evidence)}"</span><span class="pr">→ ${esc(m.req).slice(0,52)}</span></div>`).join('');
+    const tags=(c.matched||[]).filter(m=>!m.evidence&&(m.kw||[]).length).map(m=>`<span class="tag">${esc((m.kw||[]).join(', '))}</span>`).join('');
+    const flags=(c.flags||[]).map(x=>`<span class="flag-tag" title="${esc(x.detail)}">⚑ ${esc(x.code)}</span>`).join('');
+    h+=`<div class="cand ${tierOf(c.rank,flagged)}">
+      <div class="ch"><div class="rk num">#${c.rank}</div><div class="nm">${esc(c.title||c.name)}</div>${scoreChip(c.score)}</div>
+      <div class="sub">${c.candidate_id} · <span class="num">${(c.years||0).toFixed?c.years.toFixed(1):c.years}</span> yrs · ${esc(c.location)||'—'} · coverage <span class="num">${Math.round((c.coverage||0)*100)}%</span></div>
+      <div class="rsn">${esc(c.reasoning)}</div>
+      <div class="facs">${fac('technical',f.technical)}${fac('career',f.career)}${fac('seniority',f.seniority)}${fac('behavioral',f.behavioral)}${fac('trust',f.trust)}${fac('semantic',f.semantic)}</div>
+      ${proofs}${tags?`<div class="tags">${tags}</div>`:''}${flags?`<div class="tags">${flags}</div>`:''}
     </div>`;
   });
   $('out').innerHTML=h;
 }
+
+async function runTransparency(){
+  const btn=$('go');btn.disabled=true;
+  loading('Generating report…');
+  try{
+    const files=await readFiles();
+    const r=await fetch('/api/transparency',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({jd:$('jd').value,category:$('cat').value,files,paste:$('paste').value})});
+    const d=await r.json();
+    if(d.error){errState(d.error);btn.disabled=false;return}
+    renderTransparency(d);
+  }catch(e){errState(e.message)}
+  btn.disabled=false;
+}
+function renderTransparency(d){
+  $('empty').style.display='none';$('out').style.display='block';
+  const res=d.result||{},f=res.factor_breakdown||{};
+  const matched=(d.matched_with_proof||[]).map(m=>
+    `<div class="proof"><span class="pq">"${esc(m.your_evidence)}"</span><span class="pr">→ ${esc((m.requirement||'').slice(0,52))}</span></div>`).join('');
+  const unmet=(d.not_evidenced?.requirements||[]).map(r=>`<li>${esc(r)}</li>`).join('');
+  const concerns=(d.concerns_flagged||[]).map(c=>`<div class="tags"><span class="flag-tag">⚑ ${esc(c.concern)}: ${esc(c.the_two_facts)}</span></div>`).join('');
+  $('out').innerHTML=`
+    <div class="bar-top"><h2>Transparency report</h2><span class="chip">human-in-the-loop</span></div>
+    <div class="card" style="margin-bottom:14px"><div style="color:var(--ink-soft);font-size:13.5px;line-height:1.6">${esc(d.disclosure)}</div>
+      <div style="margin-top:12px;font-size:13px"><b style="color:var(--pos)">Identity used:</b> ${esc(d.data_used?.identity_used)}</div></div>
+    <div class="cand t1">
+      <div class="ch"><div class="rk">✓</div><div class="nm">${esc(res.title_read)||'Candidate'} · <span class="num">${res.years_read||0}</span> yrs</div>${scoreChip(res.fit_score)}</div>
+      <div class="sub">coverage <span class="num">${Math.round((res.requirement_coverage||0)*100)}%</span> · ${esc(res.reasoning)}</div>
+      <div class="facs">${['technical','career','seniority','behavioral','trust','semantic'].map(k=>fac(k,f[k])).join('')}</div>
+    </div>
+    <div class="card" style="margin-top:14px"><label>What matched — proof from your own words</label>
+      <div style="margin-top:6px">${matched||'<span style="color:var(--muted)">No strong matches found.</span>'}</div></div>
+    ${unmet?`<div class="card" style="margin-top:14px"><label>Not evidenced — your chance to correct the record</label>
+      <ul style="color:var(--ink-soft);font-size:13.5px;margin:0 0 0 18px;line-height:1.7">${unmet}</ul>
+      <div style="color:var(--cyan);font-size:12.5px;margin-top:8px">${esc(d.not_evidenced?.note)}</div></div>`:''}
+    ${concerns?`<div class="card" style="margin-top:14px"><label>Concerns flagged (with the two facts)</label>${concerns}</div>`:''}
+    <div class="card" style="margin-top:14px;font-size:13px;color:var(--muted)">${esc(d.your_rights)}</div>`;
+}
+
 async function loadChallenge(){
-  $('empty').style.display='grid';$('out').style.display='none';
-  $('empty').innerHTML='<div><div class="big"><span class="spin"></span></div><h3>Loading official result…</h3></div>';
+  loading('Ranking the real 100,000…','Live engine over the full Redrob dataset. First run computes; then it is instant.');
   try{
     const r=await fetch('/api/challenge',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
     const d=await r.json();
-    if(d.error){$('empty').innerHTML=`<div><div class="big">📦</div><h3>${d.error}</h3></div>`;return}
+    if(d.error){errState(d.error);return}
     $('empty').style.display='none';$('out').style.display='block';
-    let h=`<div class="bar-top"><h2>Hackathon result — one part of the product</h2><span class="eng">official</span></div>
+    const cacheChip=d.from_cache?'<span class="chip cache">cached</span>':'<span class="chip live">freshly computed</span>';
+    let h=`<div class="bar-top"><h2>100K challenge — ranked live</h2><span class="chip live">engine: ${d.engine}</span>${cacheChip}</div>
       <div class="stat-row">
-        <div class="kpi"><div class="n" style="color:var(--cyan)">${d.total.toLocaleString()}</div><div class="l">candidates ranked</div></div>
-        <div class="kpi"><div class="n" style="color:var(--green)">VALID</div><div class="l">official validator</div></div>
-        <div class="kpi"><div class="n" style="color:var(--lime)">${d.honeypots}</div><div class="l">honeypots in top-100</div></div>
+        <div class="stat accent"><div class="n num">${(d.total||0).toLocaleString()}</div><div class="l">candidates ranked</div></div>
+        <div class="stat ok"><div class="n">VALID</div><div class="l">official validator</div></div>
+        <div class="stat"><div class="n num">${d.honeypots}</div><div class="l">honeypots in top-10</div></div>
+        <div class="stat"><div class="n num">${d.elapsed}s</div><div class="l">compute time</div></div>
       </div>
-      <div class="sub" style="margin:0 0 14px 0">${d.jd}</div>`;
+      <div class="meta" style="margin:0 0 14px">${esc(d.jd)}</div>`;
     d.top.forEach(c=>{
-      h+=`<div class="cand ${c.rank<=3?'t1':c.rank<=8?'t2':'t3'}">
-        <div class="ch"><div class="rk">#${c.rank}</div><div class="nm">${c.title} @ ${c.company}</div><div class="sc">${c.score.toFixed(3)}</div></div>
-        <div class="sub">${c.candidate_id} · ${c.years} yrs · ${c.location}</div>
-        <div class="rsn">${c.reasoning}</div></div>`;
+      h+=`<div class="cand ${tierOf(c.rank,false)}">
+        <div class="ch"><div class="rk num">#${c.rank}</div><div class="nm">${esc(c.title)||c.candidate_id}</div>${scoreChip(c.score)}</div>
+        <div class="sub">${c.candidate_id} · <span class="num">${c.years}</span> yrs · ${esc(c.location)}</div>
+        <div class="rsn">${esc(c.reasoning)}</div></div>`;
     });
     $('out').innerHTML=h;
-  }catch(e){$('empty').innerHTML=`<div><div class="big">⚠️</div><h3>${e.message}</h3></div>`}
+  }catch(e){errState(e.message)}
 }
+
 async function loadWhatsNew(){
-  $('empty').style.display='grid';$('out').style.display='none';
-  $('empty').innerHTML='<div><div class="big"><span class="spin"></span></div><h3>Ranking the real 100,000…</h3><div>Running the live engine + computing the change vs the old keyword engine.</div></div>';
+  loading('Computing the live diff…','Ranking the real 100K and comparing against the old keyword engine.');
   try{
     const r=await fetch('/api/top10detail',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
     const d=await r.json();
-    if(d.error){$('empty').innerHTML=`<div><div class="big">📦</div><h3>${d.error}</h3></div>`;return}
+    if(d.error){errState(d.error);return}
     $('empty').style.display='none';$('out').style.display='block';
-    let h=`<div class="bar-top"><h2>What the recent iterations changed — on the real top 10</h2><span class="eng">engine: ${d.engine}</span></div>
+    let h=`<div class="bar-top"><h2>What changed — on the real top 10</h2><span class="chip live">engine: ${d.engine}</span></div>
       <div class="stat-row">
-        <div class="kpi"><div class="n" style="color:var(--cyan)">${d.pool.toLocaleString()}</div><div class="l">real candidates ranked</div></div>
-        <div class="kpi"><div class="n" style="color:var(--lime)">${d.slots_changed}/10</div><div class="l">top-10 slots changed vs old engine</div></div>
-        <div class="kpi"><div class="n" style="color:var(--green)">${d.elapsed}s</div><div class="l">CPU · no network</div></div>
+        <div class="stat accent"><div class="n num">${(d.pool||0).toLocaleString()}</div><div class="l">candidates ranked</div></div>
+        <div class="stat ok"><div class="n num">${d.slots_changed}/10</div><div class="l">slots changed vs old</div></div>
+        <div class="stat"><div class="n num">${d.elapsed}s</div><div class="l">compute time</div></div>
+        <div class="stat"><div class="n num">${d.overlap_with_old_top10}/10</div><div class="l">kept from old</div></div>
       </div>
-      <div class="card" style="margin:0 0 14px 0"><label>What's new in these iterations (shown per candidate below)</label>
-        <ul style="color:var(--mut);font-size:13px;margin:6px 0 0 18px;line-height:1.7">${(d.iteration_notes||[]).map(n=>`<li>${n}</li>`).join('')}</ul></div>`;
+      <div class="card" style="margin:0 0 14px"><label>What's new in these iterations</label>
+        <ul style="color:var(--ink-soft);font-size:13px;margin:6px 0 0 18px;line-height:1.7">${(d.iteration_notes||[]).map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`;
     d.top.forEach(c=>{
-      const tier=c.consistency_clean?(c.rank<=3?'t1':c.rank<=8?'t2':'t3'):'flagged';
+      const tier=c.consistency_clean?tierOf(c.rank,false):'flagged';
       const f=c.factors||{};
-      const up=c.delta>0, badge = c.was_outside_top10
-        ? `<span class="flag" style="background:rgba(52,211,153,.14);color:var(--green);border-color:rgba(52,211,153,.3)">▲ old engine ranked #${c.old_rank} (outside top 10) → now #${c.new_rank}</span>`
-        : `<span class="flag" style="background:rgba(110,168,254,.12);color:var(--cyan)">old #${c.old_rank} → now #${c.new_rank} (Δ ${up?'+':''}${c.delta})</span>`;
-      const cons = c.consistency_clean
-        ? `<span class="tag" style="color:var(--green)">✓ consistency: clean</span>`
-        : (c.flags||[]).map(x=>`<span class="flag">⚑ ${x}</span>`).join('');
+      const cons=c.consistency_clean?'<span class="tag ok">✓ consistency clean</span>':(c.flags||[]).map(x=>`<span class="flag-tag">⚑ ${esc(x)}</span>`).join('');
+      const delta=c.was_outside_top10
+        ?`<span class="delta new">▲ was #${c.old_rank} (outside top 10) → now #${c.new_rank}</span>`
+        :`<span class="delta ${c.delta>=0?'up':'down'}">old #${c.old_rank} → now #${c.new_rank} (${c.delta>=0?'+':''}${c.delta})</span>`;
       h+=`<div class="cand ${tier}">
-        <div class="ch"><div class="rk">#${c.rank}</div><div class="nm">${c.title}</div><div class="sc">${c.score.toFixed(3)}</div></div>
-        <div class="sub">${c.candidate_id} · ${(c.years||0)} yrs</div>
-        <div class="rsn">${c.headline}</div>
-        <div class="rsn" style="color:var(--mut);font-style:italic">${c.reasoning}</div>
-        <div class="facs">${fac('tech',f.technical_evidence||0)}${fac('career',f.career_fit||0)}${fac('senior',f.seniority||0)}${fac('behav',f.behavioral||0)}${fac('trust',f.trust||0)}${fac('logist',f.logistics||0)}</div>
+        <div class="ch"><div class="rk num">#${c.rank}</div><div class="nm">${esc(c.title)}</div>${scoreChip(c.score)}</div>
+        <div class="sub">${c.candidate_id} · <span class="num">${c.years}</span> yrs</div>
+        <div class="rsn head">${esc(c.headline)}</div>
+        <div class="rsn">${esc(c.reasoning)}</div>
+        <div class="facs">${fac('technical',f.technical_evidence)}${fac('career',f.career_fit)}${fac('seniority',f.seniority)}${fac('behavioral',f.behavioral)}${fac('trust',f.trust)}${fac('logistics',f.logistics)}</div>
         <div class="tags">${cons}</div>
-        <div class="tags" style="margin-top:8px">${badge}</div>
+        <div class="tags">${delta}</div>
       </div>`;
     });
     $('out').innerHTML=h;
-  }catch(e){$('empty').innerHTML=`<div><div class="big">⚠️</div><h3>${e.message}</h3></div>`}
+  }catch(e){errState(e.message)}
 }
+// deep-link: ?view=challenge opens that tab on load
+(function(){const v=new URLSearchParams(location.search).get('view');
+  if(v&&['rank','transparency','challenge','whatsnew'].includes(v))switchView(v);})();
 </script>
 </body>
 </html>
