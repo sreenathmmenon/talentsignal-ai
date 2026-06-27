@@ -91,7 +91,7 @@ python3 scripts/demo_rank.py --jd demo/data/sales_jd.md \
 
 ## Status
 
-The engine and all four surfaces are implemented, tested (137 tests), and validated end-to-end:
+The engine and all four surfaces are implemented, tested (158 tests), and validated end-to-end:
 
 - **Engine**: JD ingestion, hybrid semantic matching, schema-driven signals, role-independent consistency auditor, unified scoring, grounded reasoning — with a labeled evaluation suite (hybrid composite 0.97 / spine 0.95, paraphrase 10/10, honeypots 0% in top-10, JD-agnostic ~0.06). See [`outputs/eval/METRICS.md`](outputs/eval/METRICS.md).
 - **Universal ingest**: PDF/DOCX/TXT/CSV/JSON/LinkedIn/paste → rankable; pluggable adapters.
@@ -207,7 +207,7 @@ Open `http://127.0.0.1:8765/` in a browser.
 
 The UI uses the Helix control-plane design system for a production-grade hiring intelligence cockpit. It generates a ranked shortlist from the selected candidate JSONL and JD scorecard, shows fit factors and grounded evidence, exposes risk flags, supports search/sort/risk filtering, and downloads generated CSV/evidence/risk artifacts.
 
-The product direction is a universal JD-to-hiring-decision command center: role intelligence, evidence ranking, candidate comparison, boundary review, trust/trap review, interview probes, and exports. See `REDROB_BUSINESS_PLAN_PRODUCT_STRATEGY.md` for the Redrob business-plan signal and roadmap implication, and `TALENTSIGNAL_V2_PRODUCT_AND_ACTION_PLAN.md` for the V2 product plan.
+The product direction is a universal JD-to-hiring-decision command center: role intelligence, evidence ranking, candidate comparison, boundary review, trust/trap review, interview probes, and exports. (Design history and the product roadmap live in `docs/notes/`.)
 
 ## Docker Reproduction
 
@@ -242,23 +242,10 @@ Engine (`src/talentsignal/`):
 Support:
 - `job_specs/`: machine-readable JD scorecards. `demo/data/`: generated demo datasets.
 - `scripts/`: eval harness, data factory, demo, audits. `docs/`: methodology, MCP, architecture/defense.
-- `outputs/`: generated submission + `index/` (git-lfs embedding index). `tests/`: 104 tests.
+- `outputs/`: generated submission + `index/` (git-lfs embedding index). `tests/`: 158 tests.
 
-## Important Docs
+## Key docs
 
-- `AIM.md`
-- `HACKATHON_CHALLENGE_AND_WORK_PREPARED.md`
-- `PROJECT_COMPLETION_RULE.md`
-- `PROJECT_AUTHORSHIP_RULE.md`
-- `PROJECT_TAGLINE_DECISION.md`
-- `COUNCIL_REVIEW_JUNE_16_2026.md`
-- `PROJECT_EXECUTION_STORIES_AND_TASKS.md`
-- `TALENTSIGNAL_V2_PRODUCT_AND_ACTION_PLAN.md`
-- `WORLD_CLASS_EXECUTION_PLAN.md`
-- `FIRST_PRIZE_PREMORTEM.md`
-- `AGENTIC_AI_TALENT_INTELLIGENCE_RESEARCH.md`
-- `REDROB_BUSINESS_PLAN_PRODUCT_STRATEGY.md`
-- `REDROB_RESEARCH_AND_BIG_BET_STRATEGY_JUNE_17_2026.md`
-- `methodology.md`
-- `docs/final_completion_evidence.md`
-- `docs/v2_completion_evidence.md`
+- [`methodology.md`](methodology.md) — how the engine works and why.
+- [`outputs/eval/METRICS.md`](outputs/eval/METRICS.md) — canonical metrics (every number, sourced).
+- `docs/` — architecture, MCP, competitive analysis. `docs/notes/` — design history & planning.
