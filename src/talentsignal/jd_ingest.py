@@ -166,16 +166,23 @@ def _split_requirement_list(sent: str) -> list[str]:
 
 
 def _is_title_or_intro(sent: str) -> bool:
-    """True for a job-title / intro line that should not be a scored requirement:
-    short, contains a role word, and has no requirement verb (so it reads like a
-    title 'Senior AI Engineer at GitLab', not 'must have ...')."""
+    """True for a job-title / intro line that should not be a scored requirement.
+
+    Role-AGNOSTIC (no hardcoded role-word list — works for nurse, chef, welder,
+    actuary, etc.): a title line is SHORT, has NO requirement verb, and is NOT a
+    comma list of skills. Either it names a known role word, OR it is a brief
+    standalone opening phrase (e.g. 'Registered Nurse.', 'Senior AI Engineer at
+    GitLab.', 'Executive Chef.') — which reads like a heading, not a 'must have …'."""
     words = sent.split()
     if len(words) > 12:
         return False
     if _REQ_VERB.search(sent):
         return False
-    # a role word present, or a "... at Company" / "Role. Location." shape
-    return bool(_ROLE_WORD.search(sent))
+    # comma list with multiple items is a requirement list, not a title
+    if sent.count(",") >= 1 and len(words) >= 4:
+        return False
+    # a known role word, OR a short verb-less heading (<=6 words) reads as a title
+    return bool(_ROLE_WORD.search(sent)) or len(words) <= 6
 
 
 def _is_logistics_only(sent: str) -> bool:
