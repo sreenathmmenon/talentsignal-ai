@@ -70,14 +70,19 @@ frameworks" must-have. Labeled synthetic pools (strong / paraphrase-ideal /
 adjacent / weak / irrelevant / honeypot / behavioral-twin) across six roles and
 multiple schema shapes are scored with NDCG@10/@50, MAP, P@10.
 
-Headline results (hybrid vs the keyword baseline):
+Headline results (labeled multi-JD eval; all numbers sourced in
+[`../outputs/eval/METRICS.md`](../outputs/eval/METRICS.md)):
 
-| metric | keyword baseline | hybrid |
+| metric | spine (default) | hybrid (+embeddings) |
 |---|---|---|
-| mean per-role composite | 0.88 | **0.96** |
-| zero-keyword paraphrase fits in top-10 | 3/10 | **10/10** |
-| honeypot rate in top-10 (trap-heavy pool) | 20% | **0%** |
+| mean per-role composite | **0.95** | **0.97** |
+| zero-keyword paraphrase fits in top-10 | 10/10 | **10/10** |
+| honeypot rate in top-10 (trap-heavy pool) | 0% | **0%** |
 | cross-JD top-10 overlap (lower = more JD-agnostic) | — | **~0.06** |
+
+**The rescue result (real 100K):** a keyword filter ranks **28 of our top-100**
+candidates outside its own top 100 — a recruiter on keyword search would never see
+28% of who we recommend (`../outputs/rescue_summary.json`).
 
 Additional guarantees:
 - **Reproducible & offline:** the ranking step is CPU-only, no-network, and

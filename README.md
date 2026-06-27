@@ -16,7 +16,7 @@ Built for the Redrob *Intelligent Candidate Discovery & Ranking Challenge* — t
 1. **Reasons beyond keywords.** Hybrid retrieval (sentence-embeddings + lexical) over the JD's *own* requirements means a candidate who "built the recommendation engine serving the homepage" matches "shipped a ranking system" with zero shared keywords.
 2. **Rejects fakes.** A role-independent consistency auditor vetoes internally-impossible honeypots (8 years at a company younger than that, expert skill with 0 months) by their contradictions, not their keywords.
 3. **Weighs hireability.** Schema-driven behavioral signals down-weight stale, unresponsive candidates — and adapt to whatever signal fields a dataset has.
-4. **Proves itself.** A first-class evaluation suite (NDCG@10/@50, MAP, P@10 over labeled data across many JDs) measures every change — not guesswork. On labeled multi-JD eval the hybrid engine scores composite **0.96** with **0%** honeypots in the top-10 and zero-keyword paraphrase fits at **10/10** in the top-10.
+4. **Proves itself.** A first-class evaluation suite (NDCG@10/@50, MAP, P@10 over labeled data across many JDs) measures every change — not guesswork. On labeled multi-JD eval: **spine** scores composite **0.95**, **hybrid 0.97**; both reach **0%** honeypots in the top-10 and **10/10** zero-keyword paraphrase fits. All numbers are sourced in [`outputs/eval/METRICS.md`](outputs/eval/METRICS.md).
 5. **JD-agnostic, by measurement.** Cross-JD top-10 overlap ~0.06 — it surfaces genuinely different people for different roles.
 6. **Extensible.** A signal-plugin framework means new intelligence (background verification, GitHub-repo analysis) is added without touching the core.
 
@@ -57,7 +57,7 @@ TalentSignal ranks **any** job description against **any** candidate dataset —
 - **Unified scoring** (`src/talentsignal/scoring.py`) — one JD-requirement-weighted path; same code for an AI JD and a sales JD.
 - **Evaluation suite** (`src/talentsignal/eval/`, `scripts/eval_harness.py`) — NDCG@10/@50, MAP, P@10 over labeled synthetic data across multiple JDs and dataset shapes. Every ranking change is measured, not guessed.
 
-**Two engines.** `spine` is the zero-dependency structured ranker that always produces a valid CSV in budget. `hybrid` adds the precomputed semantic index (numpy-only at rank time) and measurably improves ranking: on labeled multi-JD eval, mean composite **0.95 vs 0.88**, zero-keyword paraphrase fits reach **10/10 in top-10 (vs 3/10)**, and honeypot rate in top-10 drops to **0%**.
+**Two engines.** `spine` is the zero-dependency structured ranker that always produces a valid CSV in budget (mean composite **0.95**). `hybrid` adds the precomputed semantic index (numpy-only at rank time) and lifts mean composite to **0.97**; both keep honeypot rate in the top-10 at **0%** and surface **10/10** zero-keyword paraphrase fits. (Source: [`outputs/eval/METRICS.md`](outputs/eval/METRICS.md).)
 
 ### Run the evaluation suite
 
@@ -93,7 +93,7 @@ python3 scripts/demo_rank.py --jd demo/data/sales_jd.md \
 
 The engine and all four surfaces are implemented, tested (137 tests), and validated end-to-end:
 
-- **Engine**: JD ingestion, hybrid semantic matching, schema-driven signals, role-independent consistency auditor, unified scoring, grounded reasoning — with a labeled evaluation suite (composite 0.97, paraphrase 10/10, honeypots 0%, JD-agnostic ~0.06).
+- **Engine**: JD ingestion, hybrid semantic matching, schema-driven signals, role-independent consistency auditor, unified scoring, grounded reasoning — with a labeled evaluation suite (hybrid composite 0.97 / spine 0.95, paraphrase 10/10, honeypots 0% in top-10, JD-agnostic ~0.06). See [`outputs/eval/METRICS.md`](outputs/eval/METRICS.md).
 - **Universal ingest**: PDF/DOCX/TXT/CSV/JSON/LinkedIn/paste → rankable; pluggable adapters.
 - **Surfaces**: clean `rank()` facade + SDK, MCP server (agentic), REST API + Python client, the Studio product UI (`studio.py`).
 - **Extensibility**: signal-plugin framework with roadmap stubs (background verification, GitHub-repo analysis).

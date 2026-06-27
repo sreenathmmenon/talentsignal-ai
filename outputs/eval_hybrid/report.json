@@ -1,70 +1,70 @@
 {
-  "engine": "spine",
+  "engine": "hybrid",
   "suites": {
     "per_role": {
       "per_role": {
         "ai_search": {
-          "ndcg@10": 0.9733323042090073,
-          "ndcg@50": 0.9776705332821943,
-          "map": 0.9989247311827957,
-          "p@5": 1.0,
-          "p@10": 1.0,
-          "honeypot_rate@10": 0.0,
-          "honeypot_rate@100": 0.4444444444444444,
-          "composite": 0.9798060217665814
-        },
-        "sales": {
-          "ndcg@10": 0.9733323042090073,
-          "ndcg@50": 0.9714418570344342,
-          "map": 0.9871334029954719,
-          "p@5": 1.0,
-          "p@10": 1.0,
-          "honeypot_rate@10": 0.0,
-          "honeypot_rate@100": 0.4444444444444444,
-          "composite": 0.9761687196641547
-        },
-        "data_analytics": {
-          "ndcg@10": 0.9720276155244293,
-          "ndcg@50": 0.7260765257187457,
-          "map": 0.6384799429690914,
-          "p@5": 1.0,
-          "p@10": 1.0,
-          "honeypot_rate@10": 0.0,
-          "honeypot_rate@100": 0.4444444444444444,
-          "composite": 0.8496087569232021
-        },
-        "backend": {
-          "ndcg@10": 0.9733323042090073,
-          "ndcg@50": 0.9517253212105541,
+          "ndcg@10": 0.9655752572205092,
+          "ndcg@50": 0.987061104394654,
           "map": 1.0,
           "p@5": 1.0,
           "p@10": 1.0,
           "honeypot_rate@10": 0.0,
           "honeypot_rate@100": 0.4444444444444444,
-          "composite": 0.97218374846767
+          "composite": 0.9789059599286508
+        },
+        "sales": {
+          "ndcg@10": 0.9448191871522936,
+          "ndcg@50": 0.959627803018868,
+          "map": 0.918313514947691,
+          "p@5": 1.0,
+          "p@10": 1.0,
+          "honeypot_rate@10": 0.0,
+          "honeypot_rate@100": 0.4444444444444444,
+          "composite": 0.948044961723961
+        },
+        "data_analytics": {
+          "ndcg@10": 0.9709461503621435,
+          "ndcg@50": 0.9889508085742058,
+          "map": 0.9978136200716846,
+          "p@5": 1.0,
+          "p@10": 1.0,
+          "honeypot_rate@10": 0.0,
+          "honeypot_rate@100": 0.4444444444444444,
+          "composite": 0.9818303607640863
+        },
+        "backend": {
+          "ndcg@10": 0.9733323042090073,
+          "ndcg@50": 0.9804164708587984,
+          "map": 1.0,
+          "p@5": 1.0,
+          "p@10": 1.0,
+          "honeypot_rate@10": 0.0,
+          "honeypot_rate@100": 0.4444444444444444,
+          "composite": 0.9807910933621432
         },
         "product": {
           "ndcg@10": 0.9733323042090073,
-          "ndcg@50": 0.9167272140815531,
-          "map": 0.8666920711307474,
+          "ndcg@50": 0.9869882847945212,
+          "map": 0.9449879384377865,
           "p@5": 1.0,
           "p@10": 1.0,
           "honeypot_rate@10": 0.0,
           "honeypot_rate@100": 0.4444444444444444,
-          "composite": 0.9416881269985816
+          "composite": 0.974510828308528
         },
         "design": {
-          "ndcg@10": 1.0,
-          "ndcg@50": 0.9919498552895487,
-          "map": 0.9448508294281264,
+          "ndcg@10": 0.9733323042090073,
+          "ndcg@50": 0.988875548019625,
+          "map": 0.9280614621363102,
           "p@5": 1.0,
           "p@10": 1.0,
           "honeypot_rate@10": 0.0,
           "honeypot_rate@100": 0.4444444444444444,
-          "composite": 0.9893125810010837
+          "composite": 0.9725380358308376
         }
       },
-      "mean_composite": 0.9515
+      "mean_composite": 0.9728
     },
     "honeypot": {
       "honeypot_rate@10": 0.0,
@@ -80,17 +80,17 @@
     "perturbation": {
       "strong_rank": 1,
       "paraphrase_rank": 2,
-      "contradicted_rank": 33,
+      "contradicted_rank": 43,
       "contradicted_below_strong": true
     },
     "generality": {
-      "mean_top10_jaccard_overlap": 0.076,
-      "max_top10_jaccard_overlap": 0.667
+      "mean_top10_jaccard_overlap": 0.056,
+      "max_top10_jaccard_overlap": 0.429
     },
     "schema": {
       "ran_without_error": true,
-      "ndcg@10": 0.968026431191903,
-      "composite": 0.9617396737746647
+      "ndcg@10": 0.9733323042090073,
+      "composite": 0.9838157159959154
     }
   }
 }

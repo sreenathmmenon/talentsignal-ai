@@ -1,17 +1,17 @@
-# Evaluation Report — engine: `spine`
+# Evaluation Report — engine: `hybrid`
 
 ## Per-role ranking quality
 
-Mean composite across roles: **0.9515**
+Mean composite across roles: **0.9728**
 
 | role | NDCG@10 | NDCG@50 | MAP | P@10 | composite |
 |---|---|---|---|---|---|
-| ai_search | 0.973 | 0.978 | 0.999 | 1.000 | 0.980 |
-| sales | 0.973 | 0.971 | 0.987 | 1.000 | 0.976 |
-| data_analytics | 0.972 | 0.726 | 0.638 | 1.000 | 0.850 |
-| backend | 0.973 | 0.952 | 1.000 | 1.000 | 0.972 |
-| product | 0.973 | 0.917 | 0.867 | 1.000 | 0.942 |
-| design | 1.000 | 0.992 | 0.945 | 1.000 | 0.989 |
+| ai_search | 0.966 | 0.987 | 1.000 | 1.000 | 0.979 |
+| sales | 0.945 | 0.960 | 0.918 | 1.000 | 0.948 |
+| data_analytics | 0.971 | 0.989 | 0.998 | 1.000 | 0.982 |
+| backend | 0.973 | 0.980 | 1.000 | 1.000 | 0.981 |
+| product | 0.973 | 0.987 | 0.945 | 1.000 | 0.975 |
+| design | 0.973 | 0.989 | 0.928 | 1.000 | 0.973 |
 
 ## Honeypot suite (must stay ~0 in top-10)
 
@@ -27,15 +27,15 @@ Mean composite across roles: **0.9515**
 
 ## Perturbation suite
 
-- strong rank: 1, paraphrase rank: 2, contradicted rank: 33
+- strong rank: 1, paraphrase rank: 2, contradicted rank: 43
 - contradicted ranked below strong: True
 
 ## Generality suite (cross-JD top-10 overlap — lower is better)
 
-- mean pairwise Jaccard overlap: **0.076**
-- max pairwise overlap: 0.667
+- mean pairwise Jaccard overlap: **0.056**
+- max pairwise overlap: 0.429
 
 ## Schema-agnostic suite (non-Redrob signal vocabulary)
 
 - ran without error: True
-- ndcg@10: 0.968026431191903
+- ndcg@10: 0.9733323042090073
