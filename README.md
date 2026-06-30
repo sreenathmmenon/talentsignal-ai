@@ -126,11 +126,15 @@ Python 3.11 was used during development.
 
 ## Reproduce Final Submission
 
+The committed `outputs/final_submission.csv` is the **hybrid** engine's output, so reproduce it with the hybrid engine (it loads the precomputed numpy index — no network, in budget):
+
 ```bash
-python3 rank.py \
+python3 rank.py --engine hybrid --index-dir outputs/index \
   --candidates '[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl' \
   --out outputs/final_submission.csv
 ```
+
+(The zero-dependency `spine` engine — omit `--engine`/`--index-dir` — produces a different, also-valid top-100 without the embedding index.)
 
 This also writes:
 

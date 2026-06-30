@@ -119,7 +119,8 @@ drop.onclick=()=>file.click();
 drop.addEventListener('drop',ev=>{addFiles(ev.dataTransfer.files)});
 file.onchange=()=>addFiles(file.files);
 function addFiles(fl){for(const f of fl)pendingFiles.push(f);renderFiles()}
-function renderFiles(){$('files').innerHTML=pendingFiles.map(f=>`<span>${f.name}</span>`).join('')}
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+function renderFiles(){$('files').innerHTML=pendingFiles.map(f=>`<span>${esc(f.name)}</span>`).join('')}
 async function readFiles(){
   const out=[];
   for(const f of pendingFiles){
@@ -151,12 +152,12 @@ function render(data){
   $('dl').style.display='inline';$('dl').onclick=()=>{const b=new Blob([lastCSV],{type:'text/csv'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='shortlist.csv';a.click();};
   $('out').innerHTML=data.ranked.map(c=>{
     const f=c.factors||{};const tier=c.rank<=3?'t1':c.rank<=8?'t2':'t3';
-    const flags=(c.risk_flags||[]).map(x=>`<span class="flag" title="${(x.detail||'').replace(/"/g,'&quot;')}">${x.code}</span>`).join('');
-    const reqs=(c.requirement_matches||[]).slice(0,3).map(m=>`<span class="m">${(m.matched_keywords||[]).join(', ')||m.requirement.slice(0,40)}</span>`).join(' · ');
+    const flags=(c.risk_flags||[]).map(x=>`<span class="flag" title="${esc(x.detail||'')}">${esc(x.code)}</span>`).join('');
+    const reqs=(c.requirement_matches||[]).slice(0,3).map(m=>`<span class="m">${esc((m.matched_keywords||[]).join(', ')||(m.requirement||'').slice(0,40))}</span>`).join(' · ');
     return `<div class="card ${tier}">
-      <div class="crank"><div class="r">#${c.rank}</div><div class="nm">${c.title||c.candidate_id}</div><div class="sc">${c.score.toFixed(3)}</div></div>
-      <div class="meta">${c.candidate_id} · ${(c.years||0).toFixed(1)} yrs · ${c.location||'—'} · confidence ${(c.confidence||0).toFixed(2)}</div>
-      <div class="reason">${c.reasoning||''}</div>
+      <div class="crank"><div class="r">#${c.rank}</div><div class="nm">${esc(c.title||c.candidate_id)}</div><div class="sc">${c.score.toFixed(3)}</div></div>
+      <div class="meta">${esc(c.candidate_id)} · ${(c.years||0).toFixed(1)} yrs · ${esc(c.location||'—')} · confidence ${(c.confidence||0).toFixed(2)}</div>
+      <div class="reason">${esc(c.reasoning||'')}</div>
       <div class="factors">${bar('tech',f.technical_evidence||0)}${bar('career',f.career_fit||0)}${bar('senior',f.seniority||0)}${bar('behav',f.behavioral||0)}${bar('trust',f.trust||0)}${bar('semantic',f.semantic_fit||0)}</div>
       ${reqs?`<div class="reqs">matched: ${reqs}</div>`:''}
       ${flags?`<div class="flags">${flags}</div>`:''}

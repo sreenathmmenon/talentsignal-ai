@@ -75,9 +75,11 @@ def rerank(jd_text: str, ranked: list, id_to_candidate: dict[str, dict],
     tail = ranked[top_k:]
     pairs = []
     valid = []
+    skipped = []  # head items with no candidate record — must NOT be lost
     for rc in head:
         cand = id_to_candidate.get(rc.candidate_id)
         if cand is None:
+            skipped.append(rc)
             continue
         pairs.append((jd_text, _evidence_text(cand)))
         valid.append(rc)
@@ -108,8 +110,10 @@ def rerank(jd_text: str, ranked: list, id_to_candidate: dict[str, dict],
         except Exception:  # noqa: BLE001
             pass
         out.append(rc)
-    # re-rank the tail after the reranked head
-    for i, rc in enumerate(tail, len(out) + 1):
-        rc.rank = i
+    # re-append head items we couldn't score (missing candidate record) AFTER the
+    # reranked ones, so no candidate is ever silently dropped, then the tail.
+    for rc in skipped + tail:
         out.append(rc)
+    for i, rc in enumerate(out, 1):
+        rc.rank = i
     return out

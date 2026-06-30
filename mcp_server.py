@@ -242,6 +242,10 @@ TOOL_FUNCS = {
 
 def handle(request: dict) -> dict | None:
     """Handle one JSON-RPC request; return a response dict (or None for notifications)."""
+    # A JSON line that parses to a non-dict (array, scalar, null) must not crash the
+    # whole server — return a proper JSON-RPC Invalid Request error instead.
+    if not isinstance(request, dict):
+        return _error(None, -32600, "Invalid Request: expected a JSON object")
     method = request.get("method")
     req_id = request.get("id")
 
@@ -289,8 +293,14 @@ def serve_stdio() -> None:
         try:
             request = json.loads(line)
         except json.JSONDecodeError:
+            sys.stdout.write(json.dumps(_error(None, -32700, "Parse error")) + "\n")
+            sys.stdout.flush()
             continue
-        response = handle(request)
+        try:
+            response = handle(request)
+        except Exception as exc:  # noqa: BLE001 - one bad request must not kill the server
+            response = _error(request.get("id") if isinstance(request, dict) else None,
+                              -32603, f"Internal error: {type(exc).__name__}")
         if response is not None:
             sys.stdout.write(json.dumps(response) + "\n")
             sys.stdout.flush()

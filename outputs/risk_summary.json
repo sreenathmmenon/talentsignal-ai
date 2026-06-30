@@ -1,9 +1,6 @@
 {
   "rows": 100,
   "top10_ineligible": 0,
-  "risk_flag_counts": {
-    "ai_terms_without_career_evidence": 1,
-    "skill_not_in_evidence": 1
-  },
-  "top100_with_any_risk_flag": 2
+  "risk_flag_counts": {},
+  "top100_with_any_risk_flag": 0
 }
