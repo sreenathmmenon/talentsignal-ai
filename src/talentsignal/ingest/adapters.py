@@ -29,17 +29,34 @@ def json_adapter(source: Any, **opts) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     if not text:
         return records
-    if text[0] == "[":
-        for rec in json.loads(text):
+
+    def _add(rec: Any) -> None:
+        # only dict records are candidates; skip scalars/lists/null silently
+        if isinstance(rec, dict):
             records.append(normalize_record(rec))
-    else:
-        # JSONL (one object per line) — or a single object
-        lines = [ln for ln in text.splitlines() if ln.strip()]
-        if len(lines) == 1 and text[0] == "{":
-            records.append(normalize_record(json.loads(text)))
-        else:
-            for ln in lines:
-                records.append(normalize_record(json.loads(ln)))
+
+    # 1) try the whole text as one JSON value (array OR pretty-printed object)
+    if text[0] in "[{":
+        try:
+            parsed = json.loads(text)
+            if isinstance(parsed, list):
+                for rec in parsed:
+                    _add(rec)
+            else:
+                _add(parsed)
+            return records
+        except json.JSONDecodeError:
+            pass  # fall through to JSONL line-by-line
+
+    # 2) JSONL — one object per line; skip blank/garbage lines instead of crashing
+    for ln in text.splitlines():
+        ln = ln.strip()
+        if not ln:
+            continue
+        try:
+            _add(json.loads(ln))
+        except json.JSONDecodeError:
+            continue
     return records
 
 

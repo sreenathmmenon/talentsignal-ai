@@ -78,11 +78,14 @@ def _evidence_tokens(candidate: dict[str, Any]) -> set[str]:
 def _evidence_blob(candidate: dict[str, Any]) -> str:
     """Full lowercased evidence text (summary + headline + career), normalized so
     punctuation/spacing differences don't cause false 'skill missing' matches."""
-    profile = candidate.get("profile", {})
+    profile = candidate.get("profile") or {}
+    if not isinstance(profile, dict):
+        profile = {}
     parts = [profile.get("summary", ""), profile.get("headline", ""), profile.get("current_title", "")]
-    for job in candidate.get("career_history", []):
-        parts.append(job.get("title", ""))
-        parts.append(job.get("description", ""))
+    for job in (candidate.get("career_history") or []):
+        if isinstance(job, dict):
+            parts.append(job.get("title", ""))
+            parts.append(job.get("description", ""))
     blob = " ".join(str(p) for p in parts).lower()
     # collapse separators so "scikit-learn" and "scikit learn" both contain "scikit"+"learn"
     return re.sub(r"[/\-.]", " ", blob)
@@ -90,16 +93,38 @@ def _evidence_blob(candidate: dict[str, Any]) -> str:
 
 def audit_candidate(candidate: dict[str, Any]) -> ConsistencyReport:
     report = ConsistencyReport()
-    profile = candidate.get("profile", {})
-    career = candidate.get("career_history", []) or []
+    # Harden against malformed inputs (string/None candidate, null profile) — real
+    # customer data is messy and must never crash the auditor.
+    if not isinstance(candidate, dict):
+        return report
+    profile = candidate.get("profile") or {}
+    if not isinstance(profile, dict):
+        profile = {}
+    career = candidate.get("career_history") or []
+    if not isinstance(career, list):
+        career = []
+    # keep only dict career entries so every j.get(...) below is safe
+    career = [j for j in career if isinstance(j, dict)]
     # Skills may be objects or plain strings; the consistency checks below only
     # apply to structured (dict) skills (duration/proficiency). Keep dicts only so
     # a string-skill applicant never crashes the auditor.
     skills = [s for s in (candidate.get("skills", []) or []) if isinstance(s, dict)]
-    signals = candidate.get("redrob_signals", {}) or {}
+    signals = candidate.get("redrob_signals") or {}
+    if not isinstance(signals, dict):
+        signals = {}
 
-    stated_years = float(profile.get("years_of_experience") or 0.0)
-    career_months = sum(int(j.get("duration_months") or 0) for j in career)
+    import math
+
+    def _f(v, default=0.0):
+        try:
+            f = float(v)
+            return f if math.isfinite(f) else default
+        except (TypeError, ValueError):
+            return default
+
+    stated_years = _f(profile.get("years_of_experience"))
+    career_months = sum(int(_f(j.get("duration_months")))
+                        for j in career if isinstance(j, dict))
 
     # 1) tenure sum wildly exceeds stated experience (impossible career length).
     if stated_years > 0 and career_months > (stated_years * 12) + 18:
