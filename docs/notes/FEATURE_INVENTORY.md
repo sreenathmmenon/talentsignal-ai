@@ -1,6 +1,11 @@
-# TalentSignal — Complete Feature Inventory (123 features)
+# TalentSignal — Complete Feature Inventory (124 features)
 
-Categories: {'JD Understanding': 23, 'Candidate Ingestion': 25, 'Ranking Engine': 30, 'Trust & Fairness': 21, 'Behavioral & Extra Intelligence': 18, 'Reasoning & Explainability': 7, 'Evaluation': 22, 'Interfaces & Surfaces': 33, 'Reproducibility & Ops': 9}
+Categories: {'JD Understanding': 23, 'Candidate Ingestion': 25, 'Ranking Engine': 30, 'Trust & Fairness': 21, 'Behavioral & Extra Intelligence': 18, 'Reasoning & Explainability': 7, 'Evaluation': 23, 'Interfaces & Surfaces': 33, 'Reproducibility & Ops': 9}
+
+_Updated: added the one-command proof (`make prove`). Test suite also grew to 215
+(added live-socket REST/MCP integration tests, validation/cache/ingest/rerank
+coverage) and a "Known limits" section was added to docs/methodology.md — those are
+tests/docs, not product features, so the feature count reflects only prove.py._
 
 > Note on totals: this is a single de-duplicated list of 123 distinct features. A handful of features legitimately belong to two concerns (e.g. evidence spans serve both the ranking engine and the transparency report; the keyword baseline ranker serves both the engine and the rescue ledger; CI/reproduction features span evaluation and ops). Each such feature is placed once in its primary category and cross-referenced in prose where relevant, so the per-category counts above sum to more than 123 only if double-counted — the unique feature total is **123**.
 
@@ -201,6 +206,7 @@ Categories: {'JD Understanding': 23, 'Candidate Ingestion': 25, 'Ranking Engine'
 - **Real-JD evaluation on real postings** — Runs the engine against REAL job descriptions over a diverse archetype population (best/under-market/undersell/adjacent/weak/keyword-stuffer; India + international) parsed via the live ingest layer, reporting where each archetype lands. — `scripts/real_jd_eval.py` (run, CANDIDATES, _embedder, main); `eval/real_jds.py` (REAL_JDS)
 - **Keyword-baseline rescue ledger** — Ranks the full pool with the engine vs a keyword-only baseline and lists candidates the keyword filter buries that the engine surfaces into its top-N, each with the candidate's evidence span and the requirement matched by meaning; skips impossible profiles. — `scripts/rescue_ledger.py` (main); `src/talentsignal/baseline_ranker.py` (keyword_rank); `src/talentsignal/consistency_audit.py` (audit_candidate)
 - **Rescue headline stats** — Computes deck-ready stats — how many of the engine's shortlist fall outside the keyword filter's top-50/top-100 — and writes a rescue_summary.json with a headline sentence and sample rescues with proof. — `scripts/rescue_ledger.py` (summary block, outputs/rescue_summary.json)
+- **One-command proof (`make prove`)** — A single script a judge runs to reproduce, live on the organizers' own 100K in ~1 min, all three core claims WITH their source: rescue count (top-100 invisible to a keyword filter, with a concrete example + the candidate's own words), 0 fabricated profiles in the top-100 (with a real caught contradiction), and cross-JD top-10 overlap ~0 (different roles → different people, no per-category code). — `scripts/prove.py`, `Makefile` (prove target)
 
 ## Interfaces & Surfaces
 *Studio GUI, REST API, MCP server, Python SDK, rank() facade, batch ranking, CLI, live cache, alternate GUIs.*
@@ -255,7 +261,7 @@ Categories: {'JD Understanding': 23, 'Candidate Ingestion': 25, 'Ranking Engine'
 - **Offline reproduction verifier** — Local stand-in for the organizers' `docker run --network none` Stage-3 sandbox: forces offline env, runs only the documented rank command, and confirms it reproduces a valid submission. — `scripts/verify_reproduction.py` (main, _run)
 - **Reproduction: no-network import inspection** — Asserts rank-time imports (ranking, artifacts, semantic_match) pull no network deps (torch/sentence_transformers/transformers). — `scripts/verify_reproduction.py` (check_no_network_imports)
 - **Reproduction: engine run + official validator check** — Runs rank.py for spine (and hybrid when a precomputed index exists) under forced-offline env, runs the official validate_submission.py, and confirms a valid exactly-100-row CSV. — `scripts/verify_reproduction.py` (check_engine, VALIDATOR path)
-- **Make targets (reproducible commands)** — make rank/rank-hybrid/precompute/eval/validate/test/clean wrapping the CLI, the official validator, and the eval harness with overridable CANDIDATES/JOB_SPEC/OUT/INDEX_DIR vars. — `Makefile`
+- **Make targets (reproducible commands)** — make rank/rank-hybrid/precompute/eval/validate/test/clean/**prove** wrapping the CLI, the official validator, the eval harness, and the one-command proof, with overridable CANDIDATES/JOB_SPEC/OUT/INDEX_DIR vars. — `Makefile`
 - **Reproduction Docker image** — python:3.11-slim image for the rank step only: installs just numpy, sets offline env vars, runnable with --network none; default CMD runs rank.py on the official candidates file. — `Dockerfile`
 - **Hosted demo Docker image** — Demo image (Dockerfile.demo) that installs the embedding stack, warms the all-MiniLM-L6-v2 model into the image, binds 0.0.0.0 + honors $PORT, and serves product_ui.py for the click-and-try hybrid demo. — `Dockerfile.demo`
 - **Render one-click deploy** — render.yaml defining a free-tier Docker web service (dockerfilePath Dockerfile.demo) with PORT/HOST env and healthCheckPath / for one-click hosting of the product demo. — `render.yaml`
