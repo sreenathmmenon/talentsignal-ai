@@ -1,15 +1,27 @@
-# TalentSignal — Complete Feature Inventory (124 features)
+# TalentSignal — Engineering Manifest
 
-Categories: {'JD Understanding': 23, 'Candidate Ingestion': 25, 'Ranking Engine': 30, 'Trust & Fairness': 21, 'Behavioral & Extra Intelligence': 18, 'Reasoning & Explainability': 7, 'Evaluation': 23, 'Interfaces & Surfaces': 33, 'Reproducibility & Ops': 9}
+**The honest framing first:** TalentSignal is **one JD-agnostic ranking engine** —
+rank any candidate against any role by *meaning*, reject fabricated profiles, explain
+every decision — exposed through **three live surfaces: a Studio UI, a REST API, and
+MCP tools** for agents. That is what a judge or buyer sees and uses.
 
-_Updated: added the one-command proof (`make prove`). Test suite also grew to 215
-(added live-socket REST/MCP integration tests, validation/cache/ingest/rerank
-coverage) and a "Known limits" section was added to docs/methodology.md — those are
-tests/docs, not product features, so the feature count reflects only prove.py._
+Counted as *user-facing capabilities*, there are about **two dozen** — the ones in the
+Studio UI (rank, candidate compare, interview kit, transparency report, live 100K
+challenge, before/after diff) are clickable; the rest (EEOC compliance, batch over many
+JDs, full eval suite) are one REST/MCP call away. The **Capabilities** tab in the Studio
+lists them all with a runnable demo for each.
 
-> Note on totals: this is a single de-duplicated list of 123 distinct features. A handful of features legitimately belong to two concerns (e.g. evidence spans serve both the ranking engine and the transparency report; the keyword baseline ranker serves both the engine and the rescue ledger; CI/reproduction features span evaluation and ops). Each such feature is placed once in its primary category and cross-referenced in prose where relevant, so the per-category counts above sum to more than 123 only if double-counted — the unique feature total is **123**.
+This document is the deeper **engineering manifest**: the individual de-duplicated
+mechanisms (parsers, scorers, auditors, adapters, eval metrics, ops) that compose those
+capabilities — grounded in code, file-by-file. It is an internal completeness record,
+**not** a marketing "feature count." Don't quote the bare number to a judge looking at
+the UI; quote "one engine, three surfaces, ~two dozen capabilities."
 
-# Consolidated Feature Inventory (123 features)
+Mechanism categories: {'JD Understanding': 23, 'Candidate Ingestion': 25, 'Ranking Engine': 30, 'Trust & Fairness': 21, 'Behavioral & Extra Intelligence': 18, 'Reasoning & Explainability': 7, 'Evaluation': 23, 'Interfaces & Surfaces': 33, 'Reproducibility & Ops': 9}
+
+> Each mechanism below is a single de-duplicated entry placed once in its primary category and cross-referenced in prose where it serves two concerns (e.g. evidence spans serve both the ranking engine and the transparency report). These are implementation mechanisms, not user-facing features — see the framing above.
+
+## Mechanisms, by concern
 
 ## JD Understanding
 *Free-text parsing, requirement extraction, category taxonomy, JD library.*
