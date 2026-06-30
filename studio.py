@@ -181,6 +181,82 @@ def do_rank(body):
     }
 
 
+def _packets_from_records(jd, records):
+    """Rank in-memory records with the LIVE engine and return full evidence
+    packets (candidate_id, rank, score, score_breakdown, evidence) + the parsed
+    job. This is the exact packet shape candidate_compare and interview_kit
+    consume, assembled from the same engine rows write_evidence_packets uses.
+    Read-only: no engine code is modified; we only call existing functions."""
+    from dataclasses import asdict
+    from talentsignal.api.facade import _resolve_job
+    from talentsignal.ranking import rank_records, rank_records_hybrid
+
+    job = _resolve_job(jd, category="ai_ml_search_ranking", title="")
+    embedder = _get_embedder() if len(records) <= 200 else None
+    if embedder is not None:
+        rows = rank_records_hybrid(records, job, top_n=min(50, len(records)),
+                                   live_embedder=embedder)
+    else:
+        rows = rank_records(records, job, top_n=min(50, len(records)))
+    packets = []
+    for row in rows:
+        ev = row["_evidence"]
+        score = row["_score"]
+        packets.append({
+            "candidate_id": row["candidate_id"],
+            "rank": row["rank"],
+            "score": row["score"],
+            "reasoning": row["reasoning"],
+            "score_breakdown": asdict(score),
+            "evidence": {
+                "title": ev.title, "years": ev.years, "location": ev.location,
+                "career_retrieval_terms": ev.career_retrieval_terms,
+                "career_production_terms": ev.career_production_terms,
+                "vector_terms": ev.vector_terms,
+                "production_terms": ev.production_terms,
+                "risk_flags": score.risk_flags,
+                "confidence": score.confidence,
+            },
+        })
+    return packets, job
+
+
+def do_compare(body):
+    """Candidate-vs-candidate comparison on a live shortlist: rank the provided
+    candidates, then explain why rank L sits ahead of rank R with a factor-by-
+    factor scorecard. The recruiter question 'why #2 over #5?' answered."""
+    from talentsignal.candidate_compare import compare_by_rank
+    records = _ingest_inputs(body.get("files"), body.get("paste"))
+    if not records:
+        return {"error": "No candidates could be parsed."}
+    packets, _job = _packets_from_records(body.get("jd", ""), records)
+    left = int(body.get("left_rank", 1))
+    right = int(body.get("right_rank", 2))
+    cmp = compare_by_rank(packets, left, right)
+    if cmp is None:
+        return {"error": f"ranks {left}/{right} not in the shortlist of {len(packets)}"}
+    return {"comparison": cmp, "shortlist": [
+        {"rank": p["rank"], "candidate_id": p["candidate_id"],
+         "title": p["evidence"]["title"], "score": p["score"]} for p in packets]}
+
+
+def do_interview_kit(body):
+    """Generate an evidence-grounded interview kit for ONE ranked candidate:
+    depth questions tied to their strongest evidence terms, a weak-area probe,
+    a risk/role-commitment question, and a decision rubric. No LLM, no
+    hallucination — every prompt is anchored in the candidate's own profile."""
+    from talentsignal.interview_kit import build_interview_kit
+    records = _ingest_inputs(body.get("files"), body.get("paste"))
+    if not records:
+        return {"error": "No candidates could be parsed."}
+    packets, job = _packets_from_records(body.get("jd", ""), records)
+    target = int(body.get("rank", 1))
+    packet = next((p for p in packets if p["rank"] == target), None)
+    if packet is None:
+        return {"error": f"rank {target} not in the shortlist of {len(packets)}"}
+    return build_interview_kit(packet, job)
+
+
 def _validator_passes() -> bool:
     """Actually run the organizers' official validator on the committed submission,
     rather than asserting validity. Cached after the first check. Returns False if
@@ -318,7 +394,8 @@ def do_top10detail(body):
 
 
 ROUTES = {"/api/rank": do_rank, "/api/challenge": do_challenge,
-          "/api/transparency": do_transparency, "/api/top10detail": do_top10detail}
+          "/api/transparency": do_transparency, "/api/top10detail": do_top10detail,
+          "/api/compare": do_compare, "/api/interview_kit": do_interview_kit}
 
 
 class Handler(BaseHTTPRequestHandler):
