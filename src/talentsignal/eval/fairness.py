@@ -63,7 +63,13 @@ def audit_name_invariance(records: list[dict[str, Any]], job, *, limit: int = 40
         for names in NAME_SETS.values():
             for nm in names[:1]:  # one swap per set is enough to detect leakage
                 alt = copy.deepcopy(rec)
-                alt.setdefault("profile", {})["anonymized_name"] = nm
+                prof = alt.setdefault("profile", {})
+                prof["anonymized_name"] = nm
+                # Inject the name into the fields the ENGINE actually reads, so the
+                # test genuinely exercises name-leakage (the old version only set
+                # anonymized_name, which build_evidence ignores — a vacuous test).
+                prof["summary"] = f"{nm}. " + str(prof.get("summary", ""))
+                prof["headline"] = f"{nm} — " + str(prof.get("headline", ""))
                 d = abs(_score_one(alt, job) - base)
                 if d > max_delta:
                     max_delta = d

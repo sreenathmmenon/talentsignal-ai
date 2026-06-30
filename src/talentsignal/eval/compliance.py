@@ -45,8 +45,8 @@ class AdverseImpactReport:
     top_k: int
     group_rates: list[GroupRate]
     impact_ratios: dict[str, float]   # group -> rate / max_rate
-    min_impact_ratio: float
-    passes_four_fifths: bool
+    min_impact_ratio: float | None    # None = not assessed (no valid comparison)
+    passes_four_fifths: bool | None   # None = not assessed
     notes: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
@@ -57,8 +57,10 @@ class AdverseImpactReport:
                         "selection_rate": round(g.rate, 4),
                         "impact_ratio": round(self.impact_ratios.get(g.group, 0.0), 4)}
                        for g in self.group_rates],
-            "min_impact_ratio": round(self.min_impact_ratio, 4),
+            "min_impact_ratio": (round(self.min_impact_ratio, 4)
+                                 if self.min_impact_ratio is not None else None),
             "passes_four_fifths_rule": self.passes_four_fifths,
+            "assessed": self.passes_four_fifths is not None,
             "notes": self.notes,
         }
 
@@ -106,9 +108,14 @@ def adverse_impact(
     if small:
         notes.append(f"groups with <{min_group_size} members excluded from the ratio "
                      f"(too small to be statistically meaningful): {', '.join(small)}")
-    if not eligible:
-        notes.append("no group large enough for a four-fifths analysis")
-        return AdverseImpactReport(attribute, top_k, rates, {}, 1.0, True, notes)
+    if not eligible or len(eligible) < 2:
+        # With fewer than 2 sufficiently-large groups the four-fifths rule is
+        # UNDEFINED (no comparison group). Do NOT assert it "passes" — that would
+        # claim a compliance guarantee that was never validly computed. Report
+        # passes=None so callers can distinguish "passed" from "not assessed".
+        notes.append("not assessed — need at least 2 groups with "
+                     f">={min_group_size} members for a four-fifths analysis")
+        return AdverseImpactReport(attribute, top_k, rates, {}, None, None, notes)
 
     max_rate = max(r.rate for r in eligible) or 1.0
     impact = {r.group: (r.rate / max_rate if max_rate else 0.0) for r in eligible}
@@ -133,14 +140,22 @@ def compliance_summary(ranked_ids: list[str], group_attributes: dict[str, dict[s
     Returns a single report dict suitable for an audit export.
     """
     reports = {}
-    overall_pass = True
+    assessed = [a for a in group_attributes
+                if adverse_impact(ranked_ids, group_attributes[a], top_k=top_k,
+                                  attribute=a).passes_four_fifths is not None]
+    passes = []
     for attr, mapping in group_attributes.items():
         rep = adverse_impact(ranked_ids, mapping, top_k=top_k, attribute=attr)
         reports[attr] = rep.to_dict()
-        overall_pass = overall_pass and rep.passes_four_fifths
+        if rep.passes_four_fifths is not None:
+            passes.append(rep.passes_four_fifths)
+    # overall = True only if at least one attribute was VALIDLY assessed and all
+    # assessed ones pass; None if nothing could be assessed (never a vacuous pass).
+    overall = (all(passes) if passes else None)
     return {
         "top_k": top_k,
-        "overall_passes_four_fifths": overall_pass,
+        "overall_passes_four_fifths": overall,
+        "assessed_attributes": assessed,
         "attributes": reports,
         "method": "EEOC Uniform Guidelines four-fifths (80%) rule",
         "engine_property": "identity-blind by construction (scores never read name/identity; "

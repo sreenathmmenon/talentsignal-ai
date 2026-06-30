@@ -162,6 +162,31 @@ def do_rank(body):
     }
 
 
+def _validator_passes() -> bool:
+    """Actually run the organizers' official validator on the committed submission,
+    rather than asserting validity. Cached after the first check. Returns False if
+    the validator or the CSV is unavailable (never claims an unverified pass)."""
+    if _validator_passes._cached is not None:
+        return _validator_passes._cached
+    ok = False
+    try:
+        import importlib.util
+        vpath = OFFICIAL_CANDIDATES.parent / "validate_submission.py"
+        if vpath.exists() and OFFICIAL_CSV.exists():
+            spec = importlib.util.spec_from_file_location("validate_submission", vpath)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            errors = mod.validate_submission(str(OFFICIAL_CSV))
+            ok = not errors
+    except Exception:  # noqa: BLE001 - if we can't verify, we do NOT claim valid
+        ok = False
+    _validator_passes._cached = ok
+    return ok
+
+
+_validator_passes._cached = None
+
+
 def do_challenge(body):
     """Rank the real 100K LIVE for the standing challenge JD (NOT a frozen CSV).
 
@@ -176,7 +201,7 @@ def do_challenge(body):
         return {"error": res["error"]}
     return {
         "jd": "Senior AI Engineer — Founding Team @ Redrob",
-        "total": res["total"], "valid": True,
+        "total": res["total"], "valid": _validator_passes(),
         "honeypots": res.get("honeypots_in_top", 0),
         "engine": res["engine"], "elapsed": res["elapsed"],
         "from_cache": res["from_cache"], "live": True,
