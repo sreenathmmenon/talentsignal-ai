@@ -9,6 +9,13 @@ from .jd_parser import JobSpec
 from .risk_audit import risk_flags, risk_penalty
 
 
+# Short but real tech skills that the generic ">=3 chars" filter would wrongly drop.
+_SHORT_SKILLS = frozenset({
+    "go", "r", "c", "ml", "ai", "js", "qa", "ux", "ui", "bi", "c#", "c++",
+    ".net", "ci", "cd", "ab", "nlp", "llm",
+})
+
+
 def clamp(value: float, lo: float = 0.0, hi: float = 1.0) -> float:
     return max(lo, min(hi, value))
 
@@ -36,7 +43,10 @@ def _term_coverage(text: str, terms: tuple[str, ...]) -> float:
     tokens = _tokenize(text)
     total = 0.0
     for term in terms:
-        words = [w for w in re.split(r"[\s/\-]+", term.lower()) if len(w) >= 3]
+        # keep words >=3 chars, but also keep short, real tech tokens (go, r, c,
+        # ml, ai, js, qa, c#, .net, c++) — dropping these erased real skills.
+        words = [w for w in re.split(r"[\s/\-]+", term.lower())
+                 if len(w) >= 3 or w in _SHORT_SKILLS]
         if not words:
             continue
         hits = sum(1 for w in words if w in tokens)

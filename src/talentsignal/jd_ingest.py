@@ -63,6 +63,12 @@ _STOPWORDS = {
     "real", "users", "experience", "production", "work", "years", "year", "role",
 }
 
+# Short but real tech skills the generic "<3 chars" filter would otherwise drop.
+_SHORT_SKILLS = frozenset({
+    "go", "r", "c", "ml", "ai", "js", "qa", "ux", "ui", "bi", "c#", "c++",
+    ".net", "ci", "cd", "ab", "nlp", "llm",
+})
+
 _SENT_SPLIT = re.compile(r"(?<=[.!?;:\n])\s+|\n+")
 _YEARS_RE = re.compile(r"(\d{1,2})\s*[-–to]+\s*(\d{1,2})\s*\+?\s*years", re.IGNORECASE)
 _YEARS_MIN_RE = re.compile(r"(\d{1,2})\s*\+\s*years", re.IGNORECASE)
@@ -98,11 +104,12 @@ def _keywords(sentence: str, limit: int = 6) -> tuple[str, ...]:
     Keeps multi-char alphanumerics that aren't stopwords, preserving order and
     de-duplicating. Hyphenated/tool tokens (e.g. 'sentence-transformers') survive.
     """
-    toks = re.findall(r"[a-zA-Z][a-zA-Z0-9+#/.\-]{1,}", sentence.lower())
+    # allow single-letter tech tokens (R, C) and short tokens like go/c#/.net/ml
+    toks = re.findall(r"[a-zA-Z][a-zA-Z0-9+#/.\-]*|[.][a-zA-Z]+", sentence.lower())
     out: list[str] = []
     for t in toks:
-        t = t.strip(".-/")
-        if len(t) < 3 or t in _STOPWORDS:
+        t = t.strip("-/")
+        if (len(t) < 3 and t not in _SHORT_SKILLS) or t in _STOPWORDS:
             continue
         if t not in out:
             out.append(t)
