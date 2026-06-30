@@ -226,6 +226,15 @@ textarea:focus,select:focus,input:focus{outline:none; border-color:var(--violet)
 .schip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;
   padding:5px 11px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft)}
 .empty{align-items:start;min-height:auto;padding-top:8px}
+/* ---- rescued-by-meaning callout + action hint on a result ---- */
+.rescue-callout{display:flex;align-items:flex-start;gap:11px;margin:0 0 12px;padding:13px 16px;
+  border-radius:var(--r-md);border:1px solid var(--line-glow);
+  background:linear-gradient(100deg,rgba(139,92,246,0.14),rgba(34,211,238,0.08));
+  color:var(--ink-soft);font-size:13.5px;line-height:1.5}
+.rescue-callout .ic{width:18px;height:18px;color:var(--violet-bright);flex:none;margin-top:1px}
+.rescue-callout b{color:var(--ink)}
+.result-tip{margin:0 0 14px;font-size:12.5px;color:var(--muted);line-height:1.5}
+.result-tip b{color:var(--ink-soft);font-weight:600}
 /* ---- progressive-disclosure actions on a ranked card ---- */
 .cand-actions{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
 .cmp-pick{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);
@@ -320,11 +329,11 @@ textarea:focus,select:focus,input:focus{outline:none; border-color:var(--violet)
   <div class="nav-in">
     <div class="logo"><span class="orb"></span> TalentSignal <span class="sub">Studio</span></div>
     <div class="tabs">
-      <button class="tab active" data-view="rank" onclick="switchView('rank')"><span class="dot"></span>Rank candidates</button>
-      <button class="tab" data-view="transparency" onclick="switchView('transparency')"><span class="dot"></span>Transparency</button>
-      <button class="tab" data-view="challenge" onclick="switchView('challenge')"><span class="dot"></span>100K challenge</button>
-      <button class="tab" data-view="whatsnew" onclick="switchView('whatsnew')"><span class="dot"></span>What changed</button>
-      <button class="tab" data-view="capabilities" onclick="switchView('capabilities')"><span class="dot"></span>Capabilities</button>
+      <button class="tab active" data-view="rank" onclick="switchView('rank')"><span class="dot"></span>Find talent</button>
+      <button class="tab" data-view="transparency" onclick="switchView('transparency')"><span class="dot"></span>Why this score</button>
+      <button class="tab" data-view="challenge" onclick="switchView('challenge')"><span class="dot"></span>Proof at scale</button>
+      <button class="tab" data-view="whatsnew" onclick="switchView('whatsnew')"><span class="dot"></span>Beyond keywords</button>
+      <button class="tab" data-view="capabilities" onclick="switchView('capabilities')"><span class="dot"></span>Platform</button>
     </div>
     <div class="live-badge"><span class="pulse"></span> live engine</div>
   </div>
@@ -334,8 +343,8 @@ textarea:focus,select:focus,input:focus{outline:none; border-color:var(--violet)
   <!-- LEFT controls -->
   <div class="col" id="leftcol">
     <div class="card">
-      <label>Job description — paste any role</label>
-      <textarea id="jd" placeholder="Paste any JD...">Senior AI Engineer — Founding Team
+      <label>The role you're hiring for</label>
+      <textarea id="jd" placeholder="Paste any job description...">Senior AI Engineer — Founding Team
 
 You must have shipped retrieval and ranking systems to real users: production embeddings-based retrieval, vector/hybrid search, and ranking models. Strong Python. You must have designed evaluation frameworks for ranking (NDCG, MRR, MAP).
 
@@ -354,15 +363,15 @@ We will not move forward with keyword-only AI experience or research with no pro
       </div>
     </div>
     <div class="card">
-      <label>Candidates — drop resumes</label>
-      <div class="drop" id="drop"><svg class="ic"><use href="#i-upload"/></svg> Drag &amp; drop resumes (pdf · docx · txt · csv · json), or click</div>
+      <label>Your candidates</label>
+      <div class="drop" id="drop"><svg class="ic"><use href="#i-upload"/></svg> Drop résumés here — PDF, Word, text, CSV or JSON. Or click to browse.</div>
       <input id="file" type="file" multiple style="display:none"/>
       <div class="files" id="files"></div>
-      <label style="margin-top:16px">…or paste resumes</label>
-      <textarea id="paste" placeholder="Paste one or more resumes (separate with a blank line)."></textarea>
+      <label style="margin-top:16px">…or paste them in</label>
+      <textarea id="paste" placeholder="Paste one or more résumés — leave a blank line between each."></textarea>
     </div>
-    <button class="go" id="go" onclick="runRank()">Rank with the live engine →</button>
-    <div class="hint">Universal ingest → JD parsing → hybrid semantic match → consistency auditor → grounded reasoning. Every score and sentence comes from the engine on your data.</div>
+    <button class="go" id="go" onclick="runRank()">Rank these candidates →</button>
+    <div class="hint">We read every résumé, match it to your role by <b>meaning</b> — not just keywords — flag anything that doesn't add up, and explain each ranking in the candidate's own words.</div>
   </div>
 
   <!-- RIGHT results -->
@@ -370,24 +379,24 @@ We will not move forward with keyword-only AI experience or research with no pro
     <div class="empty" id="empty">
       <div class="hero2" id="hero2">
         <div class="hero2-aurora"></div>
-        <div class="eyebrow"><svg class="ic"><use href="#i-sparkle"/></svg> live ranking engine · real 100,000-candidate dataset</div>
-        <h1 class="display">The candidate-ranking engine that<br><span class="shine">sees what keyword search can't.</span></h1>
+        <div class="eyebrow"><svg class="ic"><use href="#i-sparkle"/></svg> Live hiring intelligence · proven on 100,000 real candidates</div>
+        <h1 class="display">Find the people the<br><span class="shine">keyword search will miss.</span></h1>
         <div class="kpis2">
-          <div class="kpi2 big-kpi"><div class="n num grad" data-count="28" data-suffix="%">0%</div><div class="bar"><i id="rbar"></i></div><div class="l">of who we recommend is invisible to a keyword filter</div></div>
-          <div class="kpi2"><div class="n num" data-count="100000" data-fmt="1">0</div><div class="l">candidates ranked · CPU-only · in budget</div></div>
-          <div class="kpi2 ok"><div class="n"><svg class="ic"><use href="#i-check"/></svg> VALID</div><div class="l">official validator</div></div>
-          <div class="kpi2"><div class="n num" data-count="0">0</div><div class="l">fabricated profiles in our top-100</div></div>
-          <div class="kpi2"><div class="n num" data-count="215">0</div><div class="l">tests green</div></div>
+          <div class="kpi2 big-kpi"><div class="n num grad" data-count="28" data-suffix="%">0%</div><div class="bar"><i id="rbar"></i></div><div class="l">of our top hires are people a keyword search never surfaces</div></div>
+          <div class="kpi2"><div class="n num" data-count="100000" data-fmt="1">0</div><div class="l">candidates ranked in minutes — on one laptop, no cloud</div></div>
+          <div class="kpi2 ok"><div class="n"><svg class="ic"><use href="#i-check"/></svg> Verified</div><div class="l">passes the official scoring check</div></div>
+          <div class="kpi2"><div class="n num" data-count="0">0</div><div class="l">fabricated résumés reach our shortlist</div></div>
+          <div class="kpi2"><div class="n"><svg class="ic"><use href="#i-check"/></svg> Every call</div><div class="l">explained in the candidate's own words</div></div>
         </div>
         <div class="proof-ticker" id="ticker"></div>
         <div class="hero-ctas">
-          <button class="go hero-go" onclick="switchView('challenge')">See it rank the real 100,000 <svg class="ic"><use href="#i-arrow"/></svg></button>
-          <button class="go-ghost" onclick="$('jd').focus();$('jd').scrollIntoView({behavior:'smooth'})">Rank your own JD</button>
+          <button class="go hero-go" onclick="switchView('challenge')">Watch it rank 100,000 candidates <svg class="ic"><use href="#i-arrow"/></svg></button>
+          <button class="go-ghost" onclick="$('jd').focus();$('jd').scrollIntoView({behavior:'smooth'})">Try it on your own role</button>
         </div>
-        <div class="surfaces"><span class="muted">One engine, three ways:</span>
-          <span class="schip"><svg class="ic"><use href="#i-lens"/></svg> Studio UI</span>
-          <span class="schip">REST API</span>
-          <span class="schip">MCP (agentic)</span>
+        <div class="surfaces"><span class="muted">Use it your way:</span>
+          <span class="schip"><svg class="ic"><use href="#i-lens"/></svg> this app</span>
+          <span class="schip">in your ATS (API)</span>
+          <span class="schip">from an AI agent (MCP)</span>
         </div>
       </div>
     </div>
@@ -459,7 +468,7 @@ function switchView(v){
   const usesControls=(v==='rank'||v==='transparency');
   $('leftcol').style.display=usesControls?'flex':'none';
   $('app').classList.toggle('wide',!usesControls);
-  $('go').textContent=v==='transparency'?'Generate transparency report →':'Rank with the live engine →';
+  $('go').textContent=v==='transparency'?'Explain this candidate →':'Rank these candidates →';
   $('go').setAttribute('onclick',v==='transparency'?'runTransparency()':'runRank()');
   if(v==='challenge')loadChallenge();
   else if(v==='whatsnew')loadWhatsNew();
@@ -467,7 +476,7 @@ function switchView(v){
   else{
     $('out').style.display='none';$('empty').style.display='grid';
     if(v==='transparency'){
-      $('empty').innerHTML='<div><div class="big"><svg class="ic" style="width:40px;height:40px;color:var(--violet-bright)"><use href="#i-lens"/></svg></div><h3>Candidate transparency</h3><div class="d">Paste one candidate + a JD. See exactly what the engine used and concluded — with proof. The report no black-box scorer can give.</div></div>';
+      $('empty').innerHTML='<div><div class="big"><svg class="ic" style="width:40px;height:40px;color:var(--violet-bright)"><use href="#i-lens"/></svg></div><h3>Every decision, in plain sight</h3><div class="d">Paste one candidate and the role. See exactly why they scored the way they did — matched against their own words, with nothing hidden. The honest answer no black-box scorer will give a person.</div></div>';
     }else{
       $('empty').innerHTML=HERO_HTML;initHero();   // restore the proof hero on the Rank view
     }
@@ -483,7 +492,7 @@ function scoreChip(s){return `<div class="score-chip num">${(s||0).toFixed(3)}<s
 
 async function runRank(){
   const btn=$('go');btn.disabled=true;
-  loading('Running the engine…','Ingesting & ranking on real evidence.');
+  loading('Reading every résumé…','Matching each one to your role by meaning, and checking it holds up.');
   try{
     const files=await readFiles();
     const r=await fetch('/api/rank',{method:'POST',headers:{'Content-Type':'application/json'},
@@ -494,13 +503,22 @@ async function runRank(){
   }catch(e){errState(e.message)}
   btn.disabled=false;
 }
+const ENGINE_LABEL={hybrid:'meaning-based matching',spine:'fast keyword + structure'};
 let LAST_RANK=null, cmpPicks=[];
 function renderRank(d){
   $('empty').style.display='none';$('out').style.display='block';
   LAST_RANK=d; cmpPicks=[];
-  let h=`<div class="bar-top"><h2>${esc(d.job_title)||'Ranked shortlist'}</h2>
-    <span class="meta num">${d.candidate_count} candidates · ${d.ranked.length} ranked · ${d.elapsed}s</span>
-    <span class="chip live">engine: ${d.engine}</span></div>
+  const nRescued=(d.ranked||[]).filter(c=>c.rescued).length;
+  const eng=ENGINE_LABEL[d.engine]||d.engine;
+  let h=`<div class="bar-top"><h2>${esc(d.job_title)||'Your shortlist'}</h2>
+    <span class="meta num">${d.candidate_count} reviewed · ${d.ranked.length} ranked · ${d.elapsed}s</span>
+    <span class="chip live" title="How this shortlist was scored">${esc(eng)}</span></div>`;
+  if(nRescued>0){
+    h+=`<div class="rescue-callout"><svg class="ic"><use href="#i-sparkle"/></svg>
+      <div><b>${nRescued} ${nRescued===1?'person':'people'} a keyword search would have buried.</b>
+      We surfaced ${nRescued===1?'them':'them'} by what their work actually means — look for the ✦ below.</div></div>`;
+  }
+  h+=`<div class="result-tip">Tick <b>compare</b> on any two to see why one ranks higher · open an <b>interview kit</b> to question any candidate on their own evidence.</div>
     <div id="cmpbar"></div>`;
   d.ranked.forEach(c=>{
     const flagged=(c.flags||[]).length>0;
@@ -511,13 +529,13 @@ function renderRank(d){
     const flags=(c.flags||[]).map(x=>`<span class="flag-tag" title="${esc(x.detail)}">⚑ ${esc(x.code)}</span>`).join('');
     const rel=c.role_relevance||0;
     const fitClass=rel>=0.7?'fit-strong':rel>=0.45?'fit-good':rel>=0.25?'fit-partial':'fit-weak';
-    const fitChip=`<span class="fit ${fitClass}" title="role relevance ${rel.toFixed(2)} — how well they match THIS JD's requirements">${esc(c.fit_label||'')}</span>`;
-    const rescued=c.rescued?`<span class="rescued" title="Strong semantic match but low keyword overlap — a keyword filter would miss this person">✦ rescued by meaning</span>`:'';
+    const fitChip=`<span class="fit ${fitClass}" title="How closely this person fits the role you described (${Math.round(rel*100)}%)">${esc(c.fit_label||'')}</span>`;
+    const rescued=c.rescued?`<span class="rescued" title="Strong on what the work means, light on the exact keywords — a keyword search would have missed this person">✦ found by meaning</span>`:'';
     h+=`<div class="cand ${tierOf(c.rank,flagged)}">
       <div class="ch"><div class="rk num">#${c.rank}</div><div class="nm">${esc(c.title||c.name)} ${fitChip}${rescued}</div>${scoreChip(c.score)}</div>
-      <div class="sub">${c.candidate_id} · <span class="num">${(c.years||0).toFixed?c.years.toFixed(1):c.years}</span> yrs · ${esc(c.location)||'—'} · relevance <span class="num">${Math.round(rel*100)}%</span></div>
+      <div class="sub">${c.candidate_id} · <span class="num">${(c.years||0).toFixed?c.years.toFixed(1):c.years}</span> yrs · ${esc(c.location)||'—'} · fit to role <span class="num">${Math.round(rel*100)}%</span></div>
       <div class="rsn">${esc(c.reasoning)}</div>
-      <div class="facs">${fac('technical',f.technical)}${fac('career',f.career)}${fac('seniority',f.seniority)}${fac('behavioral',f.behavioral)}${fac('trust',f.trust)}${fac('semantic',f.semantic)}</div>
+      <div class="facs">${fac('Skills',f.technical)}${fac('Experience',f.career)}${fac('Seniority',f.seniority)}${fac('Availability',f.behavioral)}${fac('Credibility',f.trust)}${fac('Meaning match',f.semantic)}</div>
       ${proofs}${tags?`<div class="tags">${tags}</div>`:''}${flags?`<div class="tags">${flags}</div>`:''}
       <div class="cand-actions">
         <label class="cmp-pick" id="pick${c.rank}"><input type="checkbox" onchange="togglePick(${c.rank},this.checked)"> compare</label>
@@ -549,7 +567,7 @@ function openDrawer(html){$('drawerBody').innerHTML=html;$('scrim').classList.ad
 function closeDrawer(){$('scrim').classList.remove('open');$('drawer').classList.remove('open');}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
 async function runCompare(a,b){
-  openDrawer('<h2>Comparing…</h2><div class="dsub">Running the engine on both candidates.</div>');
+  openDrawer('<h2>Comparing…</h2><div class="dsub">Weighing both candidates strength by strength.</div>');
   try{
     const files=await readFiles();
     const r=await fetch('/api/compare',{method:'POST',headers:{'Content-Type':'application/json'},
@@ -572,8 +590,8 @@ function renderCompare(d){
         <div class="cmpbar"><span class="mid"></span><i class="L" style="width:${(lv*48).toFixed(1)}%"></i><i class="R" style="width:${(rv*48).toFixed(1)}%"></i></div></div>
       <div class="val r">${fd.right.toFixed(2)}</div></div>`;
   });
-  openDrawer(`<h2>Why #${L} over #${R}?</h2>
-    <div class="dsub">Factor-by-factor scorecard from the live engine. Sorted by the biggest gap.</div>
+  openDrawer(`<h2>#${L} vs #${R}</h2>
+    <div class="dsub">Where each one is stronger — biggest differences first.</div>
     <div class="vs"><div class="who"><b style="color:var(--violet-bright)">#${L}</b>${esc(nameOf(L))}<br><span class="num">${(+c.left_score).toFixed(3)}</span></div>
       <div class="vsdot">vs</div>
       <div class="who"><b style="color:var(--cyan-bright)">#${R}</b>${esc(nameOf(R))}<br><span class="num">${(+c.right_score).toFixed(3)}</span></div></div>
@@ -581,7 +599,7 @@ function renderCompare(d){
     <div class="reco">${esc(c.recommendation)}</div>`);
 }
 async function openKit(rank){
-  openDrawer('<h2>Building interview kit…</h2><div class="dsub">Grounding questions in this candidate’s own evidence.</div>');
+  openDrawer('<h2>Preparing your questions…</h2><div class="dsub">Drawing them from this candidate’s own work.</div>');
   try{
     const files=await readFiles();
     const r=await fetch('/api/interview_kit',{method:'POST',headers:{'Content-Type':'application/json'},
@@ -640,21 +658,21 @@ function renderTransparency(d){
 }
 
 async function loadChallenge(){
-  loading('Ranking the real 100,000…','Live engine over the full Redrob dataset. First run computes; then it is instant.');
+  loading('Ranking 100,000 real candidates…','Working through the full dataset on a single laptop. The first run computes; after that it’s instant.');
   try{
     const r=await fetch('/api/challenge',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
     const d=await r.json();
     if(d.error){errState(d.error);return}
     $('empty').style.display='none';$('out').style.display='block';
-    const cacheChip=d.from_cache?'<span class="chip cache">cached</span>':'<span class="chip live">freshly computed</span>';
-    let h=`<div class="bar-top"><h2>100K challenge — ranked live</h2><span class="chip live">engine: ${d.engine}</span>${cacheChip}</div>
+    const cacheChip=d.from_cache?'<span class="chip cache">instant replay</span>':'<span class="chip live">just computed</span>';
+    let h=`<div class="bar-top"><h2>100,000 candidates, ranked live</h2>${cacheChip}</div>
       <div class="stat-row">
         <div class="stat accent"><div class="n num">${(d.total||0).toLocaleString()}</div><div class="l">candidates ranked</div></div>
-        <div class="stat ok"><div class="n">VALID</div><div class="l">official validator</div></div>
-        <div class="stat"><div class="n num">${d.honeypots}</div><div class="l">honeypots in top-10</div></div>
-        <div class="stat"><div class="n num">${d.elapsed}s</div><div class="l">compute time</div></div>
+        <div class="stat ok"><div class="n">Verified</div><div class="l">passes the official scoring check</div></div>
+        <div class="stat"><div class="n num">${d.honeypots}</div><div class="l">fake profiles in the top 10</div></div>
+        <div class="stat"><div class="n num">${d.elapsed}s</div><div class="l">to rank all of them</div></div>
       </div>
-      <div class="meta" style="margin:0 0 14px">${esc(d.jd)}</div>`;
+      <div class="meta" style="margin:0 0 14px">Ranking for: ${esc(d.jd)}</div>`;
     d.top.forEach(c=>{
       h+=`<div class="cand ${tierOf(c.rank,false)}">
         <div class="ch"><div class="rk num">#${c.rank}</div><div class="nm">${esc(c.title)||c.candidate_id}</div>${scoreChip(c.score)}</div>
@@ -666,28 +684,28 @@ async function loadChallenge(){
 }
 
 async function loadWhatsNew(){
-  loading('Computing the live diff…','Ranking the real 100K and comparing against the old keyword engine.');
+  loading('Comparing the two approaches…','Ranking all 100,000 candidates twice — by meaning, and by keywords alone — to show the difference.');
   try{
     const r=await fetch('/api/top10detail',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
     const d=await r.json();
     if(d.error){errState(d.error);return}
     $('empty').style.display='none';$('out').style.display='block';
-    let h=`<div class="bar-top"><h2>What changed — on the real top 10</h2><span class="chip live">engine: ${d.engine}</span></div>
+    let h=`<div class="bar-top"><h2>What meaning changes vs keywords alone</h2></div>
       <div class="stat-row">
-        <div class="stat accent"><div class="n num">${(d.pool||0).toLocaleString()}</div><div class="l">candidates ranked</div></div>
-        <div class="stat ok"><div class="n num">${d.slots_changed}/10</div><div class="l">slots changed vs old</div></div>
-        <div class="stat"><div class="n num">${d.elapsed}s</div><div class="l">compute time</div></div>
-        <div class="stat"><div class="n num">${d.overlap_with_old_top10}/10</div><div class="l">kept from old</div></div>
+        <div class="stat accent"><div class="n num">${(d.pool||0).toLocaleString()}</div><div class="l">candidates ranked both ways</div></div>
+        <div class="stat ok"><div class="n num">${d.slots_changed}/10</div><div class="l">of the top 10 a keyword search got wrong</div></div>
+        <div class="stat"><div class="n num">${d.elapsed}s</div><div class="l">to rank all of them</div></div>
+        <div class="stat"><div class="n num">${d.overlap_with_old_top10}/10</div><div class="l">both approaches agreed on</div></div>
       </div>
-      <div class="card" style="margin:0 0 14px"><label>What's new in these iterations</label>
+      <div class="card" style="margin:0 0 14px"><label>Why these picks are better</label>
         <ul style="color:var(--ink-soft);font-size:13px;margin:6px 0 0 18px;line-height:1.7">${(d.iteration_notes||[]).map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`;
     d.top.forEach(c=>{
       const tier=c.consistency_clean?tierOf(c.rank,false):'flagged';
       const f=c.factors||{};
-      const cons=c.consistency_clean?'<span class="tag ok">✓ consistency clean</span>':(c.flags||[]).map(x=>`<span class="flag-tag">⚑ ${esc(x)}</span>`).join('');
+      const cons=c.consistency_clean?'<span class="tag ok">✓ profile checks out</span>':(c.flags||[]).map(x=>`<span class="flag-tag">⚑ ${esc(x)}</span>`).join('');
       const delta=c.was_outside_top10
-        ?`<span class="delta new">▲ was #${c.old_rank} (outside top 10) → now #${c.new_rank}</span>`
-        :`<span class="delta ${c.delta>=0?'up':'down'}">old #${c.old_rank} → now #${c.new_rank} (${c.delta>=0?'+':''}${c.delta})</span>`;
+        ?`<span class="delta new">▲ keywords ranked them #${c.old_rank} — we put them at #${c.new_rank}</span>`
+        :`<span class="delta ${c.delta>=0?'up':'down'}">keywords #${c.old_rank} → us #${c.new_rank} (${c.delta>=0?'+':''}${c.delta})</span>`;
       h+=`<div class="cand ${tier}">
         <div class="ch"><div class="rk num">#${c.rank}</div><div class="nm">${esc(c.title)}</div>${scoreChip(c.score)}</div>
         <div class="sub">${c.candidate_id} · <span class="num">${c.years}</span> yrs</div>
@@ -703,36 +721,36 @@ async function loadWhatsNew(){
 }
 // ---- Capabilities: the honest map of what this ONE engine does, across its three surfaces ----
 const CAPS=[
-  {ic:'i-lens',where:'UI',w:'ui',t:'Rank any JD × any candidates',
-   d:'Paste a JD and resumes (PDF/DOCX/TXT/CSV/JSON) — universal ingest → JD parsing → hybrid semantic match → consistency audit → grounded reasoning.',
-   demo:'Studio · “Rank candidates” tab'},
-  {ic:'i-sparkle',where:'UI',w:'ui',t:'Candidate compare',
-   d:'Pick two ranked rows → a factor-by-factor scorecard explaining why one sits ahead. The recruiter’s “why #2 over #5?”, answered.',
-   demo:'Studio · tick two “compare” boxes on a shortlist'},
-  {ic:'i-sparkle',where:'UI',w:'ui',t:'Interview kit',
-   d:'Per candidate: depth questions tied to their strongest evidence, a weak-area probe, risk validation, and a decision rubric. No LLM — every prompt anchored in their own profile.',
-   demo:'Studio · “Interview kit” on any ranked card'},
-  {ic:'i-check',where:'UI',w:'ui',t:'Candidate transparency report',
-   d:'What the engine used and concluded about ONE candidate — proof from their own words, unmet requirements they can dispute. The FCRA-grievance answer the incumbents lack.',
-   demo:'Studio · “Transparency” tab'},
-  {ic:'i-arrow',where:'UI',w:'ui',t:'Live 100K challenge + before/after',
-   d:'Ranks the real 100,000-candidate Redrob dataset live, and shows the diff vs the old keyword engine, per candidate.',
-   demo:'Studio · “100K challenge” / “What changed” tabs'},
-  {ic:'i-flag',where:'REST',w:'api',t:'EEOC four-fifths compliance',
-   d:'Adverse-impact report on a ranking from your OWN group labels — the report legal needs before deploying automated selection. The engine never infers protected attributes.',
-   demo:'curl localhost:8900/compliance -d \'{"ranked_ids":[...],"group_attributes":{...}}\''},
-  {ic:'i-lens',where:'REST',w:'api',t:'Ranking & ingest API',
-   d:'POST /rank, /ingest/jd, /ingest/resume, /audit, /candidate_report — the same engine any ATS or portal can call. OpenAPI spec included.',
-   demo:'curl localhost:8900/rank -d \'{"jd":"...","candidates":[...]}\''},
-  {ic:'i-sparkle',where:'MCP',w:'mcp',t:'7 agentic MCP tools',
-   d:'rank_candidates, ingest_jd, ingest_resume, audit_candidate, compliance_report, candidate_report, health — so an AI agent (Claude, etc.) can drive the engine directly.',
-   demo:'python mcp_server.py  ·  tool: rank_candidates'},
-  {ic:'i-check',where:'REST',w:'api',t:'Batch — many JDs at once',
-   d:'Rank one candidate pool against a whole req portfolio in a single call (api/batch.rank_many_jds).',
-   demo:'from talentsignal.api.batch import rank_many_jds'},
-  {ic:'i-flag',where:'eval',w:'',t:'Evaluation framework',
-   d:'NDCG@10/@50, MAP, P@10 + the challenge composite, honeypot-rate, paraphrase & cross-JD generality suites. The instrument behind every ranking change.',
-   demo:'make eval   ·   outputs/eval/METRICS.md'},
+  {ic:'i-lens',where:'In this app',w:'ui',t:'Rank candidates for any role',
+   d:'Paste a job description and any résumés — PDF, Word, text, CSV or JSON. Get back a ranked, explained shortlist that matches on meaning, not just keywords.',
+   demo:'Open the “Find talent” tab'},
+  {ic:'i-sparkle',where:'In this app',w:'ui',t:'Compare two candidates side by side',
+   d:'Pick any two on a shortlist and see exactly why one ranks higher — strength by strength. The answer to “so why them and not her?”',
+   demo:'Tick “compare” on any two candidates'},
+  {ic:'i-sparkle',where:'In this app',w:'ui',t:'Walk into the interview prepared',
+   d:'For each candidate, get sharp questions drawn from their own work, the gaps worth probing, and a clear hire / no-hire rubric. Nothing invented — every question is grounded in their résumé.',
+   demo:'Click “Interview kit” on any candidate'},
+  {ic:'i-check',where:'In this app',w:'ui',t:'Show a candidate why they scored that way',
+   d:'A plain-language report of exactly what counted for and against someone — quoted from their own words, with the gaps they can correct. The honest answer most hiring tools can’t give a person.',
+   demo:'Open the “Why this score” tab'},
+  {ic:'i-arrow',where:'In this app',w:'ui',t:'See it work at full scale',
+   d:'Watch it rank 100,000 real candidates in minutes, and see exactly where matching on meaning beats a keyword search — candidate by candidate.',
+   demo:'Open “Proof at scale” / “Beyond keywords”'},
+  {ic:'i-flag',where:'For your team',w:'api',t:'Stay fair, and prove it',
+   d:'A hiring-bias check on any shortlist, using your own diversity data — the report your legal and HR teams need before any automated screening goes live. It never guesses anyone’s background.',
+   demo:'POST your shortlist to /compliance'},
+  {ic:'i-lens',where:'In your ATS',w:'api',t:'Drop it into your own product',
+   d:'The same engine, available as a clean API any career site or applicant system can call. Rank, parse a JD, parse a résumé, fact-check a profile — your workflow, our intelligence.',
+   demo:'curl localhost:8900/rank -d \'{"jd":"…","candidates":[…]}\''},
+  {ic:'i-sparkle',where:'For AI agents',w:'mcp',t:'Let an AI assistant do the screening',
+   d:'Every capability is also a tool an AI agent (like Claude) can call directly — so an assistant can shortlist, fact-check, and explain candidates on your behalf.',
+   demo:'Run mcp_server.py — 7 tools, agent-ready'},
+  {ic:'i-check',where:'For your team',w:'api',t:'Hire across many roles at once',
+   d:'Score one pool of candidates against a whole set of open roles in a single pass — built for teams hiring at volume.',
+   demo:'Batch API · rank_many_jds'},
+  {ic:'i-flag',where:'Under the hood',w:'',t:'Measured, not guessed',
+   d:'Every ranking change is scored against labelled data with industry-standard quality metrics before it ships — so the engine gets better, provably, never worse.',
+   demo:'make eval  ·  outputs/eval/METRICS.md'},
 ];
 function renderCapabilities(){
   $('out').style.display='block';$('empty').style.display='none';
@@ -741,11 +759,11 @@ function renderCapabilities(){
     <p>${esc(c.d)}</p><pre>${esc(c.demo)}</pre></div>`).join('');
   $('out').innerHTML=`
     <div class="cap-hd">
-      <h2>One engine. Three live surfaces.</h2>
-      <p><span class="frame">TalentSignal is a single JD-agnostic ranking engine</span> — rank any candidate against any role by <i>meaning</i>, reject fabricated profiles, explain every decision. It’s exposed three ways: a <b style="color:var(--violet-bright)">Studio UI</b>, a <b style="color:var(--cyan-bright)">REST API</b>, and <b style="color:var(--pos)">MCP tools</b> for agents. Below is everything it does — and exactly how to run each.</p>
+      <h2>Everything TalentSignal can do</h2>
+      <p>It’s <span class="frame">one hiring-intelligence engine</span> — find the right people for any role, by what their work means, with every decision explained and every fake profile caught. Use it right here, plug it into your own systems, or hand it to an AI assistant. Same intelligence, wherever you need it.</p>
     </div>
     <div class="cap-grid">${cards}</div>
-    <div class="cap-foot">Honest by design: this isn’t a count of internal functions. It’s <b>one ranking engine</b> with the capabilities above — the ones in the Studio are clickable here; the rest are one REST/MCP call away. Same engine, same scores, everywhere.</div>`;
+    <div class="cap-foot">Straight answer: it’s <b>one engine</b>, shown here as the things it actually does for you. The ones marked <b>“In this app”</b> you can click today; the rest are a single call away for your engineering team. Same scores, everywhere.</div>`;
 }
 // animate the proof hero on first load
 initHero();
