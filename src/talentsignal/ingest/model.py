@@ -43,12 +43,29 @@ class Candidate:
 
 
 def _gen_id(seed: str) -> str:
-    return "CAND_" + str(int(hashlib.sha256(seed.encode()).hexdigest(), 16) % 10_000_000).zfill(7)
+    # Use ~50 bits of the hash (15 decimal digits) instead of mod 10^7 (only 10M
+    # ids -> ~39% birthday collisions at 100K candidates, silently overwriting
+    # distinct people). Digits-only keeps the CAND_ prefix shape; downstream code
+    # that needs the strict CAND_[0-9]{7} challenge format re-indexes its own ids.
+    n = int(hashlib.sha256(seed.encode("utf-8", "replace")).hexdigest(), 16) % (10 ** 15)
+    return "CAND_" + str(n).zfill(15)
 
 
 def canonical_record(c: Candidate, candidate_id: str | None = None) -> dict[str, Any]:
     """Produce a challenge-shaped, engine-rankable dict from a Candidate."""
-    cid = candidate_id or _gen_id(c.name + c.summary + c.current_company + (c.raw_text[:200]))
+    # Seed from EVERY distinguishing field so two same-name people with sparse data
+    # (CSV/LinkedIn where raw_text is empty) don't collide to the same id.
+    def _sk(s):
+        return s.get("name", "") if isinstance(s, dict) else str(s)
+
+    def _jb(j):
+        return f"{j.get('title','')}@{j.get('company','')}" if isinstance(j, dict) else str(j)
+
+    seed = "|".join([c.name, c.summary, c.current_company, c.current_title,
+                     " ".join(_sk(s) for s in (c.skills or [])),
+                     "|".join(_jb(j) for j in (c.career or [])),
+                     c.raw_text[:500]])
+    cid = candidate_id or _gen_id(seed)
     rec = {
         "candidate_id": cid,
         "profile": {

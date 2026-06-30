@@ -86,7 +86,7 @@ def csv_adapter(source: Any, **opts) -> list[dict[str, Any]]:
         for raw_key, val in row.items():
             if raw_key is None:
                 continue
-            key = _CSV_MAP.get(raw_key.strip().lower())
+            key = _CSV_MAP.get(raw_key.lstrip("﻿").strip().lower())
             if not key or not val:
                 continue
             if key == "years_of_experience":
@@ -136,7 +136,19 @@ def docx_adapter(source: Any, *, use_llm: bool = False, **opts) -> list[dict[str
     except ImportError as exc:  # pragma: no cover
         raise RuntimeError("python-docx required for DOCX ingest: pip install python-docx") from exc
     document = docx.Document(str(source))
-    text = "\n".join(p.text for p in document.paragraphs)
+    parts = [p.text for p in document.paragraphs]
+    # Many resumes lay out experience/skills in TABLES — paragraphs alone silently
+    # drop them. Also pull header/footer text. Collect all of it.
+    for table in getattr(document, "tables", []):
+        for row in table.rows:
+            for cell in row.cells:
+                if cell.text:
+                    parts.append(cell.text)
+    for section in getattr(document, "sections", []):
+        for hdr in (getattr(section, "header", None), getattr(section, "footer", None)):
+            if hdr is not None:
+                parts.extend(p.text for p in getattr(hdr, "paragraphs", []) if p.text)
+    text = "\n".join(t for t in parts if t)
     cand = parse_resume_text(text, use_llm=use_llm)
     cand.source = "docx"
     return [cand.to_record()]
@@ -183,14 +195,30 @@ def linkedin_adapter(source: Any, **opts) -> list[dict[str, Any]]:
 
 def _read_text(source: Any) -> str:
     if isinstance(source, (bytes, bytearray)):
-        return source.decode("utf-8", "ignore")
-    p = Path(str(source))
+        # utf-8-sig strips a BOM; fall back to latin-1 so accented bytes survive
+        # ('José Müller' stays intact instead of being silently dropped).
+        for enc in ("utf-8-sig", "latin-1"):
+            try:
+                return bytes(source).decode(enc)
+            except UnicodeDecodeError:
+                continue
+        return bytes(source).decode("utf-8", "replace")
+    s = str(source)
+    p = Path(s)
     try:
         if p.exists() and p.is_file():
-            return p.read_text(encoding="utf-8", errors="ignore")
+            try:
+                return p.read_text(encoding="utf-8-sig")
+            except UnicodeDecodeError:
+                return p.read_text(encoding="latin-1")
     except OSError:
         pass
-    return str(source)  # treat as inline content
+    # If it LOOKS like a file path (has a known doc extension) but doesn't exist,
+    # raise rather than silently parsing the path string as resume content.
+    if p.suffix.lower() in {".pdf", ".docx", ".doc", ".csv", ".tsv", ".json",
+                            ".jsonl", ".txt", ".md"} and not p.exists():
+        raise FileNotFoundError(f"file not found: {s}")
+    return s  # treat as inline content
 
 
 def _num(v: Any) -> float:

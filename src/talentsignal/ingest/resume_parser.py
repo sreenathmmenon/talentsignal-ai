@@ -292,12 +292,15 @@ def _parse_education(lines: list[str]) -> list[dict]:
         if not ln.strip():
             continue
         ym = re.search(r"((?:19|20)\d{2})", ln)
+        end_year = int(ym.group(1)) if ym else None
         edu.append({
             "institution": ln.strip()[:80],
             "degree": _guess_degree(ln),
             "field_of_study": "",
-            "start_year": int(ym.group(1)) - 4 if ym else 2014,
-            "end_year": int(ym.group(1)) if ym else 2018,
+            # Leave years None when unknown instead of FABRICATING 2014/2018 —
+            # invented dates can mislead downstream tenure/recency logic.
+            "start_year": (end_year - 4) if end_year else None,
+            "end_year": end_year,
             "tier": "unknown",
         })
         if len(edu) >= 5:
