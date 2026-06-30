@@ -11,6 +11,15 @@ Use it three ways, all over one engine:
 
 Built for the Redrob *Intelligent Candidate Discovery & Ranking Challenge* — the challenge JD/dataset is proof-case #1, and the submission is a valid top-100 CSV produced by this engine — but the system is the general product the challenge's job is hiring someone to build.
 
+### Verify the headline claims yourself (~1 min)
+
+```bash
+python3 scripts/prove.py      # or: make prove
+```
+
+Reproduces, on the organizers' own 100K, the three core claims with their source:
+**(1)** 29 of our top-100 are invisible to a keyword filter, **(2)** 0 fabricated profiles in the top-100 (with a real caught contradiction), **(3)** different roles surface different people (cross-JD top-10 overlap ~0).
+
 ## Why it's different
 
 1. **Reasons beyond keywords.** Hybrid retrieval (sentence-embeddings + lexical) over the JD's *own* requirements means a candidate who "built the recommendation engine serving the homepage" matches "shipped a ranking system" with zero shared keywords.

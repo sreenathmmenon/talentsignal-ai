@@ -41,3 +41,6 @@ test:
 
 clean:
 	rm -rf outputs/repro_* outputs/eval /tmp/team_submission.csv
+
+prove:
+	python3 scripts/prove.py
