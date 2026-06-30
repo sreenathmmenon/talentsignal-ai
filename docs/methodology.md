@@ -123,3 +123,19 @@ is one output of this engine; the product is the system the JD is hiring for.
 - Requirement weights and dense/lexical alpha are tuned on synthetic eval; a
   labeled real-resume corpus and learning-to-rank over the factors are the next
   quality lever.
+
+## Known limits (stated honestly)
+
+- **Vocabulary-overlapping non-tech roles.** On a 2,484 real-resume corpus across
+  21 categories, the engine nails distinctive roles (chef, aviation, accountant,
+  nurse → P@10 0.9–1.0) but is weaker on roles whose vocabulary overlaps others —
+  IT vs. consultant, sales vs. business-development (#1-correct ~3/6 on the
+  weak set). Part of this is a genuine embedding limit (MiniLM/mpnet don't strongly
+  separate these), and part is labeling overlap (a business-development resume
+  legitimately *is* sales). The engine is strongest, and best-validated, on the
+  challenge's actual domain (AI/ML/search) and on distinctive roles.
+- **No external ground truth for non-tech.** Per-category precision is measured
+  against the dataset's own category labels, which are themselves noisy.
+- **Rank-time LLM is intentionally absent** to keep the step CPU-only/offline/in-
+  budget; an optional offline-precomputed LLM reasoning pass is wired but not used
+  in the submission.
