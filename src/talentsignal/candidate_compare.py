@@ -4,13 +4,13 @@ from typing import Any
 
 
 FACTOR_LABELS = {
-    "technical_evidence": "Technical evidence",
-    "career_fit": "Career fit",
+    "technical_evidence": "Skills",
+    "career_fit": "Experience",
     "seniority": "Seniority",
-    "logistics": "Logistics",
-    "behavioral": "Behavioral availability",
-    "trust": "Trust",
-    "confidence": "Evidence confidence",
+    "logistics": "Location & logistics",
+    "behavioral": "Availability",
+    "trust": "Credibility",
+    "confidence": "Strength of evidence",
 }
 
 
@@ -51,6 +51,13 @@ def compare_packets(left: dict[str, Any], right: dict[str, Any]) -> dict[str, An
     right_strong = strongest_factor(right)
     winner = left if left_score >= right_score else right
     loser = right if winner is left else left
+    # The factor where the winner leads by the most — the human "why".
+    winner_is_left = winner is left
+    leading = [d for d in deltas if (d["delta"] > 0) == winner_is_left and d["delta"] != 0]
+    win_label = leading[0]["label"] if leading else (
+        left_strong if winner_is_left else right_strong)[0]
+    if not leading:
+        win_label = FACTOR_LABELS.get(win_label, win_label)
     return {
         "left_candidate_id": left["candidate_id"],
         "right_candidate_id": right["candidate_id"],
@@ -63,8 +70,8 @@ def compare_packets(left: dict[str, Any], right: dict[str, Any]) -> dict[str, An
         "left_strongest_factor": {"factor": left_strong[0], "label": FACTOR_LABELS[left_strong[0]], "value": round(left_strong[1], 6)},
         "right_strongest_factor": {"factor": right_strong[0], "label": FACTOR_LABELS[right_strong[0]], "value": round(right_strong[1], 6)},
         "recommendation": (
-            f"Keep {winner['candidate_id']} ahead of {loser['candidate_id']} because the combined scorecard gives it "
-            f"the stronger evidence-backed decision score ({winner['score']} vs {loser['score']})."
+            f"#{winner['rank']} stays ahead of #{loser['rank']}: the biggest gap is "
+            f"{win_label.lower()}, and the rest of the scorecard points the same way."
         ),
     }
 
