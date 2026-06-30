@@ -1,8 +1,6 @@
 {
   "rows": 100,
   "top10_ineligible": 0,
-  "risk_flag_counts": {
-    "skill_not_in_evidence": 1
-  },
-  "top100_with_any_risk_flag": 1
+  "risk_flag_counts": {},
+  "top100_with_any_risk_flag": 0
 }
