@@ -67,12 +67,18 @@ def average_precision(relevances: Sequence[float], threshold: int = RELEVANT_THR
 
 
 def precision_at_k(relevances: Sequence[float], k: int, threshold: int = RELEVANT_THRESHOLD) -> float:
-    """Fraction of the top-k that are relevant (grade >= threshold)."""
+    """Fraction of the top-k that are relevant (grade >= threshold).
+
+    Divides by the actual window size (min(k, len)) so a candidate list SHORTER
+    than k is not penalized for missing positions — consistent with
+    honeypot_rate_at_k. (For a full-length list this is identical to /k.)"""
     if k <= 0:
         return 0.0
     window = relevances[:k]
+    if not window:
+        return 0.0
     relevant = sum(1 for rel in window if rel >= threshold)
-    return relevant / k
+    return relevant / len(window)
 
 
 def honeypot_rate_at_k(relevances: Sequence[float], k: int, honeypot_grade: int = 0) -> float:

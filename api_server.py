@@ -181,14 +181,33 @@ class Handler(BaseHTTPRequestHandler):
         if not self._authorized():
             self._send(HTTPStatus.UNAUTHORIZED, {"error": "invalid or missing X-API-Key"})
             return
+        MAX_BODY = 32 * 1024 * 1024  # 32 MB cap — reject oversized bodies (DoS guard)
         try:
             length = int(self.headers.get("Content-Length", "0"))
+        except (TypeError, ValueError):
+            self._send(HTTPStatus.BAD_REQUEST, {"error": "invalid Content-Length header"})
+            return
+        if length > MAX_BODY:
+            self._send(HTTPStatus.REQUEST_ENTITY_TOO_LARGE, {"error": "request body too large"})
+            return
+        try:
             body = json.loads(self.rfile.read(length).decode("utf-8") or "{}")
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            self._send(HTTPStatus.BAD_REQUEST, {"error": "invalid JSON body"})
+            return
+        if not isinstance(body, dict):
+            self._send(HTTPStatus.BAD_REQUEST, {"error": "request body must be a JSON object"})
+            return
+        try:
             self._send(HTTPStatus.OK, fn(body))
         except KeyError as exc:
             self._send(HTTPStatus.BAD_REQUEST, {"error": f"missing field: {exc}"})
-        except Exception as exc:  # noqa: BLE001
-            self._send(HTTPStatus.INTERNAL_SERVER_ERROR, {"error": f"{type(exc).__name__}: {exc}"})
+        except (ValueError, TypeError) as exc:
+            self._send(HTTPStatus.BAD_REQUEST, {"error": f"invalid input: {exc}"})
+        except Exception:  # noqa: BLE001 - never leak internals to the client
+            import traceback
+            traceback.print_exc()
+            self._send(HTTPStatus.INTERNAL_SERVER_ERROR, {"error": "internal server error"})
 
 
 def main() -> int:

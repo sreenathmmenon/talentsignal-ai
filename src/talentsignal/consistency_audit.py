@@ -127,7 +127,12 @@ def audit_candidate(candidate: dict[str, Any]) -> ConsistencyReport:
                         for j in career if isinstance(j, dict))
 
     # 1) tenure sum wildly exceeds stated experience (impossible career length).
-    if stated_years > 0 and career_months > (stated_years * 12) + 18:
+    # NOTE: career_months SUMS jobs and does not subtract calendar overlap, so a
+    # candidate with concurrent roles can legitimately sum past their stated years.
+    # The buffer is generous (allows ~2 fully-overlapping roles) to avoid falsely
+    # flagging real concurrent work; only a wildly-impossible sum is flagged.
+    overlap_buffer = max(18, int(stated_years * 12 * 0.5))
+    if stated_years > 0 and career_months > (stated_years * 12) + overlap_buffer:
         report.flags.append(ConsistencyFlag(
             "tenure_exceeds_experience",
             f"claims {stated_years:.1f} years but career tenure sums to "
@@ -135,9 +140,13 @@ def audit_candidate(candidate: dict[str, Any]) -> ConsistencyReport:
             0.30,
         ))
 
-    # 2) expert proficiency with zero months of use.
+    # 2) expert proficiency with EXPLICIT zero months of use. Only flag when the
+    # duration field is present and equals 0 — a MISSING duration is unknown, not
+    # zero, and must not trigger a hard veto (real profiles often omit it).
     expert_zero = [s for s in skills
-                   if _norm(s.get("proficiency")) == "expert" and int(s.get("duration_months") or 0) == 0]
+                   if _norm(s.get("proficiency")) == "expert"
+                   and s.get("duration_months") is not None
+                   and int(_f(s.get("duration_months"))) == 0]
     if expert_zero:
         names = ", ".join(str(s.get("name")) for s in expert_zero[:3])
         report.flags.append(ConsistencyFlag(
