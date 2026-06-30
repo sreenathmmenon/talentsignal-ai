@@ -190,11 +190,58 @@ textarea:focus,select:focus,input:focus{outline:none; border-color:var(--violet)
           mask:radial-gradient(circle 12px,transparent 98%,#000)}
 .errbox{color:var(--neg)}
 
-@media (max-width:920px){.app{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}.facs{grid-template-columns:repeat(2,1fr)}}
+/* ---- inline icons (replace emoji) ---- */
+.ic{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.14em}
+/* ---- proof-first hero ---- */
+.hero2{position:relative;max-width:760px;padding:8px 4px;text-align:left}
+.hero2-aurora{position:absolute;width:480px;height:480px;right:-120px;top:-160px;border-radius:50%;
+  background:var(--aurora-conic);filter:blur(60px);opacity:.34;animation:spin 20s linear infinite;z-index:0}
+.hero2 > *{position:relative;z-index:1}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--cyan-bright);margin-bottom:20px}
+.eyebrow .ic{color:var(--violet-bright)}
+.display{font-size:clamp(34px,4.4vw,52px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0 0 28px}
+.shine{background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  background-size:220% auto;animation:shine 6s linear infinite}
+@keyframes shine{to{background-position:220% center}}
+.grad{background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.kpis2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
+.kpi2{background:var(--surface-glass);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;backdrop-filter:blur(var(--blur))}
+.kpi2.big-kpi{grid-column:1 / -1}
+.kpi2 .n{font-family:var(--mono);font-size:26px;font-weight:700;letter-spacing:-.02em}
+.kpi2.big-kpi .n{font-size:54px;line-height:1}
+.kpi2.ok .n{color:var(--pos);font-size:24px;display:flex;align-items:center;gap:8px}
+.kpi2 .l{font-size:12.5px;color:var(--muted);margin-top:7px;line-height:1.4}
+.kpi2 .bar{height:6px;border-radius:3px;background:var(--surface-3);overflow:hidden;margin:10px 0 2px}
+.kpi2 .bar i{display:block;height:100%;width:0;background:var(--confidence-bar);transition:width 1.3s cubic-bezier(.16,1,.3,1)}
+.proof-ticker{min-height:46px;border-left:2px solid var(--violet);padding:6px 0 6px 16px;margin-bottom:26px;
+  font-size:13.5px;color:var(--ink-soft);transition:opacity .4s}
+.proof-ticker .r{font-family:var(--mono);font-size:12px;color:var(--cyan);display:block;margin-top:5px}
+.hero-ctas{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:24px}
+.hero-go{width:auto;padding:14px 22px;display:inline-flex;align-items:center;gap:9px}
+.go-ghost{appearance:none;background:transparent;border:1px solid var(--line-strong);color:var(--ink-soft);
+  font-family:var(--sans);font-weight:600;font-size:14px;padding:14px 20px;border-radius:var(--r-md);cursor:pointer;transition:.2s}
+.go-ghost:hover{border-color:var(--violet);color:var(--ink);box-shadow:0 0 0 4px var(--focus-ring)}
+.surfaces{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px}
+.schip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;
+  padding:5px 11px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft)}
+.empty{align-items:start;min-height:auto;padding-top:8px}
+@media (max-width:920px){.app{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}.facs{grid-template-columns:repeat(2,1fr)}.kpis2{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
 </style>
 </head>
 <body>
+<script>window.__PROOF__={{PROOF_JSON}};</script>
+<!-- inline icon sprite (no emoji, no dependency) -->
+<svg style="display:none" aria-hidden="true"><defs>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+  <symbol id="i-lens" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+</defs></svg>
 <nav>
   <div class="nav-in">
     <div class="logo"><span class="orb"></span> TalentSignal <span class="sub">Studio</span></div>
@@ -233,7 +280,7 @@ We will not move forward with keyword-only AI experience or research with no pro
     </div>
     <div class="card">
       <label>Candidates — drop resumes</label>
-      <div class="drop" id="drop">⬇ Drag &amp; drop resumes (pdf · docx · txt · csv · json), or click</div>
+      <div class="drop" id="drop"><svg class="ic"><use href="#i-upload"/></svg> Drag &amp; drop resumes (pdf · docx · txt · csv · json), or click</div>
       <input id="file" type="file" multiple style="display:none"/>
       <div class="files" id="files"></div>
       <label style="margin-top:16px">…or paste resumes</label>
@@ -246,10 +293,27 @@ We will not move forward with keyword-only AI experience or research with no pro
   <!-- RIGHT results -->
   <div class="col" id="results">
     <div class="empty" id="empty">
-      <div>
-        <div class="big">⚡</div>
-        <h3>Drop a JD and some resumes</h3>
-        <div class="d">The live engine ranks them by real evidence — with factor breakdowns, proof quotes, and honest concerns.</div>
+      <div class="hero2" id="hero2">
+        <div class="hero2-aurora"></div>
+        <div class="eyebrow"><svg class="ic"><use href="#i-sparkle"/></svg> live ranking engine · real 100,000-candidate dataset</div>
+        <h1 class="display">The candidate-ranking engine that<br><span class="shine">sees what keyword search can't.</span></h1>
+        <div class="kpis2">
+          <div class="kpi2 big-kpi"><div class="n num grad" data-count="28" data-suffix="%">0%</div><div class="bar"><i id="rbar"></i></div><div class="l">of who we recommend is invisible to a keyword filter</div></div>
+          <div class="kpi2"><div class="n num" data-count="100000" data-fmt="1">0</div><div class="l">candidates ranked · CPU-only · in budget</div></div>
+          <div class="kpi2 ok"><div class="n"><svg class="ic"><use href="#i-check"/></svg> VALID</div><div class="l">official validator</div></div>
+          <div class="kpi2"><div class="n num" data-count="0">0</div><div class="l">fabricated profiles in our top-100</div></div>
+          <div class="kpi2"><div class="n num" data-count="215">0</div><div class="l">tests green</div></div>
+        </div>
+        <div class="proof-ticker" id="ticker"></div>
+        <div class="hero-ctas">
+          <button class="go hero-go" onclick="switchView('challenge')">See it rank the real 100,000 <svg class="ic"><use href="#i-arrow"/></svg></button>
+          <button class="go-ghost" onclick="$('jd').focus();$('jd').scrollIntoView({behavior:'smooth'})">Rank your own JD</button>
+        </div>
+        <div class="surfaces"><span class="muted">One engine, three ways:</span>
+          <span class="schip"><svg class="ic"><use href="#i-lens"/></svg> Studio UI</span>
+          <span class="schip">REST API</span>
+          <span class="schip">MCP (agentic)</span>
+        </div>
       </div>
     </div>
     <div id="out" style="display:none"></div>
@@ -259,6 +323,36 @@ We will not move forward with keyword-only AI experience or research with no pro
 <script>
 const $=id=>document.getElementById(id);
 let view='rank', pending=[];
+// capture the proof-hero markup once so switchView('rank') can restore it
+const HERO_HTML=$('empty').innerHTML;
+const REDUCED=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+function countUp(el){
+  const to=+el.dataset.count, suf=el.dataset.suffix||'', fmt=el.dataset.fmt;
+  if(REDUCED){el.textContent=(fmt?to.toLocaleString():to)+suf;return;}
+  const t0=performance.now(),dur=1300;
+  function step(now){const p=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-p,4),v=Math.round(to*e);
+    el.textContent=(fmt?v.toLocaleString():v)+suf; if(p<1)requestAnimationFrame(step);}
+  requestAnimationFrame(step);
+}
+function initHero(){
+  const P=window.__PROOF__||{};
+  document.querySelectorAll('#empty .n[data-count]').forEach(el=>{
+    if(el.dataset.count==='28')el.dataset.count=String(P.rescued_below_100||28);
+    if(el.dataset.count==='100000')el.dataset.count=String(P.pool||100000);
+    countUp(el);
+  });
+  const rbar=$('rbar'); if(rbar)setTimeout(()=>rbar.style.width=(P.rescued_below_100||28)+'%',REDUCED?0:120);
+  // rotating rescued-candidate ticker (real data)
+  const tick=$('ticker'), rescued=(P.rescued||[]);
+  if(tick){
+    if(!rescued.length){tick.innerHTML='<span class="muted">Strong candidates a keyword filter would bury — surfaced by meaning, with their own words.</span>';}
+    else{let i=0;const show=()=>{const r=rescued[i%rescued.length];
+      tick.style.opacity=0;
+      setTimeout(()=>{tick.innerHTML=`“${esc((r.their_own_words||'').slice(0,110))}”<span class="r">${esc(r.candidate_id)} · keyword #${r.keyword_rank} → our #${r.our_rank} · ${esc((r.matched_requirement||'').slice(0,40))}</span>`;tick.style.opacity=1;},REDUCED?0:200);
+      i++;};
+      show(); if(!REDUCED&&rescued.length>1)setInterval(show,3400);}
+  }
+}
 const drop=$('drop'),file=$('file');
 drop.onclick=()=>file.click();
 ['dragover','dragenter'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add('hi')}));
@@ -290,15 +384,17 @@ function switchView(v){
   else if(v==='whatsnew')loadWhatsNew();
   else{
     $('out').style.display='none';$('empty').style.display='grid';
-    $('empty').innerHTML=v==='transparency'
-      ?'<div><div class="big">🔍</div><h3>Candidate transparency</h3><div class="d">Paste one candidate + a JD. See exactly what the engine used and concluded — with proof. The report no black-box scorer can give.</div></div>'
-      :'<div><div class="big">⚡</div><h3>Drop a JD and some resumes</h3><div class="d">The live engine ranks them by real evidence — and shows you why.</div></div>';
+    if(v==='transparency'){
+      $('empty').innerHTML='<div><div class="big"><svg class="ic" style="width:40px;height:40px;color:var(--violet-bright)"><use href="#i-lens"/></svg></div><h3>Candidate transparency</h3><div class="d">Paste one candidate + a JD. See exactly what the engine used and concluded — with proof. The report no black-box scorer can give.</div></div>';
+    }else{
+      $('empty').innerHTML=HERO_HTML;initHero();   // restore the proof hero on the Rank view
+    }
   }
 }
 function loading(msg,sub){$('empty').style.display='grid';$('out').style.display='none';
   $('empty').innerHTML=`<div><div class="big"><span class="spin"></span></div><h3>${msg}</h3>${sub?`<div class="d">${sub}</div>`:''}</div>`}
 function errState(m){$('empty').style.display='grid';$('out').style.display='none';
-  $('empty').innerHTML=`<div><div class="big">⚠️</div><h3 class="errbox">${esc(m)}</h3></div>`}
+  $('empty').innerHTML=`<div><div class="big"><svg class="ic" style="width:40px;height:40px;color:var(--neg)"><use href="#i-flag"/></svg></div><h3 class="errbox">${esc(m)}</h3></div>`}
 
 function fac(l,v){return `<div class="fac"><div class="l">${l}<span class="v num">${(v||0).toFixed(2)}</span></div><div class="tr"><div class="fl" style="width:${Math.round((v||0)*100)}%"></div></div></div>`}
 function scoreChip(s){return `<div class="score-chip num">${(s||0).toFixed(3)}<span class="ub" style="width:${Math.round((s||0)*70)}%"></span></div>`}
@@ -443,6 +539,8 @@ async function loadWhatsNew(){
     $('out').innerHTML=h;
   }catch(e){errState(e.message)}
 }
+// animate the proof hero on first load
+initHero();
 // deep-link: ?view=challenge opens that tab on load
 (function(){const v=new URLSearchParams(location.search).get('view');
   if(v&&['rank','transparency','challenge','whatsnew'].includes(v))switchView(v);})();

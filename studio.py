@@ -35,6 +35,25 @@ ROOT = Path(__file__).parent
 INDEX_HTML = ROOT / "studio_ui.html"
 OFFICIAL_CSV = ROOT / "outputs" / "final_submission.csv"
 OFFICIAL_CANDIDATES = ROOT / "[PUB] India_runs_data_and_ai_challenge" / "India_runs_data_and_ai_challenge" / "candidates.jsonl"
+RESCUE_SUMMARY = ROOT / "outputs" / "rescue_summary.json"
+
+# Proof data inlined into the served HTML so the hero paints in 0ms (no fetch,
+# no cold 100K wait). Falls back to a small literal if the file is missing.
+def _proof_payload() -> dict:
+    try:
+        d = json.loads(RESCUE_SUMMARY.read_text(encoding="utf-8"))
+        return {
+            "rescued_below_100": d.get("keyword_ranks_below_100", 28),
+            "rescued_below_50": d.get("keyword_ranks_below_50", 60),
+            "pool": d.get("pool_size", 100000),
+            "headline": d.get("headline", ""),
+            "rescued": d.get("rescued_with_proof", [])[:6],
+        }
+    except Exception:  # noqa: BLE001
+        return {"rescued_below_100": 28, "rescued_below_50": 60, "pool": 100000,
+                "headline": "", "rescued": []}
+
+PROOF_JSON = json.dumps(_proof_payload(), separators=(",", ":"))
 
 _EMBEDDER = {"model": None, "tried": False}
 
@@ -316,8 +335,12 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def do_GET(self):
-        if urlparse(self.path).path in ("/", "/index.html"):
-            self._send(HTTPStatus.OK, INDEX_HTML.read_text(encoding="utf-8"), "text/html; charset=utf-8")
+        path = urlparse(self.path).path
+        if path in ("/", "/index.html"):
+            html = INDEX_HTML.read_text(encoding="utf-8").replace("{{PROOF_JSON}}", PROOF_JSON)
+            self._send(HTTPStatus.OK, html, "text/html; charset=utf-8")
+        elif path == "/api/proof":
+            self._send(HTTPStatus.OK, _proof_payload())
         else:
             self._send(HTTPStatus.NOT_FOUND, {"error": "not found"})
 

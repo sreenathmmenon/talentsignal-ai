@@ -248,7 +248,16 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if urlparse(self.path).path in ("/", "/index.html"):
-            self._send(HTTPStatus.OK, PAGE, "text/html; charset=utf-8")
+            # The canonical product is now TalentSignal Studio (python studio.py).
+            # Point visitors there instead of this older surface.
+            moved = ("<!doctype html><meta charset=utf-8><title>TalentSignal</title>"
+                     "<body style='margin:0;background:#07070B;color:#F5F6FC;font:16px/1.6 system-ui;"
+                     "display:grid;place-items:center;height:100vh;text-align:center'>"
+                     "<div><h1 style='font-size:30px;font-weight:800'>TalentSignal</h1>"
+                     "<p style='color:#878DAB'>The product UI is now <b>Studio</b> — run "
+                     "<code style='color:#67E8F9'>python studio.py</code> and open "
+                     "<a style='color:#67E8F9' href='http://127.0.0.1:8888'>127.0.0.1:8888</a>.</p></div></body>")
+            self._send(HTTPStatus.OK, moved, "text/html; charset=utf-8")
         else:
             self._send(HTTPStatus.NOT_FOUND, {"error": "not found"})
 

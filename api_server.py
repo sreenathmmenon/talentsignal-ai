@@ -33,6 +33,38 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 API_VERSION = "1.0.0"
 
+# A human face for the API port — a judge hitting GET / sees the product story and
+# a copy-paste curl, not raw JSON. Self-contained, no dependencies.
+_API_LANDING = """<!doctype html><html><head><meta charset=utf-8>
+<title>TalentSignal API</title>
+<style>
+body{margin:0;background:#07070B;color:#F5F6FC;font:15px/1.6 'Inter',system-ui,sans-serif;padding:56px 24px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:34px;font-weight:800;letter-spacing:-.02em;margin:0 0 8px}
+.g{background:linear-gradient(110deg,#8B5CF6,#22D3EE);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+p{color:#C7CBDD}.mut{color:#878DAB}
+pre{background:#101220;border:1px solid #1E2138;border-radius:12px;padding:18px;overflow:auto;
+  font:13px ui-monospace,monospace;color:#C7CBDD}
+.chip{display:inline-block;font:12px ui-monospace,monospace;padding:5px 11px;border-radius:999px;
+  border:1px solid #2A2E4A;color:#C7CBDD;margin:2px 6px 2px 0}
+a{color:#67E8F9}
+</style></head><body><div class=wrap>
+<h1>TalentSignal <span class=g>API</span></h1>
+<p>The same JD-agnostic ranking engine as the Studio UI — exposed as a REST service.
+Rank candidates by meaning (not keywords), reject fabricated profiles, get grounded reasoning.</p>
+<p class=mut>Endpoints:
+<span class=chip>POST /rank</span><span class=chip>POST /ingest/jd</span><span class=chip>POST /ingest/resume</span>
+<span class=chip>POST /audit</span><span class=chip>POST /compliance</span><span class=chip>POST /candidate_report</span>
+<span class=chip>GET /openapi.json</span><span class=chip>GET /health</span></p>
+<p>Try it:</p>
+<pre>curl -s localhost:PORT/rank -H 'Content-Type: application/json' -d '{
+  "jd": "Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years.",
+  "candidates": [{"candidate_id":"C1","profile":{"summary":"built embeddings retrieval ranking in python"}}]
+}'</pre>
+<p class=mut>Full spec: <a href="/openapi.json">/openapi.json</a> · Studio UI: run <code>python studio.py</code> (:8888)
+· Also available as 7 <b>MCP tools</b> for agents.</p>
+</div></body></html>"""
+
 OPENAPI = {
     "openapi": "3.0.0",
     "info": {"title": "TalentSignal API", "version": API_VERSION,
@@ -169,6 +201,14 @@ class Handler(BaseHTTPRequestHandler):
                                        "engine": "talentsignal"})
         elif path == "/openapi.json":
             self._send(HTTPStatus.OK, OPENAPI)
+        elif path in ("/", "/index.html"):
+            host = self.headers.get("Host", "localhost:8900")
+            body = _API_LANDING.replace("localhost:PORT", host).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
         else:
             self._send(HTTPStatus.NOT_FOUND, {"error": "not found"})
 

@@ -917,7 +917,15 @@ class AppHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         parsed = urlparse(self.path)
         if parsed.path == "/":
-            self._send(HTTPStatus.OK, self._render_index(), "text/html; charset=utf-8")
+            # Canonical product is now TalentSignal Studio (python studio.py).
+            moved = ("<!doctype html><meta charset=utf-8><title>TalentSignal</title>"
+                     "<body style='margin:0;background:#07070B;color:#F5F6FC;font:16px/1.6 system-ui;"
+                     "display:grid;place-items:center;height:100vh;text-align:center'>"
+                     "<div><h1 style='font-size:30px;font-weight:800'>TalentSignal</h1>"
+                     "<p style='color:#878DAB'>The product UI is now <b>Studio</b> — run "
+                     "<code style='color:#67E8F9'>python studio.py</code> and open "
+                     "<a style='color:#67E8F9' href='http://127.0.0.1:8888'>127.0.0.1:8888</a>.</p></div></body>")
+            self._send(HTTPStatus.OK, moved, "text/html; charset=utf-8")
             return
         if parsed.path == "/assets/helix-theme.css":
             if not HELIX_THEME_CSS.exists():

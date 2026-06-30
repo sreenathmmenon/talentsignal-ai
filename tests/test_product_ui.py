@@ -27,11 +27,13 @@ def _start():
 
 
 def test_page_serves():
+    # product_ui's "/" now points visitors to the canonical Studio product
+    # (the GUIs were consolidated); it still serves a valid TalentSignal page.
     srv, port = _start()
     try:
         with request.urlopen(f"http://127.0.0.1:{port}/") as r:
             html = r.read().decode()
-        assert "TalentSignal" in html and "Rank candidates" in html
+        assert "TalentSignal" in html and "studio.py" in html
     finally:
         srv.shutdown()
 
