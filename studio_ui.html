@@ -226,7 +226,81 @@ textarea:focus,select:focus,input:focus{outline:none; border-color:var(--violet)
 .schip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;
   padding:5px 11px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft)}
 .empty{align-items:start;min-height:auto;padding-top:8px}
-@media (max-width:920px){.app{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}.facs{grid-template-columns:repeat(2,1fr)}.kpis2{grid-template-columns:1fr}}
+/* ---- progressive-disclosure actions on a ranked card ---- */
+.cand-actions{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+.cmp-pick{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);
+  cursor:pointer;user-select:none;font-family:var(--mono)}
+.cmp-pick input{accent-color:var(--violet);width:15px;height:15px;cursor:pointer}
+.cmp-pick.on{color:var(--violet-bright)}
+.mini{appearance:none;background:var(--surface-2);border:1px solid var(--line-strong);color:var(--ink-soft);
+  font-family:var(--sans);font-weight:600;font-size:12.5px;padding:7px 13px;border-radius:var(--r-pill);
+  cursor:pointer;transition:.18s;display:inline-flex;align-items:center;gap:6px}
+.mini:hover{border-color:var(--violet);color:var(--ink);box-shadow:0 0 0 3px var(--focus-ring)}
+.mini .ic{width:14px;height:14px}
+/* compare action bar pinned under the results header */
+.cmp-bar{position:sticky;top:64px;z-index:20;display:flex;align-items:center;gap:12px;
+  background:var(--surface-glass-strong);backdrop-filter:blur(var(--blur));border:1px solid var(--line-strong);
+  border-radius:var(--r-pill);padding:9px 9px 9px 16px;margin:0 0 14px;box-shadow:var(--shadow-card)}
+.cmp-bar .lbl{font-size:13px;color:var(--ink-soft)}
+.cmp-bar .lbl b{color:var(--violet-bright)}
+.cmp-bar .go{padding:9px 16px;font-size:13px;margin:0;width:auto}
+.cmp-bar .clearx{margin-left:auto;color:var(--muted);background:none;border:none;cursor:pointer;font-size:12px;font-family:var(--mono)}
+/* drawer for compare / interview-kit detail */
+.scrim{position:fixed;inset:0;background:rgba(4,4,9,0.62);backdrop-filter:blur(3px);z-index:90;opacity:0;
+  transition:opacity .2s;display:none}
+.scrim.open{display:block;opacity:1}
+.drawer{position:fixed;top:0;right:0;height:100vh;width:min(560px,94vw);z-index:91;
+  background:var(--bg-elevated);border-left:1px solid var(--line-strong);box-shadow:-20px 0 60px rgba(0,0,0,.5);
+  transform:translateX(100%);transition:transform .26s cubic-bezier(.2,.8,.2,1);overflow-y:auto;padding:26px}
+.drawer.open{transform:translateX(0)}
+.drawer h2{margin:0 0 4px;font-size:20px;letter-spacing:-.01em}
+.drawer .dx{position:absolute;top:20px;right:22px;background:none;border:none;color:var(--muted);
+  cursor:pointer;font-size:20px;line-height:1}
+.drawer .dsub{color:var(--muted);font-size:13px;margin-bottom:18px}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:6px}
+.vs .who{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);text-align:center}
+.vs .who b{display:block;color:var(--ink);font-size:13.5px;margin-bottom:2px}
+.vs .vsdot{color:var(--muted);font-family:var(--mono);font-size:12px}
+.cmprow{display:grid;grid-template-columns:128px 1fr 128px;gap:10px;align-items:center;margin:9px 0}
+.cmprow .lab{font-size:12.5px;color:var(--muted)}
+.cmpbar{position:relative;height:8px;border-radius:6px;background:var(--surface-2);overflow:hidden}
+.cmpbar i{position:absolute;top:0;bottom:0}
+.cmpbar .L{left:50%;transform:translateX(-100%);background:var(--violet)}
+.cmpbar .R{left:50%;background:var(--cyan)}
+.cmpbar .mid{position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--line-strong)}
+.cmprow .val{font-family:var(--mono);font-size:12px;text-align:center}
+.cmprow .val.l{color:var(--violet-bright)}.cmprow .val.r{color:var(--cyan-bright)}
+.reco{margin-top:18px;padding:14px 16px;border-radius:var(--r-md);border:1px solid var(--line-strong);
+  background:var(--surface);color:var(--ink-soft);font-size:13.5px;line-height:1.6}
+.reco b{color:var(--pos)}
+.kitq{margin:0 0 14px;padding:13px 15px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
+.kitq .qt{font-family:var(--mono);font-size:11px;color:var(--violet-bright);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+.kitq .qq{font-size:13.5px;color:var(--ink-soft);line-height:1.55}
+.rubric{margin:6px 0 0 18px;color:var(--ink-soft);font-size:13px;line-height:1.7}
+/* ---- Capabilities view ---- */
+.cap-hd{margin:2px 0 20px}
+.cap-hd h2{font-size:24px;letter-spacing:-.02em;margin:0 0 6px}
+.cap-hd p{color:var(--ink-soft);font-size:14.5px;max-width:740px;margin:0}
+.cap-hd .frame{color:var(--violet-bright);font-weight:600}
+.cap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.cap{border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface-glass);padding:16px 17px;transition:.18s}
+.cap:hover{border-color:var(--line-strong);box-shadow:var(--shadow-card)}
+.cap .top{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.cap .top .ic{width:17px;height:17px;color:var(--violet-bright)}
+.cap .top h3{margin:0;font-size:14.5px;font-weight:700}
+.cap .where{margin-left:auto;font-family:var(--mono);font-size:10.5px;padding:3px 8px;border-radius:var(--r-pill);
+  border:1px solid var(--line-strong);color:var(--muted)}
+.cap .where.ui{color:var(--violet-bright);border-color:var(--line-glow)}
+.cap .where.api{color:var(--cyan-bright)}
+.cap .where.mcp{color:var(--pos)}
+.cap p{margin:0 0 10px;font-size:13px;color:var(--ink-soft);line-height:1.55}
+.cap pre{margin:0;background:#0A0B14;border:1px solid var(--line);border-radius:var(--r-sm);padding:10px 12px;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);overflow-x:auto;white-space:pre-wrap;word-break:break-word}
+.cap .run{margin-top:9px}
+.cap-foot{margin-top:22px;padding:16px 18px;border-radius:var(--r-md);border:1px solid var(--line);
+  background:var(--surface-glass);color:var(--muted);font-size:13px;line-height:1.6}
+.cap-foot b{color:var(--ink-soft)}
+@media (max-width:920px){.app{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}.facs{grid-template-columns:repeat(2,1fr)}.kpis2{grid-template-columns:1fr}.drawer{width:100vw}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
 </style>
 </head>
@@ -250,6 +324,7 @@ textarea:focus,select:focus,input:focus{outline:none; border-color:var(--violet)
       <button class="tab" data-view="transparency" onclick="switchView('transparency')"><span class="dot"></span>Transparency</button>
       <button class="tab" data-view="challenge" onclick="switchView('challenge')"><span class="dot"></span>100K challenge</button>
       <button class="tab" data-view="whatsnew" onclick="switchView('whatsnew')"><span class="dot"></span>What changed</button>
+      <button class="tab" data-view="capabilities" onclick="switchView('capabilities')"><span class="dot"></span>Capabilities</button>
     </div>
     <div class="live-badge"><span class="pulse"></span> live engine</div>
   </div>
@@ -320,6 +395,12 @@ We will not move forward with keyword-only AI experience or research with no pro
   </div>
 </div>
 
+<div class="scrim" id="scrim" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true">
+  <button class="dx" onclick="closeDrawer()" aria-label="Close">&times;</button>
+  <div id="drawerBody"></div>
+</aside>
+
 <script>
 const $=id=>document.getElementById(id);
 let view='rank', pending=[];
@@ -382,6 +463,7 @@ function switchView(v){
   $('go').setAttribute('onclick',v==='transparency'?'runTransparency()':'runRank()');
   if(v==='challenge')loadChallenge();
   else if(v==='whatsnew')loadWhatsNew();
+  else if(v==='capabilities')renderCapabilities();
   else{
     $('out').style.display='none';$('empty').style.display='grid';
     if(v==='transparency'){
@@ -412,11 +494,14 @@ async function runRank(){
   }catch(e){errState(e.message)}
   btn.disabled=false;
 }
+let LAST_RANK=null, cmpPicks=[];
 function renderRank(d){
   $('empty').style.display='none';$('out').style.display='block';
+  LAST_RANK=d; cmpPicks=[];
   let h=`<div class="bar-top"><h2>${esc(d.job_title)||'Ranked shortlist'}</h2>
     <span class="meta num">${d.candidate_count} candidates · ${d.ranked.length} ranked · ${d.elapsed}s</span>
-    <span class="chip live">engine: ${d.engine}</span></div>`;
+    <span class="chip live">engine: ${d.engine}</span></div>
+    <div id="cmpbar"></div>`;
   d.ranked.forEach(c=>{
     const flagged=(c.flags||[]).length>0;
     const f=c.factors||{};
@@ -434,9 +519,86 @@ function renderRank(d){
       <div class="rsn">${esc(c.reasoning)}</div>
       <div class="facs">${fac('technical',f.technical)}${fac('career',f.career)}${fac('seniority',f.seniority)}${fac('behavioral',f.behavioral)}${fac('trust',f.trust)}${fac('semantic',f.semantic)}</div>
       ${proofs}${tags?`<div class="tags">${tags}</div>`:''}${flags?`<div class="tags">${flags}</div>`:''}
+      <div class="cand-actions">
+        <label class="cmp-pick" id="pick${c.rank}"><input type="checkbox" onchange="togglePick(${c.rank},this.checked)"> compare</label>
+        <button class="mini" onclick="openKit(${c.rank})"><svg class="ic"><use href="#i-sparkle"/></svg> Interview kit</button>
+      </div>
     </div>`;
   });
   $('out').innerHTML=h;
+}
+function togglePick(rank,on){
+  $('pick'+rank).classList.toggle('on',on);
+  if(on){ if(!cmpPicks.includes(rank))cmpPicks.push(rank);
+    if(cmpPicks.length>2){const drop=cmpPicks.shift();const el=$('pick'+drop);if(el){el.classList.remove('on');el.querySelector('input').checked=false;}}
+  }else cmpPicks=cmpPicks.filter(r=>r!==rank);
+  renderCmpBar();
+}
+function renderCmpBar(){
+  const bar=$('cmpbar'); if(!bar)return;
+  if(cmpPicks.length===0){bar.innerHTML='';return;}
+  if(cmpPicks.length===1){
+    bar.innerHTML=`<div class="cmp-bar"><span class="lbl">Picked <b>#${cmpPicks[0]}</b> — choose one more to compare</span><button class="clearx" onclick="clearPicks()">clear</button></div>`;return;}
+  const [a,b]=cmpPicks.slice().sort((x,y)=>x-y);
+  bar.innerHTML=`<div class="cmp-bar"><span class="lbl">Compare <b>#${a}</b> vs <b>#${b}</b></span>
+    <button class="go" onclick="runCompare(${a},${b})">Why #${a} over #${b}? →</button>
+    <button class="clearx" onclick="clearPicks()">clear</button></div>`;
+}
+function clearPicks(){cmpPicks.forEach(r=>{const el=$('pick'+r);if(el){el.classList.remove('on');el.querySelector('input').checked=false;}});cmpPicks=[];renderCmpBar();}
+function openDrawer(html){$('drawerBody').innerHTML=html;$('scrim').classList.add('open');$('drawer').classList.add('open');}
+function closeDrawer(){$('scrim').classList.remove('open');$('drawer').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
+async function runCompare(a,b){
+  openDrawer('<h2>Comparing…</h2><div class="dsub">Running the engine on both candidates.</div>');
+  try{
+    const files=await readFiles();
+    const r=await fetch('/api/compare',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({jd:$('jd').value,category:$('cat').value,files,paste:$('paste').value,left_rank:a,right_rank:b})});
+    const d=await r.json();
+    if(d.error){openDrawer(`<h2>Compare</h2><div class="dsub errbox">${esc(d.error)}</div>`);return;}
+    renderCompare(d);
+  }catch(e){openDrawer(`<h2>Compare</h2><div class="dsub errbox">${esc(e.message)}</div>`);}
+}
+function renderCompare(d){
+  const c=d.comparison, sl=d.shortlist||[];
+  const nameOf=rk=>{const m=sl.find(s=>s.rank===rk);return m?(m.title||m.candidate_id):('#'+rk);};
+  const L=c.left_rank,R=c.right_rank;
+  let rows='';
+  (c.factor_deltas||[]).forEach(fd=>{
+    const lv=Math.max(0,Math.min(1,fd.left)),rv=Math.max(0,Math.min(1,fd.right));
+    rows+=`<div class="cmprow">
+      <div class="val l">${fd.left.toFixed(2)}</div>
+      <div><div class="lab" style="text-align:center;margin-bottom:4px">${esc(fd.label)}</div>
+        <div class="cmpbar"><span class="mid"></span><i class="L" style="width:${(lv*48).toFixed(1)}%"></i><i class="R" style="width:${(rv*48).toFixed(1)}%"></i></div></div>
+      <div class="val r">${fd.right.toFixed(2)}</div></div>`;
+  });
+  openDrawer(`<h2>Why #${L} over #${R}?</h2>
+    <div class="dsub">Factor-by-factor scorecard from the live engine. Sorted by the biggest gap.</div>
+    <div class="vs"><div class="who"><b style="color:var(--violet-bright)">#${L}</b>${esc(nameOf(L))}<br><span class="num">${(+c.left_score).toFixed(3)}</span></div>
+      <div class="vsdot">vs</div>
+      <div class="who"><b style="color:var(--cyan-bright)">#${R}</b>${esc(nameOf(R))}<br><span class="num">${(+c.right_score).toFixed(3)}</span></div></div>
+    ${rows}
+    <div class="reco">${esc(c.recommendation)}</div>`);
+}
+async function openKit(rank){
+  openDrawer('<h2>Building interview kit…</h2><div class="dsub">Grounding questions in this candidate’s own evidence.</div>');
+  try{
+    const files=await readFiles();
+    const r=await fetch('/api/interview_kit',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({jd:$('jd').value,category:$('cat').value,files,paste:$('paste').value,rank})});
+    const d=await r.json();
+    if(d.error){openDrawer(`<h2>Interview kit</h2><div class="dsub errbox">${esc(d.error)}</div>`);return;}
+    renderKit(d);
+  }catch(e){openDrawer(`<h2>Interview kit</h2><div class="dsub errbox">${esc(e.message)}</div>`);}
+}
+function renderKit(d){
+  const qs=(d.questions||[]).map(q=>`<div class="kitq"><div class="qt">${esc((q.type||'').replace(/_/g,' '))}</div><div class="qq">${esc(q.question)}</div></div>`).join('');
+  const rub=(d.decision_rubric||[]).map(x=>`<li>${esc(x)}</li>`).join('');
+  openDrawer(`<h2>Interview kit · #${d.rank}</h2>
+    <div class="dsub">${esc(d.focus)}</div>
+    ${qs}
+    <div style="font-family:var(--mono);font-size:11px;color:var(--violet-bright);text-transform:uppercase;letter-spacing:.04em;margin:18px 0 4px">Decision rubric</div>
+    <ul class="rubric">${rub}</ul>`);
 }
 
 async function runTransparency(){
@@ -539,11 +701,57 @@ async function loadWhatsNew(){
     $('out').innerHTML=h;
   }catch(e){errState(e.message)}
 }
+// ---- Capabilities: the honest map of what this ONE engine does, across its three surfaces ----
+const CAPS=[
+  {ic:'i-lens',where:'UI',w:'ui',t:'Rank any JD × any candidates',
+   d:'Paste a JD and resumes (PDF/DOCX/TXT/CSV/JSON) — universal ingest → JD parsing → hybrid semantic match → consistency audit → grounded reasoning.',
+   demo:'Studio · “Rank candidates” tab'},
+  {ic:'i-sparkle',where:'UI',w:'ui',t:'Candidate compare',
+   d:'Pick two ranked rows → a factor-by-factor scorecard explaining why one sits ahead. The recruiter’s “why #2 over #5?”, answered.',
+   demo:'Studio · tick two “compare” boxes on a shortlist'},
+  {ic:'i-sparkle',where:'UI',w:'ui',t:'Interview kit',
+   d:'Per candidate: depth questions tied to their strongest evidence, a weak-area probe, risk validation, and a decision rubric. No LLM — every prompt anchored in their own profile.',
+   demo:'Studio · “Interview kit” on any ranked card'},
+  {ic:'i-check',where:'UI',w:'ui',t:'Candidate transparency report',
+   d:'What the engine used and concluded about ONE candidate — proof from their own words, unmet requirements they can dispute. The FCRA-grievance answer the incumbents lack.',
+   demo:'Studio · “Transparency” tab'},
+  {ic:'i-arrow',where:'UI',w:'ui',t:'Live 100K challenge + before/after',
+   d:'Ranks the real 100,000-candidate Redrob dataset live, and shows the diff vs the old keyword engine, per candidate.',
+   demo:'Studio · “100K challenge” / “What changed” tabs'},
+  {ic:'i-flag',where:'REST',w:'api',t:'EEOC four-fifths compliance',
+   d:'Adverse-impact report on a ranking from your OWN group labels — the report legal needs before deploying automated selection. The engine never infers protected attributes.',
+   demo:'curl localhost:8900/compliance -d \'{"ranked_ids":[...],"group_attributes":{...}}\''},
+  {ic:'i-lens',where:'REST',w:'api',t:'Ranking & ingest API',
+   d:'POST /rank, /ingest/jd, /ingest/resume, /audit, /candidate_report — the same engine any ATS or portal can call. OpenAPI spec included.',
+   demo:'curl localhost:8900/rank -d \'{"jd":"...","candidates":[...]}\''},
+  {ic:'i-sparkle',where:'MCP',w:'mcp',t:'7 agentic MCP tools',
+   d:'rank_candidates, ingest_jd, ingest_resume, audit_candidate, compliance_report, candidate_report, health — so an AI agent (Claude, etc.) can drive the engine directly.',
+   demo:'python mcp_server.py  ·  tool: rank_candidates'},
+  {ic:'i-check',where:'REST',w:'api',t:'Batch — many JDs at once',
+   d:'Rank one candidate pool against a whole req portfolio in a single call (api/batch.rank_many_jds).',
+   demo:'from talentsignal.api.batch import rank_many_jds'},
+  {ic:'i-flag',where:'eval',w:'',t:'Evaluation framework',
+   d:'NDCG@10/@50, MAP, P@10 + the challenge composite, honeypot-rate, paraphrase & cross-JD generality suites. The instrument behind every ranking change.',
+   demo:'make eval   ·   outputs/eval/METRICS.md'},
+];
+function renderCapabilities(){
+  $('out').style.display='block';$('empty').style.display='none';
+  const cards=CAPS.map(c=>`<div class="cap">
+    <div class="top"><svg class="ic"><use href="#${c.ic}"/></svg><h3>${esc(c.t)}</h3><span class="where ${c.w}">${esc(c.where)}</span></div>
+    <p>${esc(c.d)}</p><pre>${esc(c.demo)}</pre></div>`).join('');
+  $('out').innerHTML=`
+    <div class="cap-hd">
+      <h2>One engine. Three live surfaces.</h2>
+      <p><span class="frame">TalentSignal is a single JD-agnostic ranking engine</span> — rank any candidate against any role by <i>meaning</i>, reject fabricated profiles, explain every decision. It’s exposed three ways: a <b style="color:var(--violet-bright)">Studio UI</b>, a <b style="color:var(--cyan-bright)">REST API</b>, and <b style="color:var(--pos)">MCP tools</b> for agents. Below is everything it does — and exactly how to run each.</p>
+    </div>
+    <div class="cap-grid">${cards}</div>
+    <div class="cap-foot">Honest by design: this isn’t a count of internal functions. It’s <b>one ranking engine</b> with the capabilities above — the ones in the Studio are clickable here; the rest are one REST/MCP call away. Same engine, same scores, everywhere.</div>`;
+}
 // animate the proof hero on first load
 initHero();
 // deep-link: ?view=challenge opens that tab on load
 (function(){const v=new URLSearchParams(location.search).get('view');
-  if(v&&['rank','transparency','challenge','whatsnew'].includes(v))switchView(v);})();
+  if(v&&['rank','transparency','challenge','whatsnew','capabilities'].includes(v))switchView(v);})();
 </script>
 </body>
 </html>
