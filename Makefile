@@ -40,6 +40,10 @@ rank:
 precompute:
 	python3 precompute.py --candidates "$(CANDIDATES)" --job-spec "$(JOB_SPEC)" --index-dir "$(INDEX_DIR)"
 
+## Regenerate TOP10_REPORT.md from the committed submission (so it never drifts).
+report:
+	python3 scripts/gen_top10_report.py
+
 ## Run the evaluation suite (spine + hybrid) and write outputs/eval/report.md.
 eval:
 	python3 scripts/eval_harness.py --engine spine --out outputs/eval

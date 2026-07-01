@@ -1,103 +1,77 @@
 # TalentSignal — Top 10 of 100,000 (real Redrob dataset)
 
 JD: **Senior AI Engineer** (embeddings · retrieval · ranking · NDCG · Python · 5–9 yrs)  
-Pool: **100,000 real candidates** · ranked in **28s** · CPU-only · no network  
-Engine: spine (deterministic fallback). The 14-iteration changes are annotated per row below.
+Pool: **100,000 real candidates** · CPU-only · no network · reproduces offline in budget  
+Engine: **hybrid** (the submitted engine). This report is generated directly from `outputs/final_submission.csv` + `outputs/evidence_packets.jsonl`, so it always matches the submission.
 
 ---
 
-## #1 — CAND_0018499  ·  score **0.9550**
-- **Title read:** Senior Machine Learning Engineer  ·  **Years read:** 7.2
-- **Headline:** Senior Machine Learning Engineer | Building AI-native search & ranking systems
-- **Factor breakdown:** `technical_evidence=1.00` · `career_fit=0.90` · `seniority=1.00` · `logistics=0.95` · `behavioral=0.89` · `trust=1.00` · `semantic_fit=0.00` · `lexical_fit=0.00` · `requirement_coverage=0.00`
-- **Matched requirements:** (via evidence terms in reasoning)
+## #1 — CAND_0017960  ·  score **0.571200**
+- **Title read:** Recommendation Systems Engineer  ·  **Years read:** 7.7
+- **Location:** Bangalore, Karnataka
+- **Factor breakdown:** `technical_evidence=0.45` · `career_fit=0.84` · `seniority=1.00` · `logistics=1.00` · `behavioral=0.79` · `trust=0.72` · `semantic_fit=0.45` · `requirement_coverage=1.00`
 - **Risk flags:** none (consistency auditor: clean)
-- **Reasoning (grounded, rank-aware):** Strong fit at rank 1: Senior Machine Learning Engineer with 7.2 years in Noida, Uttar Pradesh. Career evidence for bm25, matching, ranker; production signals (deployed, latency, pipeline); tooling: bge, embedding, embeddings. Reachable: open to work with a 61% response rate.
+- **Reasoning (grounded, rank-aware):** #1 — a clear recommendation. Recommendation Systems Engineer with 7.7 years in Bangalore, Karnataka. Credible depth in ranking, recommendation, search, and owned. Open and responsive (72% recruiter response).
 
-## #2 — CAND_0079387  ·  score **0.9485**
-- **Title read:** AI Engineer  ·  **Years read:** 6.9
-- **Headline:** AI Engineer | Applied ML | Building intelligent products
-- **Factor breakdown:** `technical_evidence=1.00` · `career_fit=1.00` · `seniority=1.00` · `logistics=0.60` · `behavioral=0.93` · `trust=1.00` · `semantic_fit=0.00` · `lexical_fit=0.00` · `requirement_coverage=0.00`
-- **Matched requirements:** (via evidence terms in reasoning)
+## #2 — CAND_0077337  ·  score **0.559593**
+- **Title read:** Staff Machine Learning Engineer  ·  **Years read:** 7.0
+- **Location:** Kochi, Kerala
+- **Factor breakdown:** `technical_evidence=0.47` · `career_fit=0.80` · `seniority=1.00` · `logistics=0.70` · `behavioral=0.88` · `trust=0.83` · `semantic_fit=0.47` · `requirement_coverage=0.83`
 - **Risk flags:** none (consistency auditor: clean)
-- **Reasoning (grounded, rank-aware):** Rank 2 — a clear match. AI Engineer with 6.9 years in Trivandrum, Kerala. Career evidence for bm25, ranking, recommendation; production signals (drift, monitoring, pipeline); tooling: bge, elasticsearch, embedding. Reachable: open to work with a 81% response rate.
+- **Reasoning (grounded, rank-aware):** Staff Machine Learning Engineer with 7.0 years in Kochi, Kerala. A standout at #2. Clear hands-on work in bm25, ranker, ranking, and drift. Edges out #3 on production & career evidence. Active and reachable (95% response rate).
 
-## #3 — CAND_0006567  ·  score **0.9410**
-- **Title read:** Senior AI Engineer  ·  **Years read:** 7.9
-- **Headline:** Senior Engineer | Information Retrieval at scale
-- **Factor breakdown:** `technical_evidence=1.00` · `career_fit=0.90` · `seniority=1.00` · `logistics=0.95` · `behavioral=0.84` · `trust=0.92` · `semantic_fit=0.00` · `lexical_fit=0.00` · `requirement_coverage=0.00`
-- **Matched requirements:** (via evidence terms in reasoning)
+## #3 — CAND_0052328  ·  score **0.537867**
+- **Title read:** Recommendation Systems Engineer  ·  **Years read:** 6.5
+- **Location:** Pune, Maharashtra
+- **Factor breakdown:** `technical_evidence=0.48` · `career_fit=0.70` · `seniority=1.00` · `logistics=0.85` · `behavioral=0.74` · `trust=0.78` · `semantic_fit=0.48` · `requirement_coverage=1.00`
 - **Risk flags:** none (consistency auditor: clean)
-- **Reasoning (grounded, rank-aware):** Rank 3 — a clear match. Senior AI Engineer with 7.9 years in Noida, Uttar Pradesh. Career evidence for matching, personalization, ranking; production signals (drift, monitoring, owned); tooling: ann, vector. Reachable: open to work with a 79% response rate.
+- **Reasoning (grounded, rank-aware):** Strong fit at #3: Recommendation Systems Engineer with 6.5 years in Pune, Maharashtra. Genuine, shipped work across recommendation, drift, monitoring, and embedding. Edges out #4 on seniority match. Active and reachable (79% response rate).
 
-## #4 — CAND_0069905  ·  score **0.9314**
-- **Title read:** Applied ML Engineer  ·  **Years read:** 6.6
-- **Headline:** Applied ML Engineer | Search, Ranking & Retrieval
-- **Factor breakdown:** `technical_evidence=0.98` · `career_fit=1.00` · `seniority=1.00` · `logistics=0.70` · `behavioral=0.80` · `trust=1.00` · `semantic_fit=0.00` · `lexical_fit=0.00` · `requirement_coverage=0.00`
-- **Matched requirements:** (via evidence terms in reasoning)
+## #4 — CAND_0046064  ·  score **0.518101**
+- **Title read:** Senior NLP Engineer  ·  **Years read:** 8.9
+- **Location:** Coimbatore, Tamil Nadu
+- **Factor breakdown:** `technical_evidence=0.44` · `career_fit=0.72` · `seniority=0.88` · `logistics=0.60` · `behavioral=0.79` · `trust=0.77` · `semantic_fit=0.44` · `requirement_coverage=1.00`
 - **Risk flags:** none (consistency auditor: clean)
-- **Reasoning (grounded, rank-aware):** Rank 4 — a clear match. Applied ML Engineer with 6.6 years in Bhubaneswar, Odisha. Career evidence for bm25, recommendation, retrieval; production signals (pipeline); tooling: bge, elasticsearch, embedding. Reachable: open to work with a 78% response rate.
+- **Reasoning (grounded, rank-aware):** #4 — a clear recommendation. Senior NLP Engineer with 8.9 years in Coimbatore, Tamil Nadu. Credible depth in bm25, matching, ranker, and deployed. Open and responsive (78% recruiter response).
 
-## #5 — CAND_0000031  ·  score **0.9250**
-- **Title read:** Recommendation Systems Engineer  ·  **Years read:** 6.0
-- **Headline:** Recommendation Systems Engineer | Search, Ranking & Retrieval
-- **Factor breakdown:** `technical_evidence=1.00` · `career_fit=0.90` · `seniority=1.00` · `logistics=1.00` · `behavioral=0.84` · `trust=0.62` · `semantic_fit=0.00` · `lexical_fit=0.00` · `requirement_coverage=0.00`
-- **Matched requirements:** (via evidence terms in reasoning)
+## #5 — CAND_0005260  ·  score **0.516752**
+- **Title read:** Senior NLP Engineer  ·  **Years read:** 5.2
+- **Location:** Chennai, Tamil Nadu
+- **Factor breakdown:** `technical_evidence=0.43` · `career_fit=0.72` · `seniority=0.88` · `logistics=0.70` · `behavioral=0.76` · `trust=0.83` · `semantic_fit=0.43` · `requirement_coverage=1.00`
 - **Risk flags:** none (consistency auditor: clean)
-- **Reasoning (grounded, rank-aware):** Rank 5 — a clear match. Recommendation Systems Engineer with 6.0 years in Hyderabad, Telangana. Career evidence for ranking, recommendation, search; production signals (owned, pipeline, shipped); tooling: embedding, embeddings, faiss. Reachable: open to work with a 91% response rate.
+- **Reasoning (grounded, rank-aware):** Top of the list (#5). Senior NLP Engineer with 5.2 years in Chennai, Tamil Nadu. Has done the real work in bm25, matching, ranker, and deployed. Not flagged open, but active and responsive — a passive candidate worth pursuing.
 
-## #6 — CAND_0046525  ·  score **0.9214**
+## #6 — CAND_0046525  ·  score **0.514775**
 - **Title read:** Senior Machine Learning Engineer  ·  **Years read:** 6.1
-- **Headline:** Senior Machine Learning Engineer | Building AI-native search & ranking systems
-- **Factor breakdown:** `technical_evidence=1.00` · `career_fit=0.82` · `seniority=1.00` · `logistics=0.95` · `behavioral=0.87` · `trust=0.84` · `semantic_fit=0.00` · `lexical_fit=0.00` · `requirement_coverage=0.00`
-- **Matched requirements:** (via evidence terms in reasoning)
+- **Location:** Pune, Maharashtra
+- **Factor breakdown:** `technical_evidence=0.40` · `career_fit=0.65` · `seniority=1.00` · `logistics=0.95` · `behavioral=0.87` · `trust=0.81` · `semantic_fit=0.41` · `requirement_coverage=0.83`
 - **Risk flags:** none (consistency auditor: clean)
-- **Reasoning (grounded, rank-aware):** Senior Machine Learning Engineer with 6.1 years in Pune, Maharashtra. Ranks 6 on consistent evidence. Matches: career evidence for bm25, ranker, ranking; production signals (latency, pipeline); tooling: bge, elasticsearch, embedding. Reachable: open to work with a 88% response rate.
+- **Reasoning (grounded, rank-aware):** #6, and a good match. Senior Machine Learning Engineer with 6.1 years in Pune, Maharashtra. Solid track record in bm25, ranker, ranking, and latency. Edges out #7 on reachability & engagement. Open and responsive (88% recruiter response).
 
-## #7 — CAND_0057563  ·  score **0.9196**
-- **Title read:** NLP Engineer  ·  **Years read:** 6.8
-- **Headline:** NLP Engineer | Applied ML | Building intelligent products
-- **Factor breakdown:** `technical_evidence=0.99` · `career_fit=1.00` · `seniority=1.00` · `logistics=0.75` · `behavioral=0.76` · `trust=0.84` · `semantic_fit=0.00` · `lexical_fit=0.00` · `requirement_coverage=0.00`
-- **Matched requirements:** (via evidence terms in reasoning)
+## #7 — CAND_0030953  ·  score **0.514774**
+- **Title read:** Search Engineer  ·  **Years read:** 7.8
+- **Location:** Chennai, Tamil Nadu
+- **Factor breakdown:** `technical_evidence=0.44` · `career_fit=0.84` · `seniority=1.00` · `logistics=0.60` · `behavioral=0.61` · `trust=0.69` · `semantic_fit=0.45` · `requirement_coverage=1.00`
 - **Risk flags:** none (consistency auditor: clean)
-- **Reasoning (grounded, rank-aware):** Rank 7: a good match. NLP Engineer with 6.8 years in Indore, Madhya Pradesh. Career evidence for bm25, ranking, recommendation; production signals (owned, pipeline); tooling: bge, elasticsearch, embedding.
+- **Reasoning (grounded, rank-aware):** Solid fit at #7. Search Engineer with 7.8 years in Chennai, Tamil Nadu. Real, demonstrated evidence for bm25, ranking, recommendation, and owned. Not flagged open, but active and responsive — a passive candidate worth pursuing.
 
-## #8 — CAND_0039383  ·  score **0.9195**
-- **Title read:** Applied ML Engineer  ·  **Years read:** 7.1
-- **Headline:** Applied ML Engineer | Applied ML | Building intelligent products
-- **Factor breakdown:** `technical_evidence=1.00` · `career_fit=0.90` · `seniority=1.00` · `logistics=0.95` · `behavioral=0.78` · `trust=0.78` · `semantic_fit=0.00` · `lexical_fit=0.00` · `requirement_coverage=0.00`
-- **Matched requirements:** (via evidence terms in reasoning)
+## #8 — CAND_0006567  ·  score **0.513618**
+- **Title read:** Senior AI Engineer  ·  **Years read:** 7.9
+- **Location:** Noida, Uttar Pradesh
+- **Factor breakdown:** `technical_evidence=0.37` · `career_fit=0.78` · `seniority=1.00` · `logistics=0.95` · `behavioral=0.84` · `trust=0.87` · `semantic_fit=0.36` · `requirement_coverage=0.83`
 - **Risk flags:** none (consistency auditor: clean)
-- **Reasoning (grounded, rank-aware):** Applied ML Engineer with 7.1 years in Gurgaon, Haryana. Ranks 8 on consistent evidence. Matches: career evidence for bm25, ranking, retrieval; production signals (owned, shipped); tooling: bge, elasticsearch, faiss. Reachable: open to work with a 61% response rate.
+- **Reasoning (grounded, rank-aware):** #8, and a good match. Senior AI Engineer with 7.9 years in Noida, Uttar Pradesh. Credible depth in matching, personalization, ranking, and drift. Open and responsive (79% recruiter response).
 
-## #9 — CAND_0068811  ·  score **0.9193**
-- **Title read:** Applied ML Engineer  ·  **Years read:** 8.0
-- **Headline:** Applied ML Engineer | Applied ML | Building intelligent products
-- **Factor breakdown:** `technical_evidence=1.00` · `career_fit=0.90` · `seniority=1.00` · `logistics=0.95` · `behavioral=0.79` · `trust=0.74` · `semantic_fit=0.00` · `lexical_fit=0.00` · `requirement_coverage=0.00`
-- **Matched requirements:** (via evidence terms in reasoning)
+## #9 — CAND_0079387  ·  score **0.510354**
+- **Title read:** AI Engineer  ·  **Years read:** 6.9
+- **Location:** Trivandrum, Kerala
+- **Factor breakdown:** `technical_evidence=0.44` · `career_fit=0.76` · `seniority=1.00` · `logistics=0.60` · `behavioral=0.82` · `trust=0.93` · `semantic_fit=0.44` · `requirement_coverage=0.83`
 - **Risk flags:** none (consistency auditor: clean)
-- **Reasoning (grounded, rank-aware):** Rank 9: a good match. Applied ML Engineer with 8.0 years in Pune, Maharashtra. Career evidence for ranking, recommendation, search; production signals (drift, monitoring, owned); tooling: embedding, embeddings, opensearch.
+- **Reasoning (grounded, rank-aware):** Solid fit at #9. AI Engineer with 6.9 years in Trivandrum, Kerala. Real, demonstrated evidence for bm25, ranking, recommendation, and drift. Edges out #10 on seniority match. Active and reachable (81% response rate).
 
-## #10 — CAND_0027801  ·  score **0.9181**
-- **Title read:** NLP Engineer  ·  **Years read:** 7.4
-- **Headline:** NLP Engineer | ML, NLP, Recommendation Systems
-- **Factor breakdown:** `technical_evidence=1.00` · `career_fit=0.90` · `seniority=1.00` · `logistics=0.85` · `behavioral=0.74` · `trust=1.00` · `semantic_fit=0.00` · `lexical_fit=0.00` · `requirement_coverage=0.00`
-- **Matched requirements:** (via evidence terms in reasoning)
+## #10 — CAND_0011162  ·  score **0.509699**
+- **Title read:** Recommendation Systems Engineer  ·  **Years read:** 5.8
+- **Location:** Coimbatore, Tamil Nadu
+- **Factor breakdown:** `technical_evidence=0.45` · `career_fit=0.75` · `seniority=0.88` · `logistics=0.75` · `behavioral=0.81` · `trust=0.82` · `semantic_fit=0.46` · `requirement_coverage=0.83`
 - **Risk flags:** none (consistency auditor: clean)
-- **Reasoning (grounded, rank-aware):** NLP Engineer with 7.4 years in Hyderabad, Telangana. Ranks 10 on consistent evidence. Matches: career evidence for bm25, recommendation, retrieval; production signals (drift, monitoring, pipeline); tooling: bge, elasticsearch, faiss. Reachable: open to work with a 65% response rate. Concern: 120-day notice period.
-
----
-
-# How each of the 14 recent iterations shows up in THIS top 10
-
-**[4a4a099] EEOC adverse-impact compliance** — ran on THIS top-10: `overall_passes_four_fifths = True`. Before the loop this capability did not exist.
-
-**[82141f8] Candidate transparency report** — for #1 (CAND_0018499): discloses `identity_used = none — the engine never reads your nam...`, lists 2 unmet requirement(s) the candidate can dispute, and a human (not the engine) decides. Before the loop: no such report.
-
-**[bcb171e + aabc9a5] GitHub public-evidence signal** — #1's transparency report carries a `public_evidence` slot = `None` (null here: this anonymized candidate linked no GitHub; populates when a real profile is linked). Net-new signal added by the loop.
-
-**[358da40] per-JD category fix + [b58c5f4] null/mistyped hardening** — this run scored all 100,000 real records (many with missing/odd fields) with zero crashes; before the fix a sales JD reused AI categories and malformed rows raised.
-
-**[5325cf1] reasoning-quality audit** — every reasoning line above is composed from the candidate's OWN evidence terms and rank band (see #1 'Strong fit' vs #10 flat tone + concern). The loop's audit confirmed 0 hallucinated claims across the cited evidence at scale.
-
-**[4b74521] REST/SDK default→hybrid · [2517822/574ddde] transparency+compliance on GUI/MCP/SDK** — the same shortlist above is now reachable identically from Studio, REST, SDK and MCP (cross-surface).
+- **Reasoning (grounded, rank-aware):** Recommendation Systems Engineer with 5.8 years in Coimbatore, Tamil Nadu. Earns #10 on consistent evidence. Clear hands-on work in ranking, recommendation, search, and drift. Edges out #11 on reachability & engagement. Active and reachable (75% response rate).

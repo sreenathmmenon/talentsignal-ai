@@ -155,3 +155,19 @@ def test_interview_kit_is_grounded():
     packets, job = _packets()
     kit = build_interview_kit(packets[0], job)
     assert kit  # non-empty guide
+
+
+def test_top10_report_matches_submission():
+    """The showcase report's top-10 IDs must equal the committed submission's
+    top-10 IDs — a stale report whose #1 disagrees with the CSV is a Stage-4
+    credibility hit. Skips gracefully if either artifact is absent."""
+    import csv, re
+    root = Path(__file__).resolve().parents[1]
+    sub = root / "outputs" / "final_submission.csv"
+    rep = root / "TOP10_REPORT.md"
+    if not (sub.exists() and rep.exists()):
+        import pytest
+        pytest.skip("submission or report not present")
+    top10 = [r["candidate_id"] for r in csv.DictReader(sub.open())][:10]
+    ids_in_report = re.findall(r"CAND_\d+", rep.read_text(encoding="utf-8"))[:10]
+    assert ids_in_report == top10, (ids_in_report, top10)

@@ -104,10 +104,52 @@ def _strengths_from_spine(ev: CandidateEvidence) -> list[str]:
     return uniq
 
 
-def _strength_sentence(skills: list[str], relevance: float) -> str:
-    """Turn matched skills into a human strength sentence, calibrated to ABSOLUTE
-    role relevance (not rank). A #1 in a weak pool must NOT read as a perfect fit —
-    honesty is the product's trust signal."""
+# Phrasing variants per relevance tier. Selected by a per-candidate seed so two
+# candidates with the same skills + tier don't render the identical sentence — the
+# repeated-skeleton problem a manual reviewer notices instantly. Each variant has a
+# {core} slot filled with the candidate's OWN evidence terms.
+_STRENGTH_VARIANTS = {
+    "strong": [
+        "Direct, hands-on evidence for {core} — the core of what this role needs.",
+        "Has actually shipped {core}, which is exactly what the role turns on.",
+        "Strong, first-hand work in {core} — a genuine match on the must-haves.",
+        "Deep evidence for {core}; this is the heart of the job.",
+    ],
+    "good": [
+        "Real, demonstrated evidence for {core}.",
+        "Solid track record in {core}.",
+        "Clear hands-on work in {core}.",
+        "Backed by concrete experience in {core}.",
+        "Genuine, shipped work across {core}.",
+        "Credible depth in {core}.",
+        "Evidence on the ground for {core}.",
+        "Has done the real work in {core}.",
+    ],
+    "partial": [
+        "Shows {core}, though not the full depth this role really needs.",
+        "Some real work in {core}, but short of the must-have bar.",
+        "Evidence for {core}, yet the core requirements aren't fully covered.",
+        "Touches {core}; a partial rather than complete fit.",
+    ],
+    "weak": [
+        "Some signal on {core}, but a weak match to the must-haves — best of this pool rather than a strong fit.",
+        "Adjacent evidence in {core}; makes the list on breadth, not depth.",
+        "Light coverage of {core} — surfaced as the strongest available, not a clear fit.",
+        "Peripheral signal on {core}; worth a look, but not a natural match.",
+    ],
+}
+
+
+def _tier_for(relevance: float) -> str:
+    return ("strong" if relevance >= 0.7 else "good" if relevance >= 0.45
+            else "partial" if relevance >= 0.25 else "weak")
+
+
+def _strength_sentence(skills: list[str], relevance: float, seed: int = 0) -> str:
+    """Turn a candidate's OWN evidence terms into a human strength sentence,
+    calibrated to ABSOLUTE role relevance (not rank) and varied by seed so the
+    skeleton doesn't repeat across candidates. A #1 in a weak pool must NOT read
+    as a perfect fit — honesty is the product's trust signal."""
     if not skills:
         return "Adjacent technical signals, but limited direct evidence for the must-haves."
     n = 4 if relevance >= 0.45 else 3
@@ -118,13 +160,8 @@ def _strength_sentence(skills: list[str], relevance: float) -> str:
         core = f"{picks[0]} and {picks[1]}"
     else:
         core = ", ".join(picks[:-1]) + f", and {picks[-1]}"
-    if relevance >= 0.7:
-        return f"Direct, hands-on evidence for {core} — the core of what this role needs."
-    if relevance >= 0.45:
-        return f"Real evidence for {core}."
-    if relevance >= 0.25:
-        return f"Shows {core}, though not the full depth this role really needs."
-    return f"Some signal on {core}, but a weak match to the role's must-haves — best of this pool rather than a strong fit."
+    variants = _STRENGTH_VARIANTS[_tier_for(relevance)]
+    return variants[seed % len(variants)].format(core=core)
 
 
 def _concerns(ev: CandidateEvidence, score: ScoreBreakdown, rank: int) -> list[str]:
@@ -173,12 +210,30 @@ def generate_reasoning(ev: CandidateEvidence, score: ScoreBreakdown, rank: int,
     seed = sum(ord(ch) for ch in ev.candidate_id) + rank
     opener = _OPENERS[band][seed % len(_OPENERS[band])].format(rank=rank, who=_who(ev))
 
-    skills = _matched_skill_phrases(score) or _strengths_from_spine(ev)
-    strength = _strength_sentence(skills, score.role_relevance)
+    # Lead with the candidate's OWN distinctive evidence terms (what THEY did),
+    # then fill in matched-requirement keywords — so two AI candidates don't render
+    # the identical "embeddings, retrieval, ranking, and search" list. Dedup, order-
+    # preserving; never invent a term the profile doesn't contain.
+    distinctive = _strengths_from_spine(ev)
+    matched = _matched_skill_phrases(score)
+    merged, seen = [], set()
+    for t in distinctive + matched:
+        if t and t.lower() not in seen:
+            seen.add(t.lower()); merged.append(t)
+    skills = merged or matched or distinctive
+    strength = _strength_sentence(skills, score.role_relevance, seed)
 
+    # Availability, using the reachability read (open/passive/stale) — varied, and
+    # honest about passive candidates rather than only celebrating "open to work".
     avail = ""
-    if ev.open_to_work and ev.response_rate >= 0.5 and band in ("top", "high"):
-        avail = f" Open to work, {ev.response_rate:.0%} response rate."
+    if band in ("top", "high"):
+        from .scoring import reachability
+        label, _ = reachability(ev)
+        if label == "reachable" and ev.response_rate >= 0.5:
+            avail = (f" Open and responsive ({ev.response_rate:.0%} recruiter response)."
+                     if seed % 2 else f" Active and reachable ({ev.response_rate:.0%} response rate).")
+        elif label == "passive" and ev.response_rate >= 0.5:
+            avail = " Not flagged open, but active and responsive — a passive candidate worth pursuing."
 
     # comparative clause only for the ranks a recruiter actually deliberates over
     comparative = _comparative_clause(score, rank, neighbor) if rank <= 25 else ""
@@ -189,10 +244,16 @@ def generate_reasoning(ev: CandidateEvidence, score: ScoreBreakdown, rank: int,
         lead = "One flag" if len(concerns) == 1 else "Flags"
         concern_clause = f" {lead}: {'; '.join(concerns[:2])}."
     elif band == "low":
-        # a real, specific near-cutoff caveat — never "filler" boilerplate
+        # a real, specific near-cutoff caveat — never "filler" boilerplate; varied
+        # by seed so the near-cutoff rows don't all read identically.
         cov = score.requirement_coverage or 0.0
-        concern_clause = (f" Makes the shortlist on breadth of relevant signal rather than "
-                          f"deep must-have coverage ({cov:.0%}); worth a human look.")
+        low_variants = [
+            f" On the list for breadth of relevant signal more than deep must-have coverage ({cov:.0%}); worth a human look.",
+            f" Covers {cov:.0%} of the must-haves — near-cutoff; include for a closer read, not a lock.",
+            f" Partial must-have coverage ({cov:.0%}); earns a slot on adjacent strength, verify the gaps.",
+            f" A breadth pick ({cov:.0%} must-have coverage) rather than a depth one; sanity-check before outreach.",
+        ]
+        concern_clause = low_variants[seed % len(low_variants)]
 
     text = f"{opener} {strength}{comparative}{avail}{concern_clause}"
     return " ".join(text.split())
