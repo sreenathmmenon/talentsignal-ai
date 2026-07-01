@@ -1,0 +1,113 @@
+{
+  "jd": "Senior AI Engineer \u2014 Founding Team @ Redrob",
+  "total": 100000,
+  "valid": true,
+  "honeypots": 0,
+  "engine": "spine",
+  "elapsed": 37.87,
+  "from_cache": true,
+  "live": false,
+  "top": [
+    {
+      "rank": 1,
+      "candidate_id": "CAND_0018499",
+      "score": 0.7443,
+      "reasoning": "#1 \u2014 a clear recommendation. Senior Machine Learning Engineer with 7.2 years in Noida, Uttar Pradesh. Has actually shipped bm25, matching, ranker, and deployed, which is exactly what the role turns on. Edges out #2 on production & career evidence. Open and responsive (61% recruiter response).",
+      "title": "Senior Machine Learning Engineer",
+      "company": "",
+      "years": 7.2,
+      "location": "Noida, Uttar Pradesh"
+    },
+    {
+      "rank": 2,
+      "candidate_id": "CAND_0002025",
+      "score": 0.6606,
+      "reasoning": "Strong fit at #2: Senior AI Engineer with 5.9 years in Trivandrum, Kerala. Direct, hands-on evidence for matching, ranking, recommendation, and deployed \u2014 the core of what this role needs. Edges out #3 on production & career evidence. Active and reachable (80% response rate).",
+      "title": "Senior AI Engineer",
+      "company": "",
+      "years": 5.9,
+      "location": "Trivandrum, Kerala"
+    },
+    {
+      "rank": 3,
+      "candidate_id": "CAND_0061257",
+      "score": 0.6568,
+      "reasoning": "#3 \u2014 a clear recommendation. Staff Machine Learning Engineer with 8.0 years in Noida, Uttar Pradesh. Has actually shipped ranking, search, owned, and pipeline, which is exactly what the role turns on. Edges out #4 on seniority match. Open and responsive (87% recruiter response).",
+      "title": "Staff Machine Learning Engineer",
+      "company": "",
+      "years": 8.0,
+      "location": "Noida, Uttar Pradesh"
+    },
+    {
+      "rank": 4,
+      "candidate_id": "CAND_0080766",
+      "score": 0.6552,
+      "reasoning": "Strong fit at #4: Staff Machine Learning Engineer with 8.8 years in Coimbatore, Tamil Nadu. Direct, hands-on evidence for bm25, personalization, ranking, and drift \u2014 the core of what this role needs. Not flagged open, but active and responsive \u2014 a passive candidate worth pursuing.",
+      "title": "Staff Machine Learning Engineer",
+      "company": "",
+      "years": 8.8,
+      "location": "Coimbatore, Tamil Nadu"
+    },
+    {
+      "rank": 5,
+      "candidate_id": "CAND_0005260",
+      "score": 0.6456,
+      "reasoning": "Top of the list (#5). Senior NLP Engineer with 5.2 years in Chennai, Tamil Nadu. Deep evidence for bm25, matching, ranker, and deployed; this is the heart of the job. Edges out #6 on reachability & engagement. Not flagged open, but active and responsive \u2014 a passive candidate worth pursuing.",
+      "title": "Senior NLP Engineer",
+      "company": "",
+      "years": 5.2,
+      "location": "Chennai, Tamil Nadu"
+    },
+    {
+      "rank": 6,
+      "candidate_id": "CAND_0033861",
+      "score": 0.6456,
+      "reasoning": "Solid fit at #6. Senior NLP Engineer with 8.0 years in Vizag, Andhra Pradesh. Direct, hands-on evidence for bm25, matching, ranking, and deployed \u2014 the core of what this role needs. One flag: a low recruiter response rate (16%).",
+      "title": "Senior NLP Engineer",
+      "company": "",
+      "years": 8.0,
+      "location": "Vizag, Andhra Pradesh"
+    },
+    {
+      "rank": 7,
+      "candidate_id": "CAND_0039383",
+      "score": 0.6443,
+      "reasoning": "Applied ML Engineer with 7.1 years in Gurgaon, Haryana. Earns #7 on consistent evidence. Strong, first-hand work in bm25, ranking, retrieval, and owned \u2014 a genuine match on the must-haves. Edges out #8 on production & career evidence. Active and reachable (61% response rate).",
+      "title": "Applied ML Engineer",
+      "company": "",
+      "years": 7.1,
+      "location": "Gurgaon, Haryana"
+    },
+    {
+      "rank": 8,
+      "candidate_id": "CAND_0046064",
+      "score": 0.6425,
+      "reasoning": "#8, and a good match. Senior NLP Engineer with 8.9 years in Coimbatore, Tamil Nadu. Has actually shipped bm25, matching, ranker, and deployed, which is exactly what the role turns on. Open and responsive (78% recruiter response).",
+      "title": "Senior NLP Engineer",
+      "company": "",
+      "years": 8.9,
+      "location": "Coimbatore, Tamil Nadu"
+    },
+    {
+      "rank": 9,
+      "candidate_id": "CAND_0081846",
+      "score": 0.6419,
+      "reasoning": "#9, and a good match. Lead AI Engineer with 6.7 years in Jaipur, Rajasthan. Has actually shipped bm25, ranker, ranking, and drift, which is exactly what the role turns on. Edges out #10 on reachability & engagement. Open and responsive (73% recruiter response).",
+      "title": "Lead AI Engineer",
+      "company": "",
+      "years": 6.7,
+      "location": "Jaipur, Rajasthan"
+    },
+    {
+      "rank": 10,
+      "candidate_id": "CAND_0011162",
+      "score": 0.6403,
+      "reasoning": "Recommendation Systems Engineer with 5.8 years in Coimbatore, Tamil Nadu. Earns #10 on consistent evidence. Strong, first-hand work in ranking, recommendation, search, and drift \u2014 a genuine match on the must-haves. Active and reachable (75% response rate).",
+      "title": "Recommendation Systems Engineer",
+      "company": "",
+      "years": 5.8,
+      "location": "Coimbatore, Tamil Nadu"
+    }
+  ],
+  "prebaked": true
+}

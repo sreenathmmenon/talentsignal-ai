@@ -48,6 +48,15 @@ report:
 adversarial:
 	python3 scripts/adversarial_report.py
 
+## Pre-bake the 100K "Proof at scale" snapshot the hosted demo serves.
+prebake:
+	python3 scripts/prebake_challenge.py
+
+## Build + run the hosted Studio image locally (needs Docker running).
+web-local:
+	docker build -f Dockerfile.web -t talentsignal-web .
+	docker run --rm -e PORT=8888 -p 8888:8888 talentsignal-web
+
 ## Run the evaluation suite (spine + hybrid) and write outputs/eval/report.md.
 eval:
 	python3 scripts/eval_harness.py --engine spine --out outputs/eval

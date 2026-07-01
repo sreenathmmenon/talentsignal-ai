@@ -286,13 +286,25 @@ def _validator_passes() -> bool:
 _validator_passes._cached = None
 
 
+PREBAKED_CHALLENGE = ROOT / "outputs" / "challenge_prebaked.json"
+
+
 def do_challenge(body):
     """Rank the real 100K LIVE for the standing challenge JD (NOT a frozen CSV).
 
     Uses the in-memory live cache: ranked once by the real engine, served instantly
     after, and automatically re-ranked if the candidate pool changes (so a new
-    strong applicant is never hidden by a stale result)."""
+    strong applicant is never hidden by a stale result).
+
+    HOSTED FALLBACK: when the full 100K dataset isn't present (e.g. a small demo
+    box where shipping the 100K + 146MB index would OOM), serve the deterministic
+    pre-baked snapshot instead — same result, instant, no memory spike."""
     from talentsignal import live_cache
+    if not OFFICIAL_CANDIDATES.exists() and PREBAKED_CHALLENGE.exists():
+        try:
+            return json.loads(PREBAKED_CHALLENGE.read_text(encoding="utf-8"))
+        except Exception:  # noqa: BLE001 - fall through to the live path/error
+            pass
     engine = body.get("engine", "spine")  # spine = fast+deterministic on full 100K
     res = live_cache.rank_live(live_cache.CHALLENGE_JD, engine=engine, top_n=10,
                                category="ai_ml_search_ranking")
@@ -420,6 +432,9 @@ class Handler(BaseHTTPRequestHandler):
         if path in ("/", "/index.html"):
             html = INDEX_HTML.read_text(encoding="utf-8").replace("{{PROOF_JSON}}", PROOF_JSON)
             self._send(HTTPStatus.OK, html, "text/html; charset=utf-8")
+        elif path == "/health":
+            # cheap liveness probe for the host (no engine work, no model load)
+            self._send(HTTPStatus.OK, {"status": "ok", "service": "talentsignal-studio"})
         elif path == "/api/proof":
             self._send(HTTPStatus.OK, _proof_payload())
         else:
@@ -440,7 +455,11 @@ class Handler(BaseHTTPRequestHandler):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--host", default=os.environ.get("HOST", "127.0.0.1"))
+    # Default to 0.0.0.0 when running under a platform that injects $PORT (Railway,
+    # Fly, etc.) so the container accepts external traffic; stay on localhost for a
+    # bare local run. Override with HOST=... either way.
+    _default_host = os.environ.get("HOST") or ("0.0.0.0" if os.environ.get("PORT") else "127.0.0.1")
+    ap.add_argument("--host", default=_default_host)
     ap.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8888")))
     args = ap.parse_args()
     srv = ThreadingHTTPServer((args.host, args.port), Handler)

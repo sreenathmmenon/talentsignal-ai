@@ -1,0 +1,37 @@
+# Hosted Studio demo image (Railway / Fly / any container host).
+#
+# Serves studio.py — the product UI — with the SEMANTIC (hybrid) engine live on
+# pasted résumés. The MiniLM model is baked into the image at build time so there
+# is NO runtime model download and no network dependency at request time.
+#
+# Memory: ~450 MB peak for the interactive paste-a-résumé loop (measured). The
+# 100K "Proof at scale" tab is served from a PRE-BAKED snapshot
+# (outputs/challenge_prebaked.json), so no visitor triggers a multi-GB live 100K
+# rank — the box stays small enough for a Railway Hobby / small instance.
+FROM python:3.11-slim
+
+ENV HF_HUB_OFFLINE=1 \
+    TRANSFORMERS_OFFLINE=1 \
+    TOKENIZERS_PARALLELISM=false \
+    PYTHONUNBUFFERED=1 \
+    HF_HOME=/models
+
+WORKDIR /app
+
+# Install the web/runtime deps: numpy + the embedding stack (CPU-only torch).
+COPY requirements-precompute.txt /app/requirements-precompute.txt
+RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch==2.7.0 \
+ && pip install --no-cache-dir numpy==1.26.4 sentence-transformers==5.1.2 transformers==4.52.4
+
+# Bake the MiniLM model into the image so there's no runtime download.
+RUN python -c "from sentence_transformers import SentenceTransformer; \
+    SentenceTransformer('all-MiniLM-L6-v2')"
+
+# App code. We deliberately do NOT need the 146MB embedding index or the 100K
+# candidates.jsonl here — the demo live-embeds small pastes and serves the 100K
+# tab from the pre-baked snapshot. A .dockerignore keeps the image lean.
+COPY . /app
+
+EXPOSE 8888
+# Railway/Fly inject $PORT; studio.py reads it and binds 0.0.0.0 automatically.
+CMD ["python", "studio.py"]

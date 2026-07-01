@@ -1,0 +1,20 @@
+# Keep the hosted web image lean. The demo live-embeds small pastes and serves
+# the 100K tab from outputs/challenge_prebaked.json — so the heavy assets below
+# are NOT needed at runtime and would only bloat the image.
+.git
+outputs/index/                 # 146MB embedding index (only the CLI 100K repro needs it)
+[PUB] India_runs_data_and_ai_challenge/   # 465MB organizer dataset
+demo/data
+tests
+deck/*.pdf
+*.png
+__pycache__
+**/__pycache__
+*.pyc
+.coverage
+.pytest_cache
+outputs/repro_*
+outputs/evidence_packets.jsonl
+# Runtime needs: studio_ui.html, outputs/rescue_summary.json (hero),
+# outputs/challenge_prebaked.json (100K tab), outputs/final_submission.csv.
+# All of those are small and NOT excluded above, so they ship in the image.
