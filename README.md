@@ -135,15 +135,23 @@ Python 3.11 was used during development.
 
 ## Reproduce Final Submission
 
-The committed `outputs/final_submission.csv` is the **hybrid** engine's output, so reproduce it with the hybrid engine (it loads the precomputed numpy index — no network, in budget):
+The committed `outputs/final_submission.csv` is the **hybrid** engine's output. One command reproduces it and proves the reproduction is byte-identical:
+
+```bash
+git lfs install && git lfs pull   # materialize outputs/index/*.npy (they are LFS objects)
+make reproduce                    # hybrid rank → validate → byte-diff vs the committed CSV
+```
+
+`make reproduce` writes to a **separate** file (`outputs/repro_submission.csv`) so the committed submission is never overwritten, then fails if the two differ. Equivalent explicit command:
 
 ```bash
 python3 rank.py --engine hybrid --index-dir outputs/index \
   --candidates '[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl' \
-  --out outputs/final_submission.csv
+  --out outputs/repro_submission.csv
+diff outputs/repro_submission.csv outputs/final_submission.csv   # must be identical
 ```
 
-(The zero-dependency `spine` engine — omit `--engine`/`--index-dir` — produces a different, also-valid top-100 without the embedding index.)
+If the index is an un-pulled LFS pointer, the hybrid engine aborts with an actionable `git lfs pull` message (it will not silently produce a different ranking). The zero-dependency `spine` engine — omit `--engine`/`--index-dir` — produces a different, also-valid top-100 without the embedding index.
 
 This also writes:
 

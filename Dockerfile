@@ -21,8 +21,16 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
-# Default: spine engine (zero-dependency, always reproduces).
-# For the hybrid engine, run with: --engine hybrid --index-dir outputs/index
+# IMPORTANT: the committed outputs/final_submission.csv is the HYBRID engine's
+# output. Build this image from a checkout that has pulled Git-LFS objects
+# (`git lfs install && git lfs pull`) so outputs/index/*.npy are the real files,
+# not pointers — otherwise the hybrid step aborts with an actionable message.
+#
+# Default: reproduce the SUBMITTED (hybrid) CSV to a SEPARATE path, leaving the
+# committed submission untouched. Compare the two to confirm reproduction:
+#   docker run --network none --rm talentsignal-ai \
+#     && diff outputs/repro_submission.csv outputs/final_submission.csv
 CMD ["python", "rank.py", \
+     "--engine", "hybrid", "--index-dir", "outputs/index", \
      "--candidates", "[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl", \
-     "--out", "outputs/final_submission.csv"]
+     "--out", "outputs/repro_submission.csv"]

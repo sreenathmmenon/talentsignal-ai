@@ -6,21 +6,34 @@
 
 CANDIDATES ?= [PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl
 JOB_SPEC   ?= job_specs/redrob_senior_ai_engineer.yaml
-OUT        ?= outputs/final_submission.csv
+# SUBMISSION is the committed source-of-truth CSV — never overwritten by a repro run.
+SUBMISSION ?= outputs/final_submission.csv
+# Reproductions write HERE (a separate path) so the committed CSV stays pristine.
+OUT        ?= outputs/repro_submission.csv
 INDEX_DIR  ?= outputs/index
 VALIDATOR  ?= [PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/validate_submission.py
 
-.PHONY: rank rank-hybrid precompute eval test validate clean
+.PHONY: reproduce rank rank-hybrid precompute eval test validate verify-reproduction clean
 
-## Produce the submission CSV (spine engine) and validate it.
-rank:
-	python3 rank.py --candidates "$(CANDIDATES)" --out "$(OUT)" --job-spec "$(JOB_SPEC)"
-	$(MAKE) validate
+## THE canonical reproduce command: regenerate the submitted (hybrid) CSV to a
+## separate path and prove it byte-matches the committed submission.
+reproduce: rank-hybrid verify-reproduction
 
-## Produce the submission CSV with the hybrid engine (needs a precomputed index).
+## Regenerate with the SUBMITTED (hybrid) engine to $(OUT), then validate.
 rank-hybrid:
 	python3 rank.py --engine hybrid --index-dir "$(INDEX_DIR)" \
 		--candidates "$(CANDIDATES)" --out "$(OUT)" --job-spec "$(JOB_SPEC)"
+	$(MAKE) validate
+
+## Byte-diff the regenerated CSV against the committed submission (fails if they differ).
+verify-reproduction:
+	@diff -q "$(OUT)" "$(SUBMISSION)" \
+		&& echo "REPRODUCTION OK: $(OUT) is byte-identical to $(SUBMISSION)" \
+		|| (echo "REPRODUCTION MISMATCH: $(OUT) != $(SUBMISSION)"; exit 1)
+
+## Zero-dependency fallback: spine engine to $(OUT) (a DIFFERENT, also-valid ranking).
+rank:
+	python3 rank.py --candidates "$(CANDIDATES)" --out "$(OUT)" --job-spec "$(JOB_SPEC)"
 	$(MAKE) validate
 
 ## Offline: build the embedding index (allowed to exceed the 5-min ranking budget).
