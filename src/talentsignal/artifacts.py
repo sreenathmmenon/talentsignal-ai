@@ -60,14 +60,41 @@ def save_candidate_index(
     }, indent=2), encoding="utf-8")
 
 
+def _is_lfs_pointer(path: Path) -> bool:
+    """A Git-LFS pointer is a tiny text stub that a clone WITHOUT `git lfs pull`
+    leaves in place of the real binary. Detect it so we can fail with an
+    actionable message instead of a cryptic numpy pickle error."""
+    try:
+        if path.stat().st_size > 1024:
+            return False  # real .npy is megabytes; pointers are ~130 bytes
+        with path.open("rb") as fh:
+            head = fh.read(64)
+        return head.startswith(b"version https://git-lfs")
+    except OSError:
+        return False
+
+
 def load_candidate_index(index_dir: str | Path = DEFAULT_INDEX_DIR):
     """Return (id_to_row: dict[str,int], embeddings: np.ndarray, meta: dict) or
-    (None, None, None) if the index is absent (caller falls back to lexical)."""
+    (None, None, None) if the index is absent (caller falls back to lexical).
+
+    If the embeddings file is present but is an un-pulled Git-LFS pointer, raise
+    a loud, actionable error rather than crashing on np.load or silently
+    degrading to a different (lexical) ranking — the latter would produce a
+    valid-but-WRONG top-100 that does not match the submitted CSV."""
     if np is None:
         return None, None, None
     p = index_paths(index_dir)
     if not (p["ids"].exists() and p["embeddings"].exists()):
         return None, None, None
+    if _is_lfs_pointer(p["embeddings"]):
+        raise RuntimeError(
+            f"The embedding index at {p['embeddings']} is a Git-LFS pointer, not the "
+            f"real file — this clone has not pulled LFS objects. Run:\n\n"
+            f"    git lfs install && git lfs pull\n\n"
+            f"then re-run. (Without the index the hybrid engine cannot reproduce the "
+            f"submitted CSV.)"
+        )
     ids = json.loads(p["ids"].read_text(encoding="utf-8"))
     emb = np.load(p["embeddings"], mmap_mode="r")  # mmap keeps RAM flat for 100K
     meta = json.loads(p["meta"].read_text(encoding="utf-8")) if p["meta"].exists() else {}
@@ -97,6 +124,11 @@ def load_requirement_embeddings(job_id: str, index_dir: str | Path = DEFAULT_IND
     out = Path(index_dir) / f"req_{job_id}.npy"
     if not out.exists():
         return None
+    if _is_lfs_pointer(out):
+        raise RuntimeError(
+            f"The requirement embeddings at {out} are a Git-LFS pointer, not the real "
+            f"file. Run `git lfs install && git lfs pull` then re-run."
+        )
     return np.load(out)
 
 

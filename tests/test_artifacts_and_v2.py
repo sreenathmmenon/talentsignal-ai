@@ -35,6 +35,28 @@ def test_requirement_embeddings_round_trip(tmp_path):
     assert loaded.shape == (4, 8)
 
 
+def test_lfs_pointer_index_raises_actionable_error(tmp_path):
+    """A clone that skipped `git lfs pull` leaves a pointer stub in place of the
+    real .npy. Loading it must fail LOUD with a git-lfs message, not crash on a
+    numpy pickle error or silently degrade to a different ranking (a Stage-3
+    reproduction disqualifier). Reproduces the exact fresh-clone failure mode."""
+    from talentsignal import artifacts
+    (tmp_path / "candidate_ids.json").write_text('["CAND_1","CAND_2"]', encoding="utf-8")
+    (tmp_path / "meta.json").write_text('{"count":2,"dim":8}', encoding="utf-8")
+    # a realistic Git-LFS pointer stub
+    (tmp_path / "embeddings.npy").write_text(
+        "version https://git-lfs.github.com/spec/v1\n"
+        "oid sha256:deadbeef\nsize 153600128\n", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="git lfs pull"):
+        artifacts.load_candidate_index(tmp_path)
+    # requirement-embedding loader has the same guard
+    (tmp_path / "req_job_xyz.npy").write_text(
+        "version https://git-lfs.github.com/spec/v1\noid sha256:beef\nsize 999\n",
+        encoding="utf-8")
+    with pytest.raises(RuntimeError, match="git lfs pull"):
+        artifacts.load_requirement_embeddings("job_xyz", index_dir=tmp_path)
+
+
 def test_evidence_text_handles_string_and_dict_skills():
     from talentsignal import artifacts
     cand = {"profile": {"summary": "built ranking", "headline": "AI Engineer"},

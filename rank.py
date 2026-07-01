@@ -93,6 +93,10 @@ def main() -> int:
                         help="apply the cross-encoder rerank stage to the shortlist "
                              "(higher accuracy on vocabulary-overlapping roles; needs "
                              "the offline cross-encoder model)")
+    parser.add_argument("--allow-lexical-fallback", action="store_true",
+                        help="permit the hybrid engine to run lexical-only when the "
+                             "embedding index is missing (produces a DIFFERENT ranking, "
+                             "not the submitted CSV; off by default so reproductions fail loudly)")
     args = parser.parse_args()
 
     start = time.perf_counter()
@@ -102,8 +106,27 @@ def main() -> int:
     retrieve_n = 100 if not args.rerank else max(100, 60)
     if args.engine == "hybrid":
         # Hybrid loads the precomputed numpy index (built offline by precompute.py);
-        # it never imports sentence-transformers at rank time. Falls back to
-        # lexical-only inside score_pool_hybrid if the index is absent.
+        # it never imports sentence-transformers at rank time.
+        #
+        # REPRODUCIBILITY GUARD: the submitted CSV is the hybrid engine's output, so
+        # a reproduction MUST use the real index. If the index is missing or is an
+        # un-pulled Git-LFS pointer, hybrid would silently degrade to a lexical-only
+        # ranking and emit a valid-but-DIFFERENT top-100 — a Stage-3 reproduction
+        # failure that looks like success. We fail loudly instead. Pass
+        # --allow-lexical-fallback to opt into the degraded path intentionally.
+        from talentsignal import artifacts
+        id_to_row, _emb, _meta = artifacts.load_candidate_index(args.index_dir)
+        if id_to_row is None and not args.allow_lexical_fallback:
+            print(
+                f"ERROR: hybrid engine requested but no usable embedding index was found "
+                f"at '{args.index_dir}'.\n"
+                f"  - If you just cloned the repo, run:  git lfs install && git lfs pull\n"
+                f"  - To build it from scratch, run:      python3 precompute.py\n"
+                f"  - To rank WITHOUT semantics anyway:   add --allow-lexical-fallback "
+                f"(produces a different, spine-like ranking — NOT the submitted CSV).",
+                file=sys.stderr,
+            )
+            return 2
         scored = score_pool_hybrid(records, job, index_dir=args.index_dir)
         rows = _rows_from_scored(scored, job, retrieve_n)
     else:
