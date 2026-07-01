@@ -44,6 +44,10 @@ precompute:
 report:
 	python3 scripts/gen_top10_report.py
 
+## Measure résumé-attack resistance (non-circular; no labels needed).
+adversarial:
+	python3 scripts/adversarial_report.py
+
 ## Run the evaluation suite (spine + hybrid) and write outputs/eval/report.md.
 eval:
 	python3 scripts/eval_harness.py --engine spine --out outputs/eval

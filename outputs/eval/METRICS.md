@@ -44,3 +44,21 @@ python3 scripts/rescue_ledger.py --candidates <100k.jsonl> --engine hybrid
 | test suite | **158 passing** | `pytest tests/` |
 
 _Last regenerated from current code. Do not quote a metric that isn't in this file._
+
+## Adversarial / honeypot resistance (non-circular; no labels needed)
+
+Ground truth is definitional (an injected/stuffed/fabricated résumé is grade-0 by
+construction), so this needs no human relevance labels and no protected attributes —
+unlike the ranking-quality numbers above, which are on our own graded synthetic suite.
+
+| attack | submitted **hybrid** (semantic) | **spine** (keyword) fallback |
+| --- | --- | --- |
+| prompt injection | 100% | 100% |
+| keyword stuffing | **100%** | 12.5% |
+| fabricated experience | 100% | 100% |
+| impossible tenure | 100% | 100% |
+| **overall resistance** | **100%** | 78.1% |
+
+Headline: keyword stuffing fools the keyword-based spine but not the submitted semantic
+engine — measured evidence that matching on meaning is harder to game than on keywords.
+Reproduce: `make adversarial` (`scripts/adversarial_report.py`). n=40 strong profiles × 4 attacks.

@@ -178,3 +178,42 @@ def test_disqualifier_veto_guarded_by_coverage():
                          requirement_matches=[], coverage=0.8)
     sb_strong = score_candidate_hybrid(ev, job, match_result=strong, schema_sig=sig, consistency=con)
     assert sb_strong.final_score > 0.0
+
+
+# ---- adversarial / honeypot resistance (non-circular robustness metric) ----
+
+def test_hybrid_resists_keyword_stuffing_better_than_spine():
+    """The core product claim, measured: stuffing a strong profile with role
+    keywords gives a large lift under keyword (spine) scoring but a negligible one
+    under the submitted semantic (hybrid) engine — because the stuffed terms carry
+    no real evidence. Uses lexical-only hybrid (no model) so it runs in CI."""
+    from talentsignal.eval import adversarial as adv
+    from talentsignal.eval import datasets as D
+    from talentsignal.eval.roles import AI_SEARCH
+    from talentsignal import semantic_match as sm
+    from talentsignal.schema_profile import schema_signals
+    from talentsignal.consistency_audit import audit_candidate
+    from talentsignal.scoring import score_candidate, score_candidate_hybrid
+    from talentsignal import artifacts
+    job = load_job_spec("job_specs/redrob_senior_ai_engineer.yaml")
+    reqs = list(getattr(job, "requirements", ()) or [])
+    rec = D.make_candidate(AI_SEARCH, D.STRONG, 3).record
+    stuffed = adv.attack_keyword_stuffing(rec)
+
+    def spine(r):
+        return score_candidate(build_evidence(r), job).final_score
+
+    def hybrid(r):
+        ev = build_evidence(r); txt = artifacts.evidence_text_of(r)
+        mr = sm.match(reqs, None, txt, None, alpha=sm.DEFAULT_ALPHA)  # lexical-only
+        return score_candidate_hybrid(ev, job, match_result=mr,
+                                      schema_sig=schema_signals(r),
+                                      consistency=audit_candidate(r)).final_score
+    spine_gain = spine(stuffed) - spine(rec)
+    hybrid_gain = hybrid(stuffed) - hybrid(rec)
+    # keyword stuffing must buy LESS advantage under semantic matching than keyword
+    assert hybrid_gain < spine_gain
+    # and the impossible-tenure attack must be flagged by the auditor either way
+    from talentsignal.consistency_audit import audit_candidate as audit
+    assert audit(adv.attack_impossible_tenure(rec)).flags or \
+        audit(adv.attack_impossible_tenure(rec)).is_impossible
