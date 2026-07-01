@@ -22,3 +22,4 @@ outputs/ui/
 
 # transient workflow scripts (not part of the product)
 .workflow_*.js
+.coverage
