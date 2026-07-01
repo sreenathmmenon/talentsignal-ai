@@ -142,15 +142,61 @@ def _logistics_score(ev: CandidateEvidence, job: JobSpec) -> float:
     return clamp(logistics)
 
 
+def _recency_factor(last_active_months: int) -> float:
+    """How much to trust availability signals given profile freshness."""
+    return (1.0 if last_active_months <= 1 else 0.75 if last_active_months <= 3
+            else 0.35 if last_active_months <= 6 else 0.1)
+
+
+def _open_to_work_term(ev: CandidateEvidence) -> float:
+    """Recency-gated availability term in [0,1] (HR council decision).
+
+    The self-declared open_to_work flag is a weak, noisy signal, so we interpret
+    it THROUGH recency instead of trusting it flat:
+      - open + recently active  -> ~1.0  (best case)
+      - not-open + recently active -> ~0.35 (real but mild passive-candidate penalty)
+      - either flag when STALE   -> decays toward 0.55 neutral (an old flag is not a
+        promise in either direction; recency already penalizes staleness elsewhere)
+      - flag MISSING/unknown     -> 0.55 neutral prior (unknown != unavailable)
+    No availability signal ever vetoes a candidate."""
+    rf = _recency_factor(ev.last_active_months)
+    if ev.open_to_work is True:
+        return 0.55 + 0.45 * rf
+    if ev.open_to_work is False:
+        return 0.55 - 0.20 * rf
+    return 0.55  # unknown/unset -> neutral prior
+
+
+def reachability(ev: CandidateEvidence) -> tuple[str, float]:
+    """A recruiter-facing reachability read, orthogonal to fit. Observed behavior
+    (recent activity + response rate) dominates the self-declared flag.
+    Returns (label, score in [0,1]) — display + within-band tiebreak only; this is
+    a VIEW over signals already inside Q, not an extra penalty."""
+    rf = _recency_factor(ev.last_active_months)
+    score = clamp(0.45 * rf + 0.35 * ev.response_rate + 0.20 * _open_to_work_term(ev))
+    recent = ev.last_active_months <= 3
+    responsive = ev.response_rate >= 0.4
+    if recent or responsive:
+        # active/responsive => reachable regardless of the flag; "passive" if not-open
+        label = "passive" if ev.open_to_work is False else "reachable"
+    elif ev.last_active_months >= 6 or ev.response_rate < 0.15:
+        label = "stale"
+    else:
+        label = "passive"
+    return label, round(score, 3)
+
+
 def _behavioral_score(ev: CandidateEvidence) -> float:
     response_time_score = clamp(1.0 - ev.response_time_hours / 240.0)
     notice_score = 1.0 if ev.notice_period_days <= 30 else 0.7 if ev.notice_period_days <= 60 else 0.35 if ev.notice_period_days <= 90 else 0.15
-    active_score = 1.0 if ev.last_active_months <= 1 else 0.75 if ev.last_active_months <= 3 else 0.35 if ev.last_active_months <= 6 else 0.1
+    active_score = _recency_factor(ev.last_active_months)
+    # Council Change C: observed behavior (recency, response rate) weighted above the
+    # self-declared flag. open_to_work 0.16->0.12, freed 0.04 to response+recency.
     behavioral = (
         0.18 * (ev.profile_completeness / 100.0)
-        + 0.18 * active_score
-        + 0.16 * (1.0 if ev.open_to_work else 0.25)
-        + 0.18 * ev.response_rate
+        + 0.20 * active_score
+        + 0.12 * _open_to_work_term(ev)
+        + 0.20 * ev.response_rate
         + 0.08 * response_time_score
         + 0.10 * notice_score
         + 0.06 * clamp(ev.interview_completion_rate)
@@ -234,21 +280,9 @@ def score_candidate(ev: CandidateEvidence, job: JobSpec) -> ScoreBreakdown:
     logistics += 0.05 if ev.preferred_work_mode in {"hybrid", "flexible"} else 0.0
     logistics = clamp(logistics)
 
-    response_time_score = clamp(1.0 - ev.response_time_hours / 240.0)
-    notice_score = 1.0 if ev.notice_period_days <= 30 else 0.7 if ev.notice_period_days <= 60 else 0.35 if ev.notice_period_days <= 90 else 0.15
-    active_score = 1.0 if ev.last_active_months <= 1 else 0.75 if ev.last_active_months <= 3 else 0.35 if ev.last_active_months <= 6 else 0.1
-    behavioral = (
-        0.18 * (ev.profile_completeness / 100.0)
-        + 0.18 * active_score
-        + 0.16 * (1.0 if ev.open_to_work else 0.25)
-        + 0.18 * ev.response_rate
-        + 0.08 * response_time_score
-        + 0.10 * notice_score
-        + 0.06 * clamp(ev.interview_completion_rate)
-        + 0.03 * (1.0 if ev.verified_email else 0.0)
-        + 0.03 * (1.0 if ev.verified_phone else 0.0)
-    )
-    behavioral = clamp(behavioral)
+    # Same recency-gated availability treatment as the spine path (shared helper,
+    # so both engines stay identical on availability scoring).
+    behavioral = _behavioral_score(ev)
 
     trust = 0.0
     trust += 0.22 if ev.linkedin_connected else 0.0

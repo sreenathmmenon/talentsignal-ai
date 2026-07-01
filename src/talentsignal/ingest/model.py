@@ -125,7 +125,9 @@ def normalize_record(rec: dict[str, Any]) -> dict[str, Any]:
 
     # ensure a behavioral signal block so schema-driven scoring has something.
     # neutral-but-present defaults (a real product would source these live).
-    signals.setdefault("open_to_work_flag", True)
+    # NOTE: do NOT default open_to_work_flag — a missing flag must stay unset so
+    # scoring applies a neutral prior (unknown != available, and unknown !=
+    # unavailable). Defaulting to True fabricated availability on sparse profiles.
     signals.setdefault("profile_completeness_score", _completeness(rec))
     signals.setdefault("verified_email", False)
 

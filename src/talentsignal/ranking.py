@@ -13,6 +13,17 @@ from .reasoning import generate_reasoning
 from .scoring import score_candidate
 
 
+# Near-tie band: candidates whose final scores round to the same 3rd decimal are
+# treated as "comparable"; within a band the more-reachable candidate ranks higher
+# (HR council: "stale/unresponsive should not outrank a COMPARABLE active candidate",
+# without letting availability override a real relevance/quality gap).
+def _rank_key(score, ev):
+    from .scoring import reachability
+    band = round(score.final_score, 3)          # primary: score, quantized to near-tie
+    _label, reach = reachability(ev)
+    return (-band, -reach, ev.candidate_id)      # then reachability, then stable id
+
+
 def score_pool_from_iter(
     candidates: "Iterable[dict[str, Any]]", job: JobSpec
 ) -> list[tuple[Any, Any, dict[str, Any]]]:
@@ -24,7 +35,7 @@ def score_pool_from_iter(
         ev = build_evidence(candidate)
         score = score_candidate(ev, job)
         scored.append((score, ev, candidate))
-    scored.sort(key=lambda item: (-item[0].final_score, item[1].candidate_id))
+    scored.sort(key=lambda item: _rank_key(item[0], item[1]))
     return scored
 
 
@@ -87,7 +98,7 @@ def score_pool_hybrid(
         score = score_candidate_hybrid(ev, job, match_result=result,
                                        schema_sig=schema_sig, consistency=consistency)
         scored.append((score, ev, candidate))
-    scored.sort(key=lambda item: (-item[0].final_score, item[1].candidate_id))
+    scored.sort(key=lambda item: _rank_key(item[0], item[1]))
     return scored
 
 
@@ -98,9 +109,17 @@ def rank_records_hybrid(records, job: JobSpec, top_n: int = 100, **kwargs) -> li
 def _rows_from_scored(scored: list[tuple[Any, Any, dict[str, Any]]], job: JobSpec, top_n: int) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     head = scored[:top_n]
+    prev_display = None
     for rank, (score, ev, _candidate) in enumerate(head, start=1):
-        # Ensure strict non-increasing scores after rounding and deterministic ordering.
-        display_score = max(0.0, score.final_score - (rank - 1) * 0.000001)
+        # Emit a strictly non-increasing score (validator requirement). Because the
+        # within-band reachability tiebreak may place a fractionally lower raw score
+        # above a higher one, we carry the score DOWN monotonically: each row is at
+        # most the previous row's score minus a tiny epsilon. Order is authoritative;
+        # the displayed score is a monotonic surface over it.
+        display_score = max(0.0, score.final_score)
+        if prev_display is not None and display_score >= prev_display:
+            display_score = max(0.0, prev_display - 0.000001)
+        prev_display = display_score
         # neighbor = the next-ranked candidate, for comparative "edges out #N" prose
         neighbor = head[rank][0] if rank < len(head) else None
         rows.append(

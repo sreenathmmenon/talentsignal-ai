@@ -64,7 +64,10 @@ class CandidateEvidence:
     shallow_ai_terms: list[str]
     profile_completeness: float
     last_active_months: int
-    open_to_work: bool
+    # Three-state: True (open), False (not open), None (unknown/unset). We do NOT
+    # collapse a missing flag to False — unknown availability is a neutral prior,
+    # not a penalty (missing flags correlate with busy, employed, strong candidates).
+    open_to_work: bool | None
     response_rate: float
     response_time_hours: float
     notice_period_days: int
@@ -168,7 +171,10 @@ def build_evidence(candidate: dict[str, Any]) -> CandidateEvidence:
         shallow_ai_terms=contains_any(all_text, tg.SHALLOW_AI_TERMS),
         profile_completeness=float(signals.get("profile_completeness_score") or 0.0),
         last_active_months=months_since(signals.get("last_active_date")),
-        open_to_work=bool(signals.get("open_to_work_flag")),
+        # preserve None when the flag is genuinely absent (neutral prior downstream);
+        # only coerce to bool when a real True/False value is present.
+        open_to_work=(None if signals.get("open_to_work_flag") is None
+                      else bool(signals.get("open_to_work_flag"))),
         response_rate=float(signals.get("recruiter_response_rate") or 0.0),
         response_time_hours=float(signals.get("avg_response_time_hours") or 999.0),
         notice_period_days=int(signals.get("notice_period_days") or 0),

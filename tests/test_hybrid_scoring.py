@@ -91,3 +91,64 @@ def test_hybrid_dense_lifts_paraphrase_over_lexical() -> None:
     rows = rank_records_hybrid(records, job, top_n=2,
                                candidate_embeddings=(id_to_row, emb), req_embeddings=req_emb)
     assert rows[0]["candidate_id"] == para["candidate_id"]
+
+
+# ---- Availability / reachability (HR council decision) ----
+
+def _cand_with_signals(**signals):
+    """A minimal but relevance-identical AI candidate; only signals vary."""
+    base = D.make_candidate(AI_SEARCH, D.STRONG, 0).record
+    base = dict(base)
+    base["redrob_signals"] = {**base.get("redrob_signals", {}), **signals}
+    return base
+
+
+def test_open_to_work_never_vetoes() -> None:
+    # A not-open candidate must still be scored and rank-eligible (no hard veto).
+    job = load_job_spec("job_specs/redrob_senior_ai_engineer.yaml")
+    c = _cand_with_signals(open_to_work_flag=False, last_active_date="2026-05-20",
+                           recruiter_response_rate=0.8)
+    sb = score_candidate(build_evidence(c), job)
+    assert sb.final_score > 0.0  # availability alone never zeroes a qualified candidate
+
+
+def test_missing_flag_is_neutral_between_true_and_false() -> None:
+    # unknown != available and unknown != unavailable: a missing flag must score
+    # strictly between an explicit True and an explicit False on identical profiles.
+    from talentsignal.scoring import _open_to_work_term
+    from talentsignal.features import build_evidence as be
+    common = dict(last_active_date="2026-06-01", recruiter_response_rate=0.7)
+    t = _open_to_work_term(be(_cand_with_signals(open_to_work_flag=True, **common)))
+    f = _open_to_work_term(be(_cand_with_signals(open_to_work_flag=False, **common)))
+    # build a candidate whose signal block has NO open_to_work_flag key
+    miss_rec = _cand_with_signals(**common)
+    miss_rec["redrob_signals"].pop("open_to_work_flag", None)
+    m = _open_to_work_term(be(miss_rec))
+    assert f < m < t, (f, m, t)
+
+
+def test_passive_active_outranks_open_but_stale() -> None:
+    # The brief's rule: a not-open-but-recently-active + responsive candidate should
+    # not be beaten on availability by an open-but-stale, unresponsive one.
+    from talentsignal.scoring import reachability
+    from talentsignal.features import build_evidence as be
+    passive_active = be(_cand_with_signals(
+        open_to_work_flag=False, last_active_date="2026-05-25", recruiter_response_rate=0.85))
+    open_stale = be(_cand_with_signals(
+        open_to_work_flag=True, last_active_date="2024-09-01", recruiter_response_rate=0.05))
+    lab_p, r_p = reachability(passive_active)
+    lab_s, r_s = reachability(open_stale)
+    assert r_p > r_s
+    assert lab_p == "passive" and lab_s == "stale"
+
+
+def test_stale_flag_decays_toward_neutral() -> None:
+    # An OLD flag (either direction) should be trusted less: a stale not-open scores
+    # closer to neutral than a fresh not-open.
+    from talentsignal.scoring import _open_to_work_term
+    from talentsignal.features import build_evidence as be
+    fresh_no = _open_to_work_term(be(_cand_with_signals(
+        open_to_work_flag=False, last_active_date="2026-06-01")))
+    stale_no = _open_to_work_term(be(_cand_with_signals(
+        open_to_work_flag=False, last_active_date="2024-01-01")))
+    assert stale_no > fresh_no  # penalty relaxes as the flag ages
