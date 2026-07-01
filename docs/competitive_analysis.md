@@ -56,7 +56,7 @@ the data the customer already has the right to use.**
 | **Auto-rejection risk** | ❌ discards candidates before human review | ✅ ranks + explains for a **human** decision; surfaces honest concerns, never silently drops |
 | **Fakes / honeypots** | ⚠️ keyword-dense fakes can score high | ✅ role-independent consistency auditor catches the impossible |
 | **Agentic** | ⚠️ marketed, uneven | ✅ first-class **MCP server** (the open standard) |
-| **Reproducible / auditable** | ❌ black box | ✅ deterministic, offline, structured audit exports, 137 tests, CI gate |
+| **Reproducible / auditable** | ❌ black box | ✅ deterministic, offline, structured audit exports, 221 tests, CI gate |
 | **Deploy model** | SaaS, your data leaves | ✅ **self-hostable**, runs offline (the named "future direction") |
 | **Open / inspectable** | ❌ closed | ✅ open, inspectable engine |
 

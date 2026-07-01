@@ -2,21 +2,21 @@
   "jd": "Senior AI Engineer - Founding Team",
   "pool_size": 100000,
   "our_shortlist": 100,
-  "keyword_ranks_below_50": 60,
-  "keyword_ranks_below_100": 28,
-  "headline": "Of the 100 candidates we shortlist, a keyword filter ranks 28 outside its own top 100 \u2014 a recruiter relying on keyword search would never see 28% of who we recommend.",
+  "keyword_ranks_below_50": 63,
+  "keyword_ranks_below_100": 32,
+  "headline": "Of the 100 candidates we shortlist, a keyword filter ranks 32 outside its own top 100 \u2014 a recruiter relying on keyword search would never see 32% of who we recommend.",
   "rescued_with_proof": [
     {
       "candidate_id": "CAND_0006567",
-      "our_rank": 14,
+      "our_rank": 8,
       "keyword_rank": 102,
       "title": "Senior AI Engineer",
-      "matched_requirement": "production ml systems",
-      "their_own_words": "Senior engineer who has spent the last several years building systems that connect users with relevant information at scale."
+      "matched_requirement": "vector or hybrid search infrastructure",
+      "their_own_words": "Senior ML Engineer \u2014 Search & Ranking Shipped the personalization infrastructure: the system that learns from user behavior and improves relevance over time."
     },
     {
       "candidate_id": "CAND_0010257",
-      "our_rank": 18,
+      "our_rank": 12,
       "keyword_rank": 103,
       "title": "Senior Data Scientist",
       "matched_requirement": "production ml systems",
@@ -24,7 +24,7 @@
     },
     {
       "candidate_id": "CAND_0043860",
-      "our_rank": 44,
+      "our_rank": 34,
       "keyword_rank": 156,
       "title": "Junior ML Engineer",
       "matched_requirement": "production ml systems",
@@ -32,79 +32,79 @@
     },
     {
       "candidate_id": "CAND_0076163",
-      "our_rank": 47,
+      "our_rank": 36,
       "keyword_rank": 204,
       "title": "NLP Engineer",
-      "matched_requirement": "production ml systems",
-      "their_own_words": "My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load."
+      "matched_requirement": "product engineering shipping",
+      "their_own_words": "Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."
+    },
+    {
+      "candidate_id": "CAND_0068351",
+      "our_rank": 38,
+      "keyword_rank": 145,
+      "title": "Lead AI Engineer",
+      "matched_requirement": "product engineering shipping",
+      "their_own_words": "Looking for senior IC or tech-lead roles where I can own the intelligence layer end-to-end at a product company."
     },
     {
       "candidate_id": "CAND_0005538",
-      "our_rank": 50,
+      "our_rank": 39,
       "keyword_rank": 109,
       "title": "Senior AI Engineer",
-      "matched_requirement": "production ml systems",
-      "their_own_words": "Senior engineer who has spent the last several years building systems that connect users with relevant information at scale."
+      "matched_requirement": "product engineering shipping",
+      "their_own_words": "Looking for senior IC or tech-lead roles where I can own the intelligence layer end-to-end at a product company."
     },
     {
       "candidate_id": "CAND_0012888",
-      "our_rank": 52,
+      "our_rank": 44,
       "keyword_rank": 148,
       "title": "Junior ML Engineer",
       "matched_requirement": "production ml systems",
       "their_own_words": "Junior ML Engineer Built recommendation-style features at a mid-stage startup \u2014 lighter weight than ranking systems at FAANG, but production."
     },
     {
-      "candidate_id": "CAND_0060054",
-      "our_rank": 53,
-      "keyword_rank": 157,
-      "title": "AI Engineer",
-      "matched_requirement": "production ml systems",
-      "their_own_words": "My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load."
-    },
-    {
-      "candidate_id": "CAND_0068351",
-      "our_rank": 54,
-      "keyword_rank": 145,
-      "title": "Lead AI Engineer",
-      "matched_requirement": "production ml systems",
-      "their_own_words": "Senior engineer who has spent the last several years building systems that connect users with relevant information at scale."
-    },
-    {
-      "candidate_id": "CAND_0037160",
-      "our_rank": 57,
-      "keyword_rank": 106,
-      "title": "Data Scientist",
-      "matched_requirement": "production ml systems",
-      "their_own_words": "Data Scientist | Building ML-powered solutions Data Scientist Built recommendation-style features at a mid-stage startup \u2014 lighter weight than ranking systems \u2026"
-    },
-    {
       "candidate_id": "CAND_0046924",
-      "our_rank": 58,
+      "our_rank": 48,
       "keyword_rank": 269,
       "title": "Computer Vision Engineer",
       "matched_requirement": "production ml systems",
       "their_own_words": "Junior ML Engineer Built recommendation-style features at a mid-stage startup \u2014 lighter weight than ranking systems at FAANG, but production."
     },
     {
+      "candidate_id": "CAND_0096172",
+      "our_rank": 50,
+      "keyword_rank": 140,
+      "title": "NLP Engineer",
+      "matched_requirement": "product engineering shipping",
+      "their_own_words": "Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."
+    },
+    {
+      "candidate_id": "CAND_0037160",
+      "our_rank": 51,
+      "keyword_rank": 106,
+      "title": "Data Scientist",
+      "matched_requirement": "production ml systems",
+      "their_own_words": "Data Scientist | Building ML-powered solutions Data Scientist Built recommendation-style features at a mid-stage startup \u2014 lighter weight than ranking systems \u2026"
+    },
+    {
       "candidate_id": "CAND_0008239",
-      "our_rank": 61,
+      "our_rank": 54,
       "keyword_rank": 131,
+      "title": "AI Engineer",
+      "matched_requirement": "product engineering shipping",
+      "their_own_words": "Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."
+    },
+    {
+      "candidate_id": "CAND_0064904",
+      "our_rank": 56,
+      "keyword_rank": 129,
       "title": "AI Engineer",
       "matched_requirement": "production ml systems",
       "their_own_words": "My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load."
     },
     {
-      "candidate_id": "CAND_0096172",
-      "our_rank": 62,
-      "keyword_rank": 140,
-      "title": "NLP Engineer",
-      "matched_requirement": "production ml systems",
-      "their_own_words": "My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load."
-    },
-    {
       "candidate_id": "CAND_0012837",
-      "our_rank": 63,
+      "our_rank": 57,
       "keyword_rank": 104,
       "title": "Junior ML Engineer",
       "matched_requirement": "production ml systems",
@@ -112,23 +112,23 @@
     },
     {
       "candidate_id": "CAND_0022812",
-      "our_rank": 66,
+      "our_rank": 58,
       "keyword_rank": 112,
       "title": "Applied ML Engineer",
-      "matched_requirement": "production ml systems",
-      "their_own_words": "My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load."
+      "matched_requirement": "product engineering shipping",
+      "their_own_words": "Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."
     },
     {
-      "candidate_id": "CAND_0064904",
-      "our_rank": 70,
-      "keyword_rank": 129,
-      "title": "AI Engineer",
-      "matched_requirement": "production ml systems",
-      "their_own_words": "My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load."
+      "candidate_id": "CAND_0061257",
+      "our_rank": 62,
+      "keyword_rank": 108,
+      "title": "Staff Machine Learning Engineer",
+      "matched_requirement": "product engineering shipping",
+      "their_own_words": "Looking for senior IC or tech-lead roles where I can own the intelligence layer end-to-end at a product company."
     },
     {
       "candidate_id": "CAND_0080344",
-      "our_rank": 71,
+      "our_rank": 65,
       "keyword_rank": 206,
       "title": "Senior Software Engineer (ML)",
       "matched_requirement": "production ml systems",
@@ -136,75 +136,75 @@
     },
     {
       "candidate_id": "CAND_0045862",
-      "our_rank": 73,
+      "our_rank": 68,
       "keyword_rank": 287,
       "title": "AI Specialist",
       "matched_requirement": "production ml systems",
       "their_own_words": "NLP Feature Engineering MLflow Haystack Computer Vision Recommendation Systems BentoML Fine-tuning LLMs LlamaIndex Illustrator GraphQL Vector Search LoRA"
     },
     {
-      "candidate_id": "CAND_0014440",
-      "our_rank": 75,
-      "keyword_rank": 111,
-      "title": "Recommendation Systems Engineer",
-      "matched_requirement": "production ml systems",
-      "their_own_words": "My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load."
-    },
-    {
-      "candidate_id": "CAND_0073620",
-      "our_rank": 76,
-      "keyword_rank": 136,
-      "title": "AI Research Engineer",
-      "matched_requirement": "production ml systems",
-      "their_own_words": "Data Scientist Built recommendation-style features at a mid-stage startup \u2014 lighter weight than ranking systems at FAANG, but production."
-    },
-    {
       "candidate_id": "CAND_0007596",
-      "our_rank": 78,
+      "our_rank": 73,
       "keyword_rank": 266,
       "title": "Junior ML Engineer",
       "matched_requirement": "production ml systems",
       "their_own_words": "Junior ML Engineer | 4.4 yrs in analytics & ML Junior ML Engineer Built recommendation-style features at a mid-stage startup \u2014 lighter weight than ranking syst\u2026"
     },
     {
-      "candidate_id": "CAND_0061257",
-      "our_rank": 82,
-      "keyword_rank": 108,
-      "title": "Staff Machine Learning Engineer",
-      "matched_requirement": "production ml systems",
-      "their_own_words": "Senior engineer who has spent the last several years building systems that connect users with relevant information at scale."
-    },
-    {
-      "candidate_id": "CAND_0010149",
-      "our_rank": 86,
-      "keyword_rank": 142,
-      "title": "ML Engineer",
-      "matched_requirement": "production ml systems",
-      "their_own_words": "Looking for a role where I can step up to more end-to-end ownership of ML systems, not just modeling."
-    },
-    {
-      "candidate_id": "CAND_0092255",
-      "our_rank": 90,
-      "keyword_rank": 139,
-      "title": "ML Engineer",
+      "candidate_id": "CAND_0073620",
+      "our_rank": 74,
+      "keyword_rank": 136,
+      "title": "AI Research Engineer",
       "matched_requirement": "production ml systems",
       "their_own_words": "Data Scientist Built recommendation-style features at a mid-stage startup \u2014 lighter weight than ranking systems at FAANG, but production."
     },
     {
-      "candidate_id": "CAND_0082489",
-      "our_rank": 91,
-      "keyword_rank": 1551,
-      "title": "ML Engineer",
-      "matched_requirement": "production ml systems",
-      "their_own_words": "ML Engineer | Data Science & ML enthusiast ML Engineer Built recommendation-style features at a mid-stage startup \u2014 lighter weight than ranking systems at FAAN\u2026"
+      "candidate_id": "CAND_0003977",
+      "our_rank": 76,
+      "keyword_rank": 324,
+      "title": "Recommendation Systems Engineer",
+      "matched_requirement": "learning to rank",
+      "their_own_words": "Learning to Rank NLP Node.js Embeddings Semantic Search Image Classification PyTorch CNN Python Prompt Engineering Object Detection Terraform Machine Learning"
     },
     {
-      "candidate_id": "CAND_0073883",
-      "our_rank": 92,
-      "keyword_rank": 272,
-      "title": "AI Specialist",
+      "candidate_id": "CAND_0014440",
+      "our_rank": 77,
+      "keyword_rank": 111,
+      "title": "Recommendation Systems Engineer",
+      "matched_requirement": "product engineering shipping",
+      "their_own_words": "Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."
+    },
+    {
+      "candidate_id": "CAND_0060054",
+      "our_rank": 78,
+      "keyword_rank": 157,
+      "title": "AI Engineer",
+      "matched_requirement": "embeddings retrieval ranking search recommendation",
+      "their_own_words": "AI Engineer | ML, NLP, Recommendation Systems AI Engineer Developed a semantic search feature for an internal knowledge base of ~500K documents."
+    },
+    {
+      "candidate_id": "CAND_0050454",
+      "our_rank": 82,
+      "keyword_rank": 128,
+      "title": "AI Engineer",
+      "matched_requirement": "product engineering shipping",
+      "their_own_words": "Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."
+    },
+    {
+      "candidate_id": "CAND_0043228",
+      "our_rank": 85,
+      "keyword_rank": 107,
+      "title": "Applied ML Engineer",
+      "matched_requirement": "product engineering shipping",
+      "their_own_words": "Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."
+    },
+    {
+      "candidate_id": "CAND_0072660",
+      "our_rank": 86,
+      "keyword_rank": 120,
+      "title": "Machine Learning Engineer",
       "matched_requirement": "production ml systems",
-      "their_own_words": "Junior ML Engineer Built recommendation-style features at a mid-stage startup \u2014 lighter weight than ranking systems at FAANG, but production."
+      "their_own_words": "My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load."
     }
   ]
 }

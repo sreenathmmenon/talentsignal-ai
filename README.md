@@ -18,7 +18,7 @@ python3 scripts/prove.py      # or: make prove
 ```
 
 Reproduces, on the organizers' own 100K, the three core claims with their source:
-**(1)** 29 of our top-100 are invisible to a keyword filter, **(2)** 0 fabricated profiles in the top-100 (with a real caught contradiction), **(3)** different roles surface different people (cross-JD top-10 overlap ~0).
+**(1)** 32 of our top-100 are invisible to a keyword filter, **(2)** 0 fabricated profiles in the top-100 (with a real caught contradiction), **(3)** different roles surface different people (cross-JD top-10 overlap ~0).
 
 ## Why it's different
 
@@ -32,8 +32,8 @@ Reproduces, on the organizers' own 100K, the three core claims with their source
 ## Surfaces (quickstart)
 
 ```bash
-# Product UI — upload any JD + resumes, see a ranked explainable shortlist
-python product_ui.py            # http://127.0.0.1:8800
+# Studio — the product UI: upload any JD + resumes, see a ranked explainable shortlist
+python studio.py                # http://127.0.0.1:8888
 
 # REST API + SDK — integrate into a portal/ATS
 python api_server.py            # POST /rank, /ingest/jd, /ingest/resume, /audit
@@ -100,7 +100,7 @@ python3 scripts/demo_rank.py --jd demo/data/sales_jd.md \
 
 ## Status
 
-The engine and all four surfaces are implemented, tested (158 tests), and validated end-to-end:
+The engine and all four surfaces are implemented, tested (221 tests), and validated end-to-end:
 
 - **Engine**: JD ingestion, hybrid semantic matching, schema-driven signals, role-independent consistency auditor, unified scoring, grounded reasoning — with a labeled evaluation suite (hybrid composite 0.97 / spine 0.95, paraphrase 10/10, honeypots 0% in top-10, JD-agnostic ~0.06). See [`outputs/eval/METRICS.md`](outputs/eval/METRICS.md).
 - **Universal ingest**: PDF/DOCX/TXT/CSV/JSON/LinkedIn/paste → rankable; pluggable adapters.
@@ -245,7 +245,7 @@ The raw `candidates.jsonl` is ignored by git because it is large. For external r
 
 Surfaces (all over one engine facade `talentsignal.api.rank`):
 - `rank.py`: hackathon ranking CLI (spine + hybrid engines).
-- `product_ui.py`: the product UI — upload any JD + resumes → ranked shortlist.
+- `studio.py`: the Studio product UI (:8888) — upload any JD + resumes → ranked, explainable shortlist, with compare, interview kits, and the live 100K.
 - `api_server.py`: REST API; `src/talentsignal/client.py`: Python SDK client.
 - `mcp_server.py`: MCP server exposing the engine as agentic tools.
 - `precompute.py`: offline embedding-index builder (hybrid engine).
@@ -263,7 +263,7 @@ Engine (`src/talentsignal/`):
 Support:
 - `job_specs/`: machine-readable JD scorecards. `demo/data/`: generated demo datasets.
 - `scripts/`: eval harness, data factory, demo, audits. `docs/`: methodology, MCP, architecture/defense.
-- `outputs/`: generated submission + `index/` (git-lfs embedding index). `tests/`: 158 tests.
+- `outputs/`: generated submission + `index/` (git-lfs embedding index). `tests/`: 221 tests.
 
 ## Key docs
 

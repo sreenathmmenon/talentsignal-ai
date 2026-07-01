@@ -80,7 +80,7 @@ Headline results (labeled multi-JD eval; all numbers sourced in
 | honeypot rate in top-10 (trap-heavy pool) | 0% | **0%** |
 | cross-JD top-10 overlap (lower = more JD-agnostic) | — | **~0.06** |
 
-**The rescue result (real 100K):** a keyword filter ranks **28 of our top-100**
+**The rescue result (real 100K):** a keyword filter ranks **32 of our top-100**
 candidates outside its own top 100 — a recruiter on keyword search would never see
 28% of who we recommend (`../outputs/rescue_summary.json`).
 

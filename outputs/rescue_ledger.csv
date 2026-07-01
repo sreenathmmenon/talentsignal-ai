@@ -1,29 +1,33 @@
 candidate_id,our_rank,keyword_rank,title,matched_requirement,their_own_words
-CAND_0006567,14,102,Senior AI Engineer,production ml systems,Senior engineer who has spent the last several years building systems that connect users with relevant information at scale.
-CAND_0010257,18,103,Senior Data Scientist,production ml systems,My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load.
-CAND_0043860,44,156,Junior ML Engineer,production ml systems,Junior ML Engineer | 6.1 yrs in analytics & ML Junior ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking syst…
-CAND_0076163,47,204,NLP Engineer,production ml systems,My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load.
-CAND_0005538,50,109,Senior AI Engineer,production ml systems,Senior engineer who has spent the last several years building systems that connect users with relevant information at scale.
-CAND_0012888,52,148,Junior ML Engineer,production ml systems,"Junior ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at FAANG, but production."
-CAND_0060054,53,157,AI Engineer,production ml systems,My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load.
-CAND_0068351,54,145,Lead AI Engineer,production ml systems,Senior engineer who has spent the last several years building systems that connect users with relevant information at scale.
-CAND_0037160,57,106,Data Scientist,production ml systems,Data Scientist | Building ML-powered solutions Data Scientist Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems …
-CAND_0046924,58,269,Computer Vision Engineer,production ml systems,"Junior ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at FAANG, but production."
-CAND_0008239,61,131,AI Engineer,production ml systems,My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load.
-CAND_0096172,62,140,NLP Engineer,production ml systems,My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load.
-CAND_0012837,63,104,Junior ML Engineer,production ml systems,"ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at FAANG, but production."
-CAND_0022812,66,112,Applied ML Engineer,production ml systems,My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load.
-CAND_0064904,70,129,AI Engineer,production ml systems,My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load.
-CAND_0080344,71,206,Senior Software Engineer (ML),production ml systems,"Junior ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at FAANG, but production."
-CAND_0045862,73,287,AI Specialist,production ml systems,NLP Feature Engineering MLflow Haystack Computer Vision Recommendation Systems BentoML Fine-tuning LLMs LlamaIndex Illustrator GraphQL Vector Search LoRA
-CAND_0014440,75,111,Recommendation Systems Engineer,production ml systems,My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load.
-CAND_0073620,76,136,AI Research Engineer,production ml systems,"Data Scientist Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at FAANG, but production."
-CAND_0007596,78,266,Junior ML Engineer,production ml systems,Junior ML Engineer | 4.4 yrs in analytics & ML Junior ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking syst…
-CAND_0061257,82,108,Staff Machine Learning Engineer,production ml systems,Senior engineer who has spent the last several years building systems that connect users with relevant information at scale.
-CAND_0010149,86,142,ML Engineer,production ml systems,"Looking for a role where I can step up to more end-to-end ownership of ML systems, not just modeling."
+CAND_0006567,8,102,Senior AI Engineer,vector or hybrid search infrastructure,Senior ML Engineer — Search & Ranking Shipped the personalization infrastructure: the system that learns from user behavior and improves relevance over time.
+CAND_0010257,12,103,Senior Data Scientist,production ml systems,My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load.
+CAND_0043860,34,156,Junior ML Engineer,production ml systems,Junior ML Engineer | 6.1 yrs in analytics & ML Junior ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking syst…
+CAND_0076163,36,204,NLP Engineer,product engineering shipping,"Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."
+CAND_0068351,38,145,Lead AI Engineer,product engineering shipping,Looking for senior IC or tech-lead roles where I can own the intelligence layer end-to-end at a product company.
+CAND_0005538,39,109,Senior AI Engineer,product engineering shipping,Looking for senior IC or tech-lead roles where I can own the intelligence layer end-to-end at a product company.
+CAND_0012888,44,148,Junior ML Engineer,production ml systems,"Junior ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at FAANG, but production."
+CAND_0046924,48,269,Computer Vision Engineer,production ml systems,"Junior ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at FAANG, but production."
+CAND_0096172,50,140,NLP Engineer,product engineering shipping,"Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."
+CAND_0037160,51,106,Data Scientist,production ml systems,Data Scientist | Building ML-powered solutions Data Scientist Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems …
+CAND_0008239,54,131,AI Engineer,product engineering shipping,"Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."
+CAND_0064904,56,129,AI Engineer,production ml systems,My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load.
+CAND_0012837,57,104,Junior ML Engineer,production ml systems,"ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at FAANG, but production."
+CAND_0022812,58,112,Applied ML Engineer,product engineering shipping,"Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."
+CAND_0061257,62,108,Staff Machine Learning Engineer,product engineering shipping,Looking for senior IC or tech-lead roles where I can own the intelligence layer end-to-end at a product company.
+CAND_0080344,65,206,Senior Software Engineer (ML),production ml systems,"Junior ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at FAANG, but production."
+CAND_0045862,68,287,AI Specialist,production ml systems,NLP Feature Engineering MLflow Haystack Computer Vision Recommendation Systems BentoML Fine-tuning LLMs LlamaIndex Illustrator GraphQL Vector Search LoRA
+CAND_0007596,73,266,Junior ML Engineer,production ml systems,Junior ML Engineer | 4.4 yrs in analytics & ML Junior ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking syst…
+CAND_0073620,74,136,AI Research Engineer,production ml systems,"Data Scientist Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at FAANG, but production."
+CAND_0003977,76,324,Recommendation Systems Engineer,learning to rank,Learning to Rank NLP Node.js Embeddings Semantic Search Image Classification PyTorch CNN Python Prompt Engineering Object Detection Terraform Machine Learning
+CAND_0014440,77,111,Recommendation Systems Engineer,product engineering shipping,"Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."
+CAND_0060054,78,157,AI Engineer,embeddings retrieval ranking search recommendation,"AI Engineer | ML, NLP, Recommendation Systems AI Engineer Developed a semantic search feature for an internal knowledge base of ~500K documents."
+CAND_0050454,82,128,AI Engineer,product engineering shipping,"Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."
+CAND_0043228,85,107,Applied ML Engineer,product engineering shipping,"Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."
+CAND_0072660,86,120,Machine Learning Engineer,production ml systems,My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load.
+CAND_0010149,87,142,ML Engineer,production ml systems,"Looking for a role where I can step up to more end-to-end ownership of ML systems, not just modeling."
+CAND_0082489,88,1551,ML Engineer,production ml systems,ML Engineer | Data Science & ML enthusiast ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at FAAN…
 CAND_0092255,90,139,ML Engineer,production ml systems,"Data Scientist Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at FAANG, but production."
-CAND_0082489,91,1551,ML Engineer,production ml systems,ML Engineer | Data Science & ML enthusiast ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at FAAN…
 CAND_0073883,92,272,AI Specialist,production ml systems,"Junior ML Engineer Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at FAANG, but production."
-CAND_0050454,95,128,AI Engineer,production ml systems,My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load.
-CAND_0003977,96,324,Recommendation Systems Engineer,production ml systems,My academic background is in CS/ML but my main learning has come from shipping real systems and seeing what holds up under production load.
-CAND_0054173,99,270,Computer Vision Engineer,production ml systems,"Looking for a role where I can step up to more end-to-end ownership of ML systems, not just modeling."
+CAND_0037980,94,155,Senior Applied Scientist,product engineering shipping,Worked closely with the product and growth teams.
+CAND_0010283,97,173,AI Specialist,production ml systems,Vector Search Embeddings Deep Learning TTS Computer Vision CNN Prompt Engineering scikit-learn JavaScript ASR Qdrant Recommendation Systems QLoRA MLOps
+CAND_0036437,100,154,Search Engineer,product engineering shipping,"Open to senior IC roles in applied ML or AI engineering, ideally at product companies where I'd own a meaningful piece of the ML stack."

@@ -44,7 +44,7 @@ the market leaders are vulnerable exactly where TalentSignal is strongest:
 All surfaces default to the best (hybrid) engine when a model is available.
 
 ## Engineering quality
-- 145 tests; CI quality gate (ranking/honeypot/generality/fairness/reproduction)
+- 221 tests; CI quality gate (ranking/honeypot/generality/fairness/reproduction)
   on every push.
 - Degrades, never crashes, on hostile input (empty/injection/unicode/null/mistyped).
 - Deterministic, reproducible offline; the hackathon submission is valid, 0
