@@ -152,3 +152,29 @@ def test_stale_flag_decays_toward_neutral() -> None:
     stale_no = _open_to_work_term(be(_cand_with_signals(
         open_to_work_flag=False, last_active_date="2024-01-01")))
     assert stale_no > fresh_no  # penalty relaxes as the flag ages
+
+
+def test_disqualifier_veto_guarded_by_coverage():
+    """A semantic disqualifier hit HARD-vetoes only when the candidate lacks
+    must-have coverage. A strong candidate (high coverage) who merely overlaps a
+    disqualifier term is soft-penalised, not zeroed — prevents false-veto loss of
+    genuinely strong candidates (measured ~6/100k in the real pool)."""
+    from talentsignal.scoring import score_candidate_hybrid
+    from talentsignal.semantic_match import MatchResult
+    from talentsignal.consistency_audit import audit_candidate
+    from talentsignal.schema_profile import schema_signals
+    job = load_job_spec("job_specs/redrob_senior_ai_engineer.yaml")
+    rec = D.make_candidate(AI_SEARCH, D.STRONG, 0).record
+    ev = build_evidence(rec)
+    sig = schema_signals(rec)
+    con = audit_candidate(rec)
+    # weak coverage + disqualifier hit -> hard veto (score 0)
+    weak = MatchResult(semantic_fit=0.6, lexical_fit=0.4, disqualifier_hit=0.7,
+                       requirement_matches=[], coverage=0.2)
+    sb_weak = score_candidate_hybrid(ev, job, match_result=weak, schema_sig=sig, consistency=con)
+    assert sb_weak.final_score == 0.0
+    # strong coverage + same disqualifier hit -> NOT vetoed (soft-penalised only)
+    strong = MatchResult(semantic_fit=0.6, lexical_fit=0.4, disqualifier_hit=0.7,
+                         requirement_matches=[], coverage=0.8)
+    sb_strong = score_candidate_hybrid(ev, job, match_result=strong, schema_sig=sig, consistency=con)
+    assert sb_strong.final_score > 0.0

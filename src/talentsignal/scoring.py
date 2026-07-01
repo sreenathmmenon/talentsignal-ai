@@ -420,10 +420,20 @@ def score_candidate_hybrid(
     disq_hits: tuple = ()
     hard_veto = 1.0
     if match_result.disqualifier_hit >= 0.5:
-        hard_veto = 0.0          # a real disqualifier hit is a hard veto
         disq_hits = tuple(m.req_text for m in match_result.requirement_matches
                           if m.kind == "disqualifier" and m.score >= 0.5)
         flags.append("semantic_disqualifier_overlap")
+        # A disqualifier match only HARD-vetoes when the candidate does NOT also meet
+        # the role's core requirements. Someone who clearly covers the must-haves and
+        # merely mentions a disqualifier term (e.g. "research AND shipped to
+        # production" against a "no pure research" disqualifier) is a likely false
+        # positive — downgrade to a strong soft penalty rather than deleting them.
+        # Prevents losing genuinely strong candidates (measured: ~6/100k) to a
+        # semantic keyword overlap; a clear disqualifier with weak coverage still zeroes.
+        if match_result.coverage < 0.5:
+            hard_veto = 0.0      # true disqualifier: no counter-evidence
+        else:
+            soft_penalty += 0.20  # keyword overlap despite strong fit -> heavy soft penalty
     if consistency.is_impossible:
         hard_veto = 0.0          # internally-impossible profile is a hard veto
 
