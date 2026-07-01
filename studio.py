@@ -353,11 +353,22 @@ def _old_substring_rank(rows):
     return {r["candidate_id"]: i + 1 for i, r in enumerate(order)}
 
 
+PREBAKED_TOP10 = ROOT / "outputs" / "top10detail_prebaked.json"
+
+
 def do_top10detail(body):
     """Deep top-10 of the real 100K with full reasoning, factor bars, consistency
     audit, AND the rank change vs the old substring engine — so the work done in
-    the recent iterations is visible per candidate, on real data."""
+    the recent iterations is visible per candidate, on real data.
+
+    HOSTED FALLBACK: serve the deterministic pre-baked snapshot when the 100K
+    dataset isn't present on the box (same reasoning as do_challenge)."""
     if not OFFICIAL_CANDIDATES.exists():
+        if PREBAKED_TOP10.exists():
+            try:
+                return json.loads(PREBAKED_TOP10.read_text(encoding="utf-8"))
+            except Exception:  # noqa: BLE001
+                pass
         return {"error": "Official 100K dataset not found."}
     from talentsignal.api import rank
     rows = [json.loads(l) for l in open(OFFICIAL_CANDIDATES) if l.strip()]

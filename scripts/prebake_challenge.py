@@ -38,6 +38,17 @@ def main() -> int:
     OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
     print(f"Wrote {OUT} — {res.get('total')} candidates, top-1 = "
           f"{res['top'][0]['candidate_id'] if res.get('top') else '?'}")
+
+    # Also bake the "Beyond keywords" (what-changed) tab.
+    top10 = studio.do_top10detail({})
+    out2 = ROOT / "outputs" / "top10detail_prebaked.json"
+    if top10.get("error"):
+        print(f"warning: could not pre-bake top10detail: {top10['error']}", file=sys.stderr)
+    else:
+        top10["prebaked"] = True
+        out2.write_text(json.dumps(top10, indent=2), encoding="utf-8")
+        print(f"Wrote {out2} — pool {top10.get('pool')}, "
+              f"{top10.get('slots_changed')}/10 slots changed vs keyword engine")
     return 0
 
 
