@@ -1,0 +1,16 @@
+# Keep the railway UP upload small — the hosted image does NOT need the heavy
+# assets. The demo live-embeds small pastes and serves the 100K tab from
+# outputs/challenge_prebaked.json, so exclude the big dataset + index + junk.
+[PUB] India_runs_data_and_ai_challenge/
+outputs/index/
+outputs/evidence_packets.jsonl
+outputs/repro_*
+deck/*.pdf
+*.png
+tests/
+.git/
+__pycache__/
+**/__pycache__/
+*.pyc
+.coverage
+.pytest_cache/
