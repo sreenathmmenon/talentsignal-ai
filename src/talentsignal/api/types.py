@@ -70,6 +70,10 @@ class RankedCandidate:
     top10_eligible: bool = True
     confidence: float = 0.0
     cross_encoder_score: float = 0.0  # set when the rerank stage runs
+    # Recruiter-facing reachability, orthogonal to fit: "reachable" | "passive" |
+    # "stale". A view over availability signals, NOT an extra penalty on the score.
+    reachability_label: str = ""
+    reachability_score: float = 0.0
 
     def to_dict(self) -> dict[str, Any]:
         d = asdict(self)

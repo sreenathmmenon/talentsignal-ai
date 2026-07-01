@@ -138,6 +138,10 @@ def _candidate_view(rec, ranked):
             "trust": round(f.trust, 2) if f else 0,
             "semantic": round(f.semantic_fit, 2) if f else 0,
         } if f else {},
+        # reachability: recruiter-facing availability read (reachable/passive/stale),
+        # orthogonal to fit — a not-open candidate is ranked on merit and flagged, not hidden.
+        "reachability": getattr(ranked, "reachability_label", "") or "",
+        "reachability_score": round(getattr(ranked, "reachability_score", 0.0), 2),
         "coverage": round(f.requirement_coverage, 2) if f else 0,
         # "rescued by meaning": strong semantic fit but low keyword overlap — the
         # candidate a keyword filter would miss. The product's signature trust signal.

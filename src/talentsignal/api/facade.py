@@ -115,6 +115,10 @@ def _to_ranked_candidate(row: dict[str, Any], rank_i: int) -> RankedCandidate:
             role_relevance=getattr(score, "role_relevance", 0.0),
             general_quality=getattr(score, "general_quality", 0.0),
         )
+    reach_label, reach_score = "", 0.0
+    if ev is not None:
+        from ..scoring import reachability
+        reach_label, reach_score = reachability(ev)
     return RankedCandidate(
         candidate_id=row["candidate_id"],
         rank=int(row["rank"]),
@@ -128,6 +132,8 @@ def _to_ranked_candidate(row: dict[str, Any], rank_i: int) -> RankedCandidate:
         risk_flags=_map_risk_flags(score) if score else [],
         top10_eligible=getattr(score, "top10_eligible", True) if score else True,
         confidence=getattr(score, "confidence", 0.0) if score else 0.0,
+        reachability_label=reach_label,
+        reachability_score=reach_score,
     )
 
 
