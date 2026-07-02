@@ -1,7 +1,6 @@
 {
   "jd": "Senior AI Engineer \u2014 Founding Team @ Redrob",
   "total": 100000,
-  "sample_of": null,
   "live": false,
   "prebaked": true,
   "from_cache": true,
@@ -9,7 +8,7 @@
   "honeypots": 0,
   "engine": "hybrid",
   "elapsed": "~70",
-  "note": "This is our actual submitted top-100 for the challenge (validator passes, 0 honeypots). Reproduces offline byte-identical in ~70s.",
+  "note": "Our actual submitted top-100 \u2014 the real engine's ranking on all 100,000 candidates (passes the official validator, 0 fabricated profiles). The full 100K ranking reproduces offline in ~70s; the hosted demo box shows the result rather than re-running the 3GB job.",
   "top": [
     {
       "rank": 1,
@@ -17,7 +16,7 @@
       "score": 0.5712,
       "reasoning": "#1 \u2014 a clear recommendation. Recommendation Systems Engineer with 7.7 years in Bangalore, Karnataka. Credible depth in ranking, recommendation, search, and owned. Open and responsive (72% recruiter response).",
       "title": "Recommendation Systems Engineer",
-      "company": "",
+      "company": "Nykaa",
       "years": 7.7,
       "location": "Bangalore, Karnataka"
     },
@@ -27,7 +26,7 @@
       "score": 0.559593,
       "reasoning": "Staff Machine Learning Engineer with 7.0 years in Kochi, Kerala. A standout at #2. Clear hands-on work in bm25, ranker, ranking, and drift. Edges out #3 on production & career evidence. Active and reachable (95% response rate).",
       "title": "Staff Machine Learning Engineer",
-      "company": "",
+      "company": "Paytm",
       "years": 7.0,
       "location": "Kochi, Kerala"
     },
@@ -37,7 +36,7 @@
       "score": 0.537867,
       "reasoning": "Strong fit at #3: Recommendation Systems Engineer with 6.5 years in Pune, Maharashtra. Genuine, shipped work across recommendation, drift, monitoring, and embedding. Edges out #4 on seniority match. Active and reachable (79% response rate).",
       "title": "Recommendation Systems Engineer",
-      "company": "",
+      "company": "Amazon",
       "years": 6.5,
       "location": "Pune, Maharashtra"
     },
@@ -47,7 +46,7 @@
       "score": 0.518101,
       "reasoning": "#4 \u2014 a clear recommendation. Senior NLP Engineer with 8.9 years in Coimbatore, Tamil Nadu. Credible depth in bm25, matching, ranker, and deployed. Open and responsive (78% recruiter response).",
       "title": "Senior NLP Engineer",
-      "company": "",
+      "company": "Salesforce",
       "years": 8.9,
       "location": "Coimbatore, Tamil Nadu"
     },
@@ -57,7 +56,7 @@
       "score": 0.516752,
       "reasoning": "Top of the list (#5). Senior NLP Engineer with 5.2 years in Chennai, Tamil Nadu. Has done the real work in bm25, matching, ranker, and deployed. Not flagged open, but active and responsive \u2014 a passive candidate worth pursuing.",
       "title": "Senior NLP Engineer",
-      "company": "",
+      "company": "Netflix",
       "years": 5.2,
       "location": "Chennai, Tamil Nadu"
     },
@@ -67,7 +66,7 @@
       "score": 0.514775,
       "reasoning": "#6, and a good match. Senior Machine Learning Engineer with 6.1 years in Pune, Maharashtra. Solid track record in bm25, ranker, ranking, and latency. Edges out #7 on reachability & engagement. Open and responsive (88% recruiter response).",
       "title": "Senior Machine Learning Engineer",
-      "company": "",
+      "company": "Genpact AI",
       "years": 6.1,
       "location": "Pune, Maharashtra"
     },
@@ -77,7 +76,7 @@
       "score": 0.514774,
       "reasoning": "Solid fit at #7. Search Engineer with 7.8 years in Chennai, Tamil Nadu. Real, demonstrated evidence for bm25, ranking, recommendation, and owned. Not flagged open, but active and responsive \u2014 a passive candidate worth pursuing.",
       "title": "Search Engineer",
-      "company": "",
+      "company": "Nykaa",
       "years": 7.8,
       "location": "Chennai, Tamil Nadu"
     },
@@ -87,7 +86,7 @@
       "score": 0.513618,
       "reasoning": "#8, and a good match. Senior AI Engineer with 7.9 years in Noida, Uttar Pradesh. Credible depth in matching, personalization, ranking, and drift. Open and responsive (79% recruiter response).",
       "title": "Senior AI Engineer",
-      "company": "",
+      "company": "Meta",
       "years": 7.9,
       "location": "Noida, Uttar Pradesh"
     },
@@ -97,7 +96,7 @@
       "score": 0.510354,
       "reasoning": "Solid fit at #9. AI Engineer with 6.9 years in Trivandrum, Kerala. Real, demonstrated evidence for bm25, ranking, recommendation, and drift. Edges out #10 on seniority match. Active and reachable (81% response rate).",
       "title": "AI Engineer",
-      "company": "",
+      "company": "Microsoft",
       "years": 6.9,
       "location": "Trivandrum, Kerala"
     },
@@ -107,10 +106,909 @@
       "score": 0.509699,
       "reasoning": "Recommendation Systems Engineer with 5.8 years in Coimbatore, Tamil Nadu. Earns #10 on consistent evidence. Clear hands-on work in ranking, recommendation, search, and drift. Edges out #11 on reachability & engagement. Active and reachable (75% response rate).",
       "title": "Recommendation Systems Engineer",
-      "company": "",
+      "company": "upGrad",
       "years": 5.8,
       "location": "Coimbatore, Tamil Nadu"
+    },
+    {
+      "rank": 11,
+      "candidate_id": "CAND_0008425",
+      "score": 0.509698,
+      "reasoning": "A dependable #11. Senior NLP Engineer with 7.8 years in Kolkata, West Bengal. Backed by concrete experience in bm25, matching, ranking, and deployed. Edges out #12 on production & career evidence. Open and responsive (66% recruiter response).",
+      "title": "Senior NLP Engineer",
+      "company": "Ola",
+      "years": 7.8,
+      "location": "Kolkata, West Bengal"
+    },
+    {
+      "rank": 12,
+      "candidate_id": "CAND_0010257",
+      "score": 0.508636,
+      "reasoning": "Solid fit at #12. Senior Data Scientist with 6.5 years in Noida, Uttar Pradesh. Real, demonstrated evidence for ranking, recommendation, search, and drift. Active and reachable (72% response rate). One flag: a 120-day notice period.",
+      "title": "Senior Data Scientist",
+      "company": "Google",
+      "years": 6.5,
+      "location": "Noida, Uttar Pradesh"
+    },
+    {
+      "rank": 13,
+      "candidate_id": "CAND_0000031",
+      "score": 0.504911,
+      "reasoning": "Recommendation Systems Engineer with 6.0 years in Hyderabad, Telangana. Earns #13 on consistent evidence. Evidence on the ground for ranking, recommendation, search, and owned. Edges out #14 on seniority match. Active and reachable (91% response rate).",
+      "title": "Recommendation Systems Engineer",
+      "company": "Swiggy",
+      "years": 6.0,
+      "location": "Hyderabad, Telangana"
+    },
+    {
+      "rank": 14,
+      "candidate_id": "CAND_0074225",
+      "score": 0.504728,
+      "reasoning": "A dependable #14. Machine Learning Engineer with 4.3 years in Vizag, Andhra Pradesh. Has done the real work in ranking, owned, pipeline, and elasticsearch. Open and responsive (91% recruiter response). One flag: a 120-day notice period.",
+      "title": "Machine Learning Engineer",
+      "company": "Unacademy",
+      "years": 4.3,
+      "location": "Vizag, Andhra Pradesh"
+    },
+    {
+      "rank": 15,
+      "candidate_id": "CAND_0064326",
+      "score": 0.502188,
+      "reasoning": "#15, and a good match. Search Engineer with 7.6 years in Gurgaon, Haryana. Solid track record in ranking, search, owned, and pipeline. Edges out #16 on seniority match. Open and responsive (94% recruiter response).",
+      "title": "Search Engineer",
+      "company": "Sarvam AI",
+      "years": 7.6,
+      "location": "Gurgaon, Haryana"
+    },
+    {
+      "rank": 16,
+      "candidate_id": "CAND_0039754",
+      "score": 0.50196,
+      "reasoning": "#16, and a good match. Senior Applied Scientist with 16.2 years in Indore, Madhya Pradesh. Solid track record in bm25, ranker, ranking, and drift. Open and responsive (81% recruiter response).",
+      "title": "Senior Applied Scientist",
+      "company": "Meta",
+      "years": 16.2,
+      "location": "Indore, Madhya Pradesh"
+    },
+    {
+      "rank": 17,
+      "candidate_id": "CAND_0055905",
+      "score": 0.496197,
+      "reasoning": "Senior Machine Learning Engineer with 8.1 years in London. Earns #17 on consistent evidence. Evidence on the ground for bm25, matching, ranker, and deployed. Edges out #18 on production & career evidence. Active and reachable (87% response rate).",
+      "title": "Senior Machine Learning Engineer",
+      "company": "Flipkart",
+      "years": 8.1,
+      "location": "London"
+    },
+    {
+      "rank": 18,
+      "candidate_id": "CAND_0088025",
+      "score": 0.493956,
+      "reasoning": "Staff Machine Learning Engineer with 8.6 years in Jaipur, Rajasthan. Earns #18 on consistent evidence. Evidence on the ground for ranker, ranking, recommendation, and owned. Edges out #19 on reachability & engagement. Active and reachable (83% response rate).",
+      "title": "Staff Machine Learning Engineer",
+      "company": "Yellow.ai",
+      "years": 8.6,
+      "location": "Jaipur, Rajasthan"
+    },
+    {
+      "rank": 19,
+      "candidate_id": "CAND_0083307",
+      "score": 0.492428,
+      "reasoning": "#19, and a good match. Search Engineer with 7.8 years in Vizag, Andhra Pradesh. Credible depth in bm25, ranking, retrieval, and owned. Open and responsive (70% recruiter response). One flag: a 120-day notice period.",
+      "title": "Search Engineer",
+      "company": "CRED",
+      "years": 7.8,
+      "location": "Vizag, Andhra Pradesh"
+    },
+    {
+      "rank": 20,
+      "candidate_id": "CAND_0081846",
+      "score": 0.489721,
+      "reasoning": "Solid fit at #20. Lead AI Engineer with 6.7 years in Jaipur, Rajasthan. Genuine, shipped work across bm25, ranker, ranking, and drift. Edges out #21 on reachability & engagement. Active and reachable (73% response rate).",
+      "title": "Lead AI Engineer",
+      "company": "Razorpay",
+      "years": 6.7,
+      "location": "Jaipur, Rajasthan"
+    },
+    {
+      "rank": 21,
+      "candidate_id": "CAND_0018722",
+      "score": 0.485695,
+      "reasoning": "Recommendation Systems Engineer with 6.6 years in Toronto. Lands at #21. Evidence on the ground for bm25, ranking, recommendation, and owned. Edges out #22 on production & career evidence.",
+      "title": "Recommendation Systems Engineer",
+      "company": "Saarthi.ai",
+      "years": 6.6,
+      "location": "Toronto"
+    },
+    {
+      "rank": 22,
+      "candidate_id": "CAND_0099401",
+      "score": 0.482937,
+      "reasoning": "NLP Engineer with 7.7 years in Ahmedabad, Gujarat. Lands at #22. Clear hands-on work in ranking, recommendation, search, and drift. Edges out #23 on seniority match.",
+      "title": "NLP Engineer",
+      "company": "Dream11",
+      "years": 7.7,
+      "location": "Ahmedabad, Gujarat"
+    },
+    {
+      "rank": 23,
+      "candidate_id": "CAND_0094759",
+      "score": 0.482795,
+      "reasoning": "Lead AI Engineer with 8.6 years in Mumbai, Maharashtra. Lands at #23. Evidence on the ground for bm25, ranker, ranking, and latency. Edges out #24 on seniority match. One flag: a low recruiter response rate (11%).",
+      "title": "Lead AI Engineer",
+      "company": "Meta",
+      "years": 8.6,
+      "location": "Mumbai, Maharashtra"
+    },
+    {
+      "rank": 24,
+      "candidate_id": "CAND_0012957",
+      "score": 0.482229,
+      "reasoning": "#24 \u2014 partial but real. Search Engineer with 4.9 years in Chennai, Tamil Nadu. Credible depth in ranking, recommendation, search, and owned. One flag: a 120-day notice period.",
+      "title": "Search Engineer",
+      "company": "Razorpay",
+      "years": 4.9,
+      "location": "Chennai, Tamil Nadu"
+    },
+    {
+      "rank": 25,
+      "candidate_id": "CAND_0037944",
+      "score": 0.482228,
+      "reasoning": "#25 \u2014 partial but real. Senior Data Scientist with 4.9 years in Jaipur, Rajasthan. Solid track record in ranking, owned, pipeline, and embedding. Edges out #26 on production & career evidence.",
+      "title": "Senior Data Scientist",
+      "company": "Vedantu",
+      "years": 4.9,
+      "location": "Jaipur, Rajasthan"
+    },
+    {
+      "rank": 26,
+      "candidate_id": "CAND_0002025",
+      "score": 0.480422,
+      "reasoning": "Reasonable fit at #26. Senior AI Engineer with 5.9 years in Trivandrum, Kerala. Real, demonstrated evidence for matching, ranking, recommendation, and deployed.",
+      "title": "Senior AI Engineer",
+      "company": "Apple",
+      "years": 5.9,
+      "location": "Trivandrum, Kerala"
+    },
+    {
+      "rank": 27,
+      "candidate_id": "CAND_0050876",
+      "score": 0.475833,
+      "reasoning": "Applied ML Engineer with 6.0 years in Kolkata, West Bengal. Lands at #27. Clear hands-on work in ranking, recommendation, search, and owned.",
+      "title": "Applied ML Engineer",
+      "company": "Freshworks",
+      "years": 6.0,
+      "location": "Kolkata, West Bengal"
+    },
+    {
+      "rank": 28,
+      "candidate_id": "CAND_0030031",
+      "score": 0.475549,
+      "reasoning": "Reasonable fit at #28. AI Engineer with 5.7 years in Trivandrum, Kerala. Real, demonstrated evidence for ranking, recommendation, search, and drift.",
+      "title": "AI Engineer",
+      "company": "Microsoft",
+      "years": 5.7,
+      "location": "Trivandrum, Kerala"
+    },
+    {
+      "rank": 29,
+      "candidate_id": "CAND_0049896",
+      "score": 0.470513,
+      "reasoning": "Search Engineer with 7.3 years in Vizag, Andhra Pradesh. Lands at #29. Evidence on the ground for ranking, recommendation, search, and pipeline.",
+      "title": "Search Engineer",
+      "company": "Unacademy",
+      "years": 7.3,
+      "location": "Vizag, Andhra Pradesh"
+    },
+    {
+      "rank": 30,
+      "candidate_id": "CAND_0027691",
+      "score": 0.470512,
+      "reasoning": "Reasonable fit at #30. NLP Engineer with 6.5 years in Pune, Maharashtra. Genuine, shipped work across bm25, ranking, retrieval, and drift.",
+      "title": "NLP Engineer",
+      "company": "Haptik",
+      "years": 6.5,
+      "location": "Pune, Maharashtra"
+    },
+    {
+      "rank": 31,
+      "candidate_id": "CAND_0024620",
+      "score": 0.467588,
+      "reasoning": "AI Engineer with 5.9 years in New York. Lands at #31. Clear hands-on work in ranking, recommendation, search, and drift.",
+      "title": "AI Engineer",
+      "company": "PharmEasy",
+      "years": 5.9,
+      "location": "New York"
+    },
+    {
+      "rank": 32,
+      "candidate_id": "CAND_0039383",
+      "score": 0.467155,
+      "reasoning": "Worth a look at #32. Applied ML Engineer with 7.1 years in Gurgaon, Haryana. Has done the real work in bm25, ranking, retrieval, and owned.",
+      "title": "Applied ML Engineer",
+      "company": "Meesho",
+      "years": 7.1,
+      "location": "Gurgaon, Haryana"
+    },
+    {
+      "rank": 33,
+      "candidate_id": "CAND_0041610",
+      "score": 0.465627,
+      "reasoning": "Recommendation Systems Engineer with 6.7 years in Indore, Madhya Pradesh. Lands at #33. Clear hands-on work in ranking, recommendation, search, and drift.",
+      "title": "Recommendation Systems Engineer",
+      "company": "Zoho",
+      "years": 6.7,
+      "location": "Indore, Madhya Pradesh"
+    },
+    {
+      "rank": 34,
+      "candidate_id": "CAND_0043860",
+      "score": 0.461651,
+      "reasoning": "Reasonable fit at #34. Junior ML Engineer with 6.1 years in Bhubaneswar, Odisha. Genuine, shipped work across ranking, recommendation, pipeline, and production.",
+      "title": "Junior ML Engineer",
+      "company": "Aganitha",
+      "years": 6.1,
+      "location": "Bhubaneswar, Odisha"
+    },
+    {
+      "rank": 35,
+      "candidate_id": "CAND_0070398",
+      "score": 0.460997,
+      "reasoning": "Worth a look at #35. Machine Learning Engineer with 7.2 years in Kochi, Kerala. Backed by concrete experience in bm25, ranking, retrieval, and owned. One flag: a 120-day notice period.",
+      "title": "Machine Learning Engineer",
+      "company": "Genpact AI",
+      "years": 7.2,
+      "location": "Kochi, Kerala"
+    },
+    {
+      "rank": 36,
+      "candidate_id": "CAND_0076163",
+      "score": 0.456728,
+      "reasoning": "Reasonable fit at #36. NLP Engineer with 6.9 years in Chandigarh, Chandigarh. Real, demonstrated evidence for ranking, search, owned, and pipeline.",
+      "title": "NLP Engineer",
+      "company": "Ola",
+      "years": 6.9,
+      "location": "Chandigarh, Chandigarh"
+    },
+    {
+      "rank": 37,
+      "candidate_id": "CAND_0053695",
+      "score": 0.454968,
+      "reasoning": "Recommendation Systems Engineer with 5.8 years in Bhubaneswar, Odisha. Lands at #37. Evidence on the ground for bm25, ranking, recommendation, and owned.",
+      "title": "Recommendation Systems Engineer",
+      "company": "Meesho",
+      "years": 5.8,
+      "location": "Bhubaneswar, Odisha"
+    },
+    {
+      "rank": 38,
+      "candidate_id": "CAND_0068351",
+      "score": 0.454577,
+      "reasoning": "Lead AI Engineer with 6.4 years in Delhi, Delhi. Lands at #38. Clear hands-on work in matching, ranking, search, and owned.",
+      "title": "Lead AI Engineer",
+      "company": "Sarvam AI",
+      "years": 6.4,
+      "location": "Delhi, Delhi"
+    },
+    {
+      "rank": 39,
+      "candidate_id": "CAND_0005538",
+      "score": 0.453608,
+      "reasoning": "#39 \u2014 partial but real. Senior AI Engineer with 5.9 years in Kolkata, West Bengal. Solid track record in matching, ranking, recommendation, and index refresh.",
+      "title": "Senior AI Engineer",
+      "company": "Adobe",
+      "years": 5.9,
+      "location": "Kolkata, West Bengal"
+    },
+    {
+      "rank": 40,
+      "candidate_id": "CAND_0068811",
+      "score": 0.453607,
+      "reasoning": "#40 \u2014 partial but real. Applied ML Engineer with 8.0 years in Pune, Maharashtra. Credible depth in ranking, recommendation, search, and drift.",
+      "title": "Applied ML Engineer",
+      "company": "Freshworks",
+      "years": 8.0,
+      "location": "Pune, Maharashtra"
+    },
+    {
+      "rank": 41,
+      "candidate_id": "CAND_0041669",
+      "score": 0.452769,
+      "reasoning": "Reasonable fit at #41. Recommendation Systems Engineer with 8.0 years in Noida, Uttar Pradesh. Real, demonstrated evidence for ranking, recommendation, search, and owned.",
+      "title": "Recommendation Systems Engineer",
+      "company": "CRED",
+      "years": 8.0,
+      "location": "Noida, Uttar Pradesh"
+    },
+    {
+      "rank": 42,
+      "candidate_id": "CAND_0098846",
+      "score": 0.452046,
+      "reasoning": "AI Engineer with 7.6 years in Indore, Madhya Pradesh. Lands at #42. Clear hands-on work in ranking, search, drift, and monitoring.",
+      "title": "AI Engineer",
+      "company": "upGrad",
+      "years": 7.6,
+      "location": "Indore, Madhya Pradesh"
+    },
+    {
+      "rank": 43,
+      "candidate_id": "CAND_0081686",
+      "score": 0.451749,
+      "reasoning": "#43 \u2014 partial but real. Search Engineer with 6.0 years in Austin. Credible depth in bm25, ranking, recommendation, and owned.",
+      "title": "Search Engineer",
+      "company": "Netflix",
+      "years": 6.0,
+      "location": "Austin"
+    },
+    {
+      "rank": 44,
+      "candidate_id": "CAND_0012888",
+      "score": 0.451748,
+      "reasoning": "Reasonable fit at #44. Junior ML Engineer with 6.4 years in Delhi, Delhi. Genuine, shipped work across ranking, recommendation, pipeline, and production.",
+      "title": "Junior ML Engineer",
+      "company": "Genpact AI",
+      "years": 6.4,
+      "location": "Delhi, Delhi"
+    },
+    {
+      "rank": 45,
+      "candidate_id": "CAND_0018549",
+      "score": 0.450717,
+      "reasoning": "#45 \u2014 partial but real. Recommendation Systems Engineer with 6.8 years in Coimbatore, Tamil Nadu. Credible depth in ranking, recommendation, search, and owned.",
+      "title": "Recommendation Systems Engineer",
+      "company": "Uber",
+      "years": 6.8,
+      "location": "Coimbatore, Tamil Nadu"
+    },
+    {
+      "rank": 46,
+      "candidate_id": "CAND_0032179",
+      "score": 0.449687,
+      "reasoning": "#46 \u2014 partial but real. Computer Vision Engineer with 6.4 years in Sydney. Solid track record in ranking, recommendation, pipeline, and production.",
+      "title": "Computer Vision Engineer",
+      "company": "InMobi",
+      "years": 6.4,
+      "location": "Sydney"
+    },
+    {
+      "rank": 47,
+      "candidate_id": "CAND_0086151",
+      "score": 0.44656,
+      "reasoning": "#47 \u2014 partial but real. Recommendation Systems Engineer with 7.7 years in Vizag, Andhra Pradesh. Solid track record in bm25, ranking, recommendation, and owned. One flag: a 120-day notice period.",
+      "title": "Recommendation Systems Engineer",
+      "company": "Wysa",
+      "years": 7.7,
+      "location": "Vizag, Andhra Pradesh"
+    },
+    {
+      "rank": 48,
+      "candidate_id": "CAND_0046924",
+      "score": 0.445067,
+      "reasoning": "Computer Vision Engineer with 6.3 years in Noida, Uttar Pradesh. Lands at #48. Evidence on the ground for ranking, recommendation, search, and production. One flag: a 120-day notice period.",
+      "title": "Computer Vision Engineer",
+      "company": "PharmEasy",
+      "years": 6.3,
+      "location": "Noida, Uttar Pradesh"
+    },
+    {
+      "rank": 49,
+      "candidate_id": "CAND_0095528",
+      "score": 0.44383,
+      "reasoning": "Worth a look at #49. Senior Data Scientist with 5.3 years in Indore, Madhya Pradesh. Backed by concrete experience in ranking, recommendation, drift, and monitoring.",
+      "title": "Senior Data Scientist",
+      "company": "Netflix",
+      "years": 5.3,
+      "location": "Indore, Madhya Pradesh"
+    },
+    {
+      "rank": 50,
+      "candidate_id": "CAND_0096172",
+      "score": 0.443829,
+      "reasoning": "Reasonable fit at #50. NLP Engineer with 5.2 years in Chennai, Tamil Nadu. Real, demonstrated evidence for bm25, ranking, recommendation, and pipeline.",
+      "title": "NLP Engineer",
+      "company": "Krutrim",
+      "years": 5.2,
+      "location": "Chennai, Tamil Nadu"
+    },
+    {
+      "rank": 51,
+      "candidate_id": "CAND_0037160",
+      "score": 0.443139,
+      "reasoning": "#51 \u2014 partial but real. Data Scientist with 6.0 years in Mumbai, Maharashtra. Solid track record in ranking, recommendation, pipeline, and production.",
+      "title": "Data Scientist",
+      "company": "Haptik",
+      "years": 6.0,
+      "location": "Mumbai, Maharashtra"
+    },
+    {
+      "rank": 52,
+      "candidate_id": "CAND_0026532",
+      "score": 0.443138,
+      "reasoning": "Worth a look at #52. Recommendation Systems Engineer with 4.8 years in Chennai, Tamil Nadu. Backed by concrete experience in bm25, ranking, recommendation, and pipeline.",
+      "title": "Recommendation Systems Engineer",
+      "company": "Zomato",
+      "years": 4.8,
+      "location": "Chennai, Tamil Nadu"
+    },
+    {
+      "rank": 53,
+      "candidate_id": "CAND_0064270",
+      "score": 0.441496,
+      "reasoning": "#53 \u2014 partial but real. Applied ML Engineer with 4.2 years in Pune, Maharashtra. Credible depth in ranking, search, owned, and pipeline.",
+      "title": "Applied ML Engineer",
+      "company": "Verloop.io",
+      "years": 4.2,
+      "location": "Pune, Maharashtra"
+    },
+    {
+      "rank": 54,
+      "candidate_id": "CAND_0008239",
+      "score": 0.440313,
+      "reasoning": "#54 \u2014 partial but real. AI Engineer with 4.0 years in Jaipur, Rajasthan. Solid track record in ranking, search, owned, and pipeline.",
+      "title": "AI Engineer",
+      "company": "Apple",
+      "years": 4.0,
+      "location": "Jaipur, Rajasthan"
+    },
+    {
+      "rank": 55,
+      "candidate_id": "CAND_0086022",
+      "score": 0.438358,
+      "reasoning": "Senior Applied Scientist with 5.3 years in Kolkata, West Bengal. Lands at #55. Evidence on the ground for bm25, ranker, ranking, and latency.",
+      "title": "Senior Applied Scientist",
+      "company": "Sarvam AI",
+      "years": 5.3,
+      "location": "Kolkata, West Bengal"
+    },
+    {
+      "rank": 56,
+      "candidate_id": "CAND_0064904",
+      "score": 0.436535,
+      "reasoning": "Reasonable fit at #56. AI Engineer with 4.9 years in Hyderabad, Telangana. Genuine, shipped work across ranking, recommendation, drift, and monitoring.",
+      "title": "AI Engineer",
+      "company": "LinkedIn",
+      "years": 4.9,
+      "location": "Hyderabad, Telangana"
+    },
+    {
+      "rank": 57,
+      "candidate_id": "CAND_0012837",
+      "score": 0.435804,
+      "reasoning": "Worth a look at #57. Junior ML Engineer with 6.4 years in Chandigarh, Chandigarh. Backed by concrete experience in ranking, recommendation, pipeline, and production.",
+      "title": "Junior ML Engineer",
+      "company": "Sarvam AI",
+      "years": 6.4,
+      "location": "Chandigarh, Chandigarh"
+    },
+    {
+      "rank": 58,
+      "candidate_id": "CAND_0022812",
+      "score": 0.435803,
+      "reasoning": "Applied ML Engineer with 4.5 years in Coimbatore, Tamil Nadu. Lands at #58. Evidence on the ground for ranking, recommendation, search, and drift.",
+      "title": "Applied ML Engineer",
+      "company": "Dream11",
+      "years": 4.5,
+      "location": "Coimbatore, Tamil Nadu"
+    },
+    {
+      "rank": 59,
+      "candidate_id": "CAND_0006557",
+      "score": 0.433692,
+      "reasoning": "Worth a look at #59. NLP Engineer with 7.9 years in Jaipur, Rajasthan. Has done the real work in ranking, recommendation, search, and owned. One flag: a 120-day notice period.",
+      "title": "NLP Engineer",
+      "company": "Paytm",
+      "years": 7.9,
+      "location": "Jaipur, Rajasthan"
+    },
+    {
+      "rank": 60,
+      "candidate_id": "CAND_0065878",
+      "score": 0.432054,
+      "reasoning": "Worth a look at #60. Senior Data Scientist with 7.8 years in Trivandrum, Kerala. Backed by concrete experience in ranking, recommendation, search, and owned.",
+      "title": "Senior Data Scientist",
+      "company": "Niramai",
+      "years": 7.8,
+      "location": "Trivandrum, Kerala"
+    },
+    {
+      "rank": 61,
+      "candidate_id": "CAND_0061265",
+      "score": 0.430686,
+      "reasoning": "Recommendation Systems Engineer with 6.6 years in Delhi, Delhi. Sits at #61, on the bubble. Evidence on the ground for bm25, ranking, recommendation, and drift. One flag: a 120-day notice period.",
+      "title": "Recommendation Systems Engineer",
+      "company": "Zoho",
+      "years": 6.6,
+      "location": "Delhi, Delhi"
+    },
+    {
+      "rank": 62,
+      "candidate_id": "CAND_0061257",
+      "score": 0.43028,
+      "reasoning": "Near the cutoff at #62. Staff Machine Learning Engineer with 8.0 years in Noida, Uttar Pradesh. Real, demonstrated evidence for ranking, search, owned, and pipeline. On the list for breadth of relevant signal more than deep must-have coverage (67%); worth a human look.",
+      "title": "Staff Machine Learning Engineer",
+      "company": "LinkedIn",
+      "years": 8.0,
+      "location": "Noida, Uttar Pradesh"
+    },
+    {
+      "rank": 63,
+      "candidate_id": "CAND_0007412",
+      "score": 0.429289,
+      "reasoning": "Applied ML Engineer with 7.4 years in Noida, Uttar Pradesh. Sits at #63, on the bubble. Clear hands-on work in ranking, recommendation, search, and owned. One flag: a 120-day notice period.",
+      "title": "Applied ML Engineer",
+      "company": "Zoho",
+      "years": 7.4,
+      "location": "Noida, Uttar Pradesh"
+    },
+    {
+      "rank": 64,
+      "candidate_id": "CAND_0031593",
+      "score": 0.429288,
+      "reasoning": "Search Engineer with 7.8 years in Kolkata, West Bengal. Sits at #64, on the bubble. Clear hands-on work in ranking, recommendation, search, and owned. Partial must-have coverage (67%); earns a slot on adjacent strength, verify the gaps.",
+      "title": "Search Engineer",
+      "company": "Genpact AI",
+      "years": 7.8,
+      "location": "Kolkata, West Bengal"
+    },
+    {
+      "rank": 65,
+      "candidate_id": "CAND_0080344",
+      "score": 0.426764,
+      "reasoning": "#65, included with caveats. Senior Software Engineer (ML) with 4.9 years in Hyderabad, Telangana. Solid track record in ranking, recommendation, pipeline, and production. Covers 83% of the must-haves \u2014 near-cutoff; include for a closer read, not a lock.",
+      "title": "Senior Software Engineer (ML)",
+      "company": "Zoho",
+      "years": 4.9,
+      "location": "Hyderabad, Telangana"
+    },
+    {
+      "rank": 66,
+      "candidate_id": "CAND_0005649",
+      "score": 0.426763,
+      "reasoning": "A maybe at #66. Senior Data Scientist with 7.4 years in Delhi, Delhi. Has done the real work in bm25, ranking, recommendation, and drift. A breadth pick (67% must-have coverage) rather than a depth one; sanity-check before outreach.",
+      "title": "Senior Data Scientist",
+      "company": "Sarvam AI",
+      "years": 7.4,
+      "location": "Delhi, Delhi"
+    },
+    {
+      "rank": 67,
+      "candidate_id": "CAND_0018499",
+      "score": 0.424897,
+      "reasoning": "A maybe at #67. Senior Machine Learning Engineer with 7.2 years in Noida, Uttar Pradesh. Has done the real work in bm25, matching, ranker, and deployed. A breadth pick (67% must-have coverage) rather than a depth one; sanity-check before outreach.",
+      "title": "Senior Machine Learning Engineer",
+      "company": "Zomato",
+      "years": 7.2,
+      "location": "Noida, Uttar Pradesh"
+    },
+    {
+      "rank": 68,
+      "candidate_id": "CAND_0045862",
+      "score": 0.424786,
+      "reasoning": "AI Specialist with 6.7 years in Jaipur, Rajasthan. Sits at #68, on the bubble. Clear hands-on work in ranking, recommendation, production, and vector. Partial must-have coverage (83%); earns a slot on adjacent strength, verify the gaps.",
+      "title": "AI Specialist",
+      "company": "Yellow.ai",
+      "years": 6.7,
+      "location": "Jaipur, Rajasthan"
+    },
+    {
+      "rank": 69,
+      "candidate_id": "CAND_0080766",
+      "score": 0.424529,
+      "reasoning": "#69, included with caveats. Staff Machine Learning Engineer with 8.8 years in Coimbatore, Tamil Nadu. Credible depth in bm25, personalization, ranking, and drift. Covers 67% of the must-haves \u2014 near-cutoff; include for a closer read, not a lock.",
+      "title": "Staff Machine Learning Engineer",
+      "company": "Salesforce",
+      "years": 8.8,
+      "location": "Coimbatore, Tamil Nadu"
+    },
+    {
+      "rank": 70,
+      "candidate_id": "CAND_0096142",
+      "score": 0.423312,
+      "reasoning": "#70, included with caveats. Applied ML Engineer with 5.0 years in Hyderabad, Telangana. Solid track record in ranking, recommendation, owned, and pipeline. One flag: a 120-day notice period.",
+      "title": "Applied ML Engineer",
+      "company": "upGrad",
+      "years": 5.0,
+      "location": "Hyderabad, Telangana"
+    },
+    {
+      "rank": 71,
+      "candidate_id": "CAND_0051630",
+      "score": 0.42278,
+      "reasoning": "A maybe at #71. Machine Learning Engineer with 6.0 years in Kolkata, West Bengal. Backed by concrete experience in bm25, ranking, retrieval, and owned. A breadth pick (83% must-have coverage) rather than a depth one; sanity-check before outreach.",
+      "title": "Machine Learning Engineer",
+      "company": "Razorpay",
+      "years": 6.0,
+      "location": "Kolkata, West Bengal"
+    },
+    {
+      "rank": 72,
+      "candidate_id": "CAND_0075574",
+      "score": 0.42233,
+      "reasoning": "#72, included with caveats. Machine Learning Engineer with 5.7 years in Bangalore, Karnataka. Solid track record in ranking, search, owned, and pipeline. Covers 67% of the must-haves \u2014 near-cutoff; include for a closer read, not a lock.",
+      "title": "Machine Learning Engineer",
+      "company": "Haptik",
+      "years": 5.7,
+      "location": "Bangalore, Karnataka"
+    },
+    {
+      "rank": 73,
+      "candidate_id": "CAND_0007596",
+      "score": 0.420966,
+      "reasoning": "#73, included with caveats. Junior ML Engineer with 4.4 years in Delhi, Delhi. Solid track record in ranking, recommendation, production, and vector. Covers 83% of the must-haves \u2014 near-cutoff; include for a closer read, not a lock.",
+      "title": "Junior ML Engineer",
+      "company": "Flipkart",
+      "years": 4.4,
+      "location": "Delhi, Delhi"
+    },
+    {
+      "rank": 74,
+      "candidate_id": "CAND_0073620",
+      "score": 0.420965,
+      "reasoning": "#74, included with caveats. AI Research Engineer with 4.4 years in Noida, Uttar Pradesh. Solid track record in ranking, recommendation, search, and pipeline. Covers 83% of the must-haves \u2014 near-cutoff; include for a closer read, not a lock.",
+      "title": "AI Research Engineer",
+      "company": "TCS",
+      "years": 4.4,
+      "location": "Noida, Uttar Pradesh"
+    },
+    {
+      "rank": 75,
+      "candidate_id": "CAND_0057563",
+      "score": 0.420593,
+      "reasoning": "NLP Engineer with 6.8 years in Indore, Madhya Pradesh. Sits at #75, on the bubble. Clear hands-on work in bm25, ranking, recommendation, and owned. Partial must-have coverage (67%); earns a slot on adjacent strength, verify the gaps.",
+      "title": "NLP Engineer",
+      "company": "Locobuzz",
+      "years": 6.8,
+      "location": "Indore, Madhya Pradesh"
+    },
+    {
+      "rank": 76,
+      "candidate_id": "CAND_0003977",
+      "score": 0.419945,
+      "reasoning": "A maybe at #76. Recommendation Systems Engineer with 4.6 years in Delhi, Delhi. Backed by concrete experience in bm25, recommendation, retrieval, and bge. A breadth pick (83% must-have coverage) rather than a depth one; sanity-check before outreach.",
+      "title": "Recommendation Systems Engineer",
+      "company": "Google",
+      "years": 4.6,
+      "location": "Delhi, Delhi"
+    },
+    {
+      "rank": 77,
+      "candidate_id": "CAND_0014440",
+      "score": 0.418809,
+      "reasoning": "A maybe at #77. Recommendation Systems Engineer with 6.4 years in Chennai, Tamil Nadu. Has done the real work in ranking, recommendation, search, and drift. A breadth pick (67% must-have coverage) rather than a depth one; sanity-check before outreach.",
+      "title": "Recommendation Systems Engineer",
+      "company": "CRED",
+      "years": 6.4,
+      "location": "Chennai, Tamil Nadu"
+    },
+    {
+      "rank": 78,
+      "candidate_id": "CAND_0060054",
+      "score": 0.418203,
+      "reasoning": "AI Engineer with 6.4 years in Jaipur, Rajasthan. Sits at #78, on the bubble. Clear hands-on work in bm25, ranking, recommendation, and owned. Partial must-have coverage (67%); earns a slot on adjacent strength, verify the gaps.",
+      "title": "AI Engineer",
+      "company": "Mad Street Den",
+      "years": 6.4,
+      "location": "Jaipur, Rajasthan"
+    },
+    {
+      "rank": 79,
+      "candidate_id": "CAND_0056262",
+      "score": 0.418197,
+      "reasoning": "#79, included with caveats. Junior ML Engineer with 6.0 years in Bangalore, Karnataka. Solid track record in ranking, recommendation, pipeline, and production. Covers 67% of the must-haves \u2014 near-cutoff; include for a closer read, not a lock.",
+      "title": "Junior ML Engineer",
+      "company": "Swiggy",
+      "years": 6.0,
+      "location": "Bangalore, Karnataka"
+    },
+    {
+      "rank": 80,
+      "candidate_id": "CAND_0057701",
+      "score": 0.416869,
+      "reasoning": "#80, included with caveats. Recommendation Systems Engineer with 4.1 years in Chandigarh, Chandigarh. Solid track record in ranking, recommendation, owned, and shipped. One flag: a 120-day notice period.",
+      "title": "Recommendation Systems Engineer",
+      "company": "Verloop.io",
+      "years": 4.1,
+      "location": "Chandigarh, Chandigarh"
+    },
+    {
+      "rank": 81,
+      "candidate_id": "CAND_0047721",
+      "score": 0.416775,
+      "reasoning": "A maybe at #81. Senior Data Scientist with 7.0 years in Coimbatore, Tamil Nadu. Backed by concrete experience in ranking, recommendation, search, and owned. A breadth pick (67% must-have coverage) rather than a depth one; sanity-check before outreach.",
+      "title": "Senior Data Scientist",
+      "company": "Microsoft",
+      "years": 7.0,
+      "location": "Coimbatore, Tamil Nadu"
+    },
+    {
+      "rank": 82,
+      "candidate_id": "CAND_0050454",
+      "score": 0.414783,
+      "reasoning": "#82, included with caveats. AI Engineer with 6.8 years in Delhi, Delhi. Solid track record in bm25, ranking, retrieval, and owned. Covers 67% of the must-haves \u2014 near-cutoff; include for a closer read, not a lock.",
+      "title": "AI Engineer",
+      "company": "Rephrase.ai",
+      "years": 6.8,
+      "location": "Delhi, Delhi"
+    },
+    {
+      "rank": 83,
+      "candidate_id": "CAND_0061339",
+      "score": 0.414113,
+      "reasoning": "Search Engineer with 4.2 years in Chandigarh, Chandigarh. Sits at #83, on the bubble. Evidence on the ground for ranking, recommendation, search, and owned. Partial must-have coverage (67%); earns a slot on adjacent strength, verify the gaps.",
+      "title": "Search Engineer",
+      "company": "Rephrase.ai",
+      "years": 4.2,
+      "location": "Chandigarh, Chandigarh"
+    },
+    {
+      "rank": 84,
+      "candidate_id": "CAND_0049538",
+      "score": 0.414112,
+      "reasoning": "Applied ML Engineer with 5.8 years in Jaipur, Rajasthan. Sits at #84, on the bubble. Evidence on the ground for ranking, recommendation, search, and drift. Partial must-have coverage (67%); earns a slot on adjacent strength, verify the gaps.",
+      "title": "Applied ML Engineer",
+      "company": "Saarthi.ai",
+      "years": 5.8,
+      "location": "Jaipur, Rajasthan"
+    },
+    {
+      "rank": 85,
+      "candidate_id": "CAND_0043228",
+      "score": 0.413759,
+      "reasoning": "#85, included with caveats. Applied ML Engineer with 6.8 years in Chennai, Tamil Nadu. Credible depth in bm25, ranking, retrieval, and drift. Covers 67% of the must-haves \u2014 near-cutoff; include for a closer read, not a lock.",
+      "title": "Applied ML Engineer",
+      "company": "Zoho",
+      "years": 6.8,
+      "location": "Chennai, Tamil Nadu"
+    },
+    {
+      "rank": 86,
+      "candidate_id": "CAND_0072660",
+      "score": 0.412828,
+      "reasoning": "Near the cutoff at #86. Machine Learning Engineer with 7.1 years in Berlin. Real, demonstrated evidence for ranking, search, drift, and monitoring. On the list for breadth of relevant signal more than deep must-have coverage (83%); worth a human look.",
+      "title": "Machine Learning Engineer",
+      "company": "Unacademy",
+      "years": 7.1,
+      "location": "Berlin"
+    },
+    {
+      "rank": 87,
+      "candidate_id": "CAND_0010149",
+      "score": 0.411652,
+      "reasoning": "A maybe at #87. ML Engineer with 6.9 years in Bangalore, Karnataka. Backed by concrete experience in ranking, recommendation, pipeline, and production. A breadth pick (67% must-have coverage) rather than a depth one; sanity-check before outreach.",
+      "title": "ML Engineer",
+      "company": "Glance",
+      "years": 6.9,
+      "location": "Bangalore, Karnataka"
+    },
+    {
+      "rank": 88,
+      "candidate_id": "CAND_0082489",
+      "score": 0.411548,
+      "reasoning": "Near the cutoff at #88. ML Engineer with 5.3 years in Noida, Uttar Pradesh. Genuine, shipped work across ranking, recommendation, search, and production. On the list for breadth of relevant signal more than deep must-have coverage (83%); worth a human look.",
+      "title": "ML Engineer",
+      "company": "InMobi",
+      "years": 5.3,
+      "location": "Noida, Uttar Pradesh"
+    },
+    {
+      "rank": 89,
+      "candidate_id": "CAND_0042029",
+      "score": 0.411547,
+      "reasoning": "A maybe at #89. Senior Data Scientist with 6.5 years in Delhi, Delhi. Has done the real work in ranking, owned, pipeline, and elasticsearch. A breadth pick (67% must-have coverage) rather than a depth one; sanity-check before outreach.",
+      "title": "Senior Data Scientist",
+      "company": "Flipkart",
+      "years": 6.5,
+      "location": "Delhi, Delhi"
+    },
+    {
+      "rank": 90,
+      "candidate_id": "CAND_0092255",
+      "score": 0.410879,
+      "reasoning": "ML Engineer with 5.2 years in Noida, Uttar Pradesh. Sits at #90, on the bubble. Evidence on the ground for ranking, recommendation, pipeline, and production. Partial must-have coverage (67%); earns a slot on adjacent strength, verify the gaps.",
+      "title": "ML Engineer",
+      "company": "InMobi",
+      "years": 5.2,
+      "location": "Noida, Uttar Pradesh"
+    },
+    {
+      "rank": 91,
+      "candidate_id": "CAND_0028793",
+      "score": 0.410352,
+      "reasoning": "#91, included with caveats. Search Engineer with 7.2 years in Trivandrum, Kerala. Credible depth in bm25, ranking, retrieval, and owned. One flag: a 120-day notice period.",
+      "title": "Search Engineer",
+      "company": "Google",
+      "years": 7.2,
+      "location": "Trivandrum, Kerala"
+    },
+    {
+      "rank": 92,
+      "candidate_id": "CAND_0073883",
+      "score": 0.408234,
+      "reasoning": "AI Specialist with 5.3 years in Chandigarh, Chandigarh. Sits at #92, on the bubble. Evidence on the ground for ranking, recommendation, production, and faiss. Partial must-have coverage (67%); earns a slot on adjacent strength, verify the gaps.",
+      "title": "AI Specialist",
+      "company": "Krutrim",
+      "years": 5.3,
+      "location": "Chandigarh, Chandigarh"
+    },
+    {
+      "rank": 93,
+      "candidate_id": "CAND_0041611",
+      "score": 0.408025,
+      "reasoning": "A maybe at #93. Staff Machine Learning Engineer with 6.4 years in Austin. Has done the real work in bm25, ranker, ranking, and drift. One flag: no platform activity in 6+ months.",
+      "title": "Staff Machine Learning Engineer",
+      "company": "Locobuzz",
+      "years": 6.4,
+      "location": "Austin"
+    },
+    {
+      "rank": 94,
+      "candidate_id": "CAND_0037980",
+      "score": 0.405513,
+      "reasoning": "Senior Applied Scientist with 9.0 years in Kolkata, West Bengal. Sits at #94, on the bubble. Evidence on the ground for personalization, ranking, search, and drift. Partial must-have coverage (67%); earns a slot on adjacent strength, verify the gaps.",
+      "title": "Senior Applied Scientist",
+      "company": "Niramai",
+      "years": 9.0,
+      "location": "Kolkata, West Bengal"
+    },
+    {
+      "rank": 95,
+      "candidate_id": "CAND_0051292",
+      "score": 0.405512,
+      "reasoning": "A maybe at #95. Applied ML Engineer with 5.2 years in Trivandrum, Kerala. Has done the real work in bm25, ranking, retrieval, and owned. A breadth pick (67% must-have coverage) rather than a depth one; sanity-check before outreach.",
+      "title": "Applied ML Engineer",
+      "company": "Freshworks",
+      "years": 5.2,
+      "location": "Trivandrum, Kerala"
+    },
+    {
+      "rank": 96,
+      "candidate_id": "CAND_0065277",
+      "score": 0.405511,
+      "reasoning": "Near the cutoff at #96. Computer Vision Engineer with 6.3 years in Mumbai, Maharashtra. Real, demonstrated evidence for ranking, recommendation, pipeline, and production. On the list for breadth of relevant signal more than deep must-have coverage (67%); worth a human look.",
+      "title": "Computer Vision Engineer",
+      "company": "Aganitha",
+      "years": 6.3,
+      "location": "Mumbai, Maharashtra"
+    },
+    {
+      "rank": 97,
+      "candidate_id": "CAND_0010283",
+      "score": 0.405068,
+      "reasoning": "Near the cutoff at #97. AI Specialist with 5.3 years in Mumbai, Maharashtra. Genuine, shipped work across production, embedding, embeddings, and python. One flag: a 120-day notice period.",
+      "title": "AI Specialist",
+      "company": "Saarthi.ai",
+      "years": 5.3,
+      "location": "Mumbai, Maharashtra"
+    },
+    {
+      "rank": 98,
+      "candidate_id": "CAND_0091534",
+      "score": 0.404294,
+      "reasoning": "#98, included with caveats. AI Engineer with 16.6 years in Gurgaon, Haryana. Credible depth in bm25, ranking, retrieval, and owned. Covers 67% of the must-haves \u2014 near-cutoff; include for a closer read, not a lock.",
+      "title": "AI Engineer",
+      "company": "Flipkart",
+      "years": 16.6,
+      "location": "Gurgaon, Haryana"
+    },
+    {
+      "rank": 99,
+      "candidate_id": "CAND_0084819",
+      "score": 0.40296,
+      "reasoning": "Search Engineer with 4.5 years in Indore, Madhya Pradesh. Sits at #99, on the bubble. Evidence on the ground for ranking, search, owned, and pipeline. One flag: a 120-day notice period.",
+      "title": "Search Engineer",
+      "company": "Dream11",
+      "years": 4.5,
+      "location": "Indore, Madhya Pradesh"
+    },
+    {
+      "rank": 100,
+      "candidate_id": "CAND_0036437",
+      "score": 0.402891,
+      "reasoning": "Near the cutoff at #100. Search Engineer with 4.8 years in Kolkata, West Bengal. Real, demonstrated evidence for ranking, search, drift, and monitoring. On the list for breadth of relevant signal more than deep must-have coverage (67%); worth a human look.",
+      "title": "Search Engineer",
+      "company": "Rephrase.ai",
+      "years": 4.8,
+      "location": "Kolkata, West Bengal"
     }
-  ],
-  "is_submission": true
+  ]
 }

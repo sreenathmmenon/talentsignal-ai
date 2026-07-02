@@ -118,7 +118,18 @@ def rank_live(jd: str | None = None, *, category: str = "ai_ml_search_ranking",
     """
     from .api import rank as _rank
 
-    jd = jd if jd is not None else CHALLENGE_JD
+    # Use the SAME job spec the submission (rank.py) uses, so the UI's 100K ranking
+    # is the identical computation to the CSV/XLSX — same parsed requirements AND the
+    # same precomputed requirement embeddings in the index. (Falls back to the text
+    # JD only if the spec file is missing.)
+    if jd is None:
+        from pathlib import Path as _Path
+        _spec = _Path(__file__).resolve().parents[2] / "job_specs" / "redrob_senior_ai_engineer.yaml"
+        if _spec.exists():
+            from .jd_parser import load_job_spec
+            jd = load_job_spec(_spec)
+        else:
+            jd = CHALLENGE_JD
     os.environ.setdefault("HF_HUB_OFFLINE", "1")
     os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
