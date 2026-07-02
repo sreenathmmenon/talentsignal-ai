@@ -167,11 +167,38 @@ def _open_to_work_term(ev: CandidateEvidence) -> float:
     return 0.55  # unknown/unset -> neutral prior
 
 
+def insufficient_evidence(ev: CandidateEvidence) -> bool:
+    """True when a candidate carries essentially NO usable profile evidence — e.g. an
+    off-schema record (wrong field names, missing profile) that the pipeline filled
+    with defaults. Such a record must NOT be scored as a confident 'standout'; it
+    should be flagged honestly so a naive integration doesn't get silent garbage."""
+    text = (getattr(ev, "all_text", "") or "").strip()
+    title = (ev.title or "").strip()
+    return len(text) < 3 and not title and not ev.years
+
+
+def _has_activity_data(ev: CandidateEvidence) -> bool:
+    """True only when the candidate actually carries platform activity/response
+    signals. A pasted/uploaded résumé has none — last_active defaults to the 999
+    sentinel and response_rate to 0 — and we must NOT read that absence as 'stale'
+    (unknown != inactive; that misleads and unfairly penalizes)."""
+    return ev.last_active_months < 999 or ev.response_rate > 0.0
+
+
 def reachability(ev: CandidateEvidence) -> tuple[str, float]:
     """A recruiter-facing reachability read, orthogonal to fit. Observed behavior
     (recent activity + response rate) dominates the self-declared flag.
     Returns (label, score in [0,1]) — display + within-band tiebreak only; this is
-    a VIEW over signals already inside Q, not an extra penalty."""
+    a VIEW over signals already inside Q, not an extra penalty.
+
+    When there is NO activity data at all (e.g. a résumé with no platform signals),
+    returns an honest 'unknown' with a neutral score instead of a misleading 'stale'
+    penalty. If the profile explicitly says open-to-work, that's surfaced too."""
+    if not _has_activity_data(ev):
+        # honest neutral read — we simply don't know reachability from a bare résumé
+        if ev.open_to_work is True:
+            return "reachable", 0.6   # self-declared open, no activity data to gate it
+        return "unknown", 0.5
     rf = _recency_factor(ev.last_active_months)
     score = clamp(0.45 * rf + 0.35 * ev.response_rate + 0.20 * _open_to_work_term(ev))
     recent = ev.last_active_months <= 3
@@ -187,6 +214,11 @@ def reachability(ev: CandidateEvidence) -> tuple[str, float]:
 
 
 def _behavioral_score(ev: CandidateEvidence) -> float:
+    # No platform behavioral signals at all (e.g. a pasted/uploaded résumé)? Return a
+    # NEUTRAL score rather than penalizing the candidate for data a résumé can't carry.
+    # (unknown != unavailable — the same principle as the reachability read.)
+    if not _has_activity_data(ev) and not ev.notice_period_days and ev.profile_completeness == 0:
+        return 0.5
     response_time_score = clamp(1.0 - ev.response_time_hours / 240.0)
     notice_score = 1.0 if ev.notice_period_days <= 30 else 0.7 if ev.notice_period_days <= 60 else 0.35 if ev.notice_period_days <= 90 else 0.15
     active_score = _recency_factor(ev.last_active_months)
@@ -340,12 +372,24 @@ def score_candidate(ev: CandidateEvidence, job: JobSpec) -> ScoreBreakdown:
         consistency = None
     soft_multiplier = clamp(1.0 - soft_penalty, 0.6, 1.0)
 
+    # Off-schema / empty record guard: a candidate with no usable evidence must not be
+    # scored as a confident "standout". Flag it honestly and floor its relevance so it
+    # sinks instead of silently ranking on default values.
+    no_evidence = insufficient_evidence(ev)
+    concern_notes: tuple = ()
+    if no_evidence:
+        relevance = 0.0
+        flags = list(flags) + ["insufficient_evidence"]
+        concern_notes = ("insufficient profile data to assess — the record has no usable "
+                         "skills, career text, or title (check the input format)",)
+
     final = _gate(relevance, quality, soft_multiplier=soft_multiplier, hard_veto=hard_veto)
 
     # top-10 eligibility: must clear a minimum relevance and not be vetoed.
-    top10_eligible = bool(hard_veto) and relevance >= 0.34
+    top10_eligible = bool(hard_veto) and relevance >= 0.34 and not no_evidence
     # confidence tracks relevance + evidence depth (display/back-compat).
-    confidence = clamp(0.6 * relevance + 0.25 * career_must_have_coverage
+    confidence = 0.0 if no_evidence else clamp(
+                       0.6 * relevance + 0.25 * career_must_have_coverage
                        + 0.10 * (1.0 if ev.career_production_terms else 0.0)
                        + 0.05 * (1.0 if not flags else 0.0))
     penalty = round(soft_penalty if hard_veto else 1.0, 6)
@@ -362,6 +406,7 @@ def score_candidate(ev: CandidateEvidence, job: JobSpec) -> ScoreBreakdown:
         top10_eligible=top10_eligible,
         penalty=round(penalty, 6),
         risk_flags=flags,
+        concern_notes=concern_notes,
         engine="spine",
         role_relevance=round(relevance, 6),
         general_quality=round(quality, 6),
@@ -463,11 +508,22 @@ def score_candidate_hybrid(
     # Q = generic quality (seniority/logistics/behavioral/trust ONLY).
     quality = _quality_blend(seniority, logistics, behavioral, trust, job.weights)
     soft_multiplier = clamp(1.0 - soft_penalty, 0.6, 1.0)
+
+    # Off-schema / empty record guard (same as the spine path).
+    no_evidence = insufficient_evidence(ev)
+    if no_evidence:
+        relevance = 0.0
+        if "insufficient_evidence" not in flags:
+            flags = list(flags) + ["insufficient_evidence"]
+        concern_notes = (("insufficient profile data to assess — the record has no usable "
+                          "skills, career text, or title (check the input format)",)
+                         + tuple(concern_notes))[:3]
+
     final = _gate(relevance, quality, soft_multiplier=soft_multiplier, hard_veto=hard_veto)
 
-    top10_eligible = bool(hard_veto) and relevance >= 0.34
+    top10_eligible = bool(hard_veto) and relevance >= 0.34 and not no_evidence
     penalty = round(soft_penalty if hard_veto else 1.0, 6)
-    confidence = clamp(
+    confidence = 0.0 if no_evidence else clamp(
         0.50 * relevance
         + 0.20 * match_result.coverage
         + 0.15 * (1.0 if career_lexical >= 0.34 else 0.0)

@@ -151,3 +151,18 @@ def test_bad_tool_result_never_raises_protocol_error():
                "left_rank": 1, "right_rank": 9})
     body = json.loads(res["content"][0]["text"])
     assert "error" in body and "shortlist" in body["error"]
+
+
+def test_compliance_accepts_flat_and_nested_group_labels():
+    """The compliance tool must not crash on the intuitive FLAT group map (the bug
+    that broke fair_hiring_review). Both flat {id:group} and nested
+    {attr:{id:group}} must work; empty input gives a friendly error."""
+    flat = _raw("compliance", {"ranked_ids": ["a", "b", "c", "d"],
+                "group_attributes": {"a": "F", "b": "M", "c": "F", "d": "M"}, "top_k": 2})
+    assert not flat.get("isError"), flat
+    assert "overall_passes_four_fifths" in json.loads(flat["content"][0]["text"])
+    nested = _raw("compliance", {"ranked_ids": ["a", "b", "c", "d"],
+                  "group_attributes": {"gender": {"a": "F", "b": "M", "c": "F", "d": "M"}}, "top_k": 2})
+    assert not nested.get("isError"), nested
+    empty = _raw("compliance", {"ranked_ids": ["a"], "group_attributes": {}})
+    assert empty.get("isError")

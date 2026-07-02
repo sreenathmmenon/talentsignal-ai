@@ -217,3 +217,50 @@ def test_hybrid_resists_keyword_stuffing_better_than_spine():
     from talentsignal.consistency_audit import audit_candidate as audit
     assert audit(adv.attack_impossible_tenure(rec)).flags or \
         audit(adv.attack_impossible_tenure(rec)).is_impossible
+
+
+def test_resume_without_activity_data_is_not_stale():
+    """A pasted/uploaded résumé has no platform activity signals. It must read as
+    'unknown' (neutral), NOT 'stale' with a penalty — unknown != inactive. A real
+    candidate with genuine old activity still reads 'stale'."""
+    from talentsignal.scoring import reachability, _behavioral_score
+    from talentsignal.features import build_evidence
+    # résumé: no redrob_signals at all
+    resume = {"candidate_id": "R1", "profile": {"summary": "ML engineer, open to work",
+              "current_title": "ML Engineer", "years_of_experience": 7},
+              "career_history": [{"title": "ML", "description": "ranking retrieval"}],
+              "skills": ["Python"], "redrob_signals": {}}
+    ev = build_evidence(resume)
+    label, _ = reachability(ev)
+    assert label in ("unknown", "reachable"), label      # never 'stale' on a bare résumé
+    assert _behavioral_score(ev) >= 0.4                    # neutral, not penalized to ~0
+    # a real candidate with genuine stale data is still flagged stale
+    stale = {"candidate_id": "S1", "profile": {"summary": "x", "current_title": "ML"},
+             "career_history": [], "skills": ["Python"],
+             "redrob_signals": {"last_active_date": "2024-01-01",
+                                 "recruiter_response_rate": 0.05, "open_to_work_flag": True}}
+    assert reachability(build_evidence(stale))[0] == "stale"
+
+
+def test_off_schema_record_flagged_not_confident_garbage():
+    """A candidate with no usable evidence (wrong field names / missing profile)
+    must NOT be scored as a confident 'standout'. It gets score 0, an
+    'insufficient_evidence' flag, and honest reasoning — so a naive integration
+    sees a clear signal, not silent garbage."""
+    from talentsignal.api import rank
+    res = rank("Senior AI Engineer. embeddings ranking. 5-9 years.",
+               [{"id": "X1", "name": "Alice", "experience": "5 years"}, {"foo": "bar"}],
+               top_n=2, engine="spine")
+    for c in res.ranked:
+        assert c.score == 0.0
+        assert any(f.code == "insufficient_evidence" for f in (c.risk_flags or []))
+        assert "insufficient profile data" in c.reasoning
+        assert "standout" not in c.reasoning
+    # a real candidate is unaffected
+    good = rank("Senior AI Engineer. embeddings retrieval ranking Python. 5-9 years.",
+                [{"candidate_id": "C1", "profile": {"summary": "Built embeddings retrieval ranking in Python",
+                  "current_title": "ML Engineer", "years_of_experience": 7},
+                  "career_history": [{"title": "ML", "description": "ranking retrieval"}],
+                  "skills": ["Python"], "redrob_signals": {}}], top_n=1, engine="spine").ranked[0]
+    assert not any(f.code == "insufficient_evidence" for f in (good.risk_flags or []))
+    assert good.score > 0

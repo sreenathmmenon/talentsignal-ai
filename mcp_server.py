@@ -98,13 +98,21 @@ TOOLS = [
         "name": "compliance",
         "description": "EEOC four-fifths (80%) adverse-impact report on a ranking, given "
                        "customer-supplied protected-group labels. The engine never infers "
-                       "protected attributes.",
+                       "protected attributes. group_attributes maps candidates to their "
+                       "group; use the nested form for multiple attributes, or a flat "
+                       "candidate→group map for a single attribute.",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "ranked_ids": {"type": "array", "items": {"type": "string"}},
-                "group_attributes": {"type": "object"},
-                "top_k": {"type": "integer", "default": 10},
+                "ranked_ids": {"type": "array", "items": {"type": "string"},
+                               "description": "Candidate IDs in ranked order (best first)."},
+                "group_attributes": {
+                    "type": "object",
+                    "description": "EITHER nested {attribute: {candidate_id: group}} — e.g. "
+                                   "{\"gender\": {\"CAND_1\": \"F\", \"CAND_2\": \"M\"}} — OR a "
+                                   "flat {candidate_id: group} map for one attribute."},
+                "top_k": {"type": "integer", "default": 10,
+                          "description": "Selection cutoff (top-k = 'selected')."},
             },
             "required": ["ranked_ids", "group_attributes"],
         },
@@ -248,10 +256,21 @@ def tool_candidate_report(args: dict) -> dict:
 
 def tool_compliance(args: dict) -> dict:
     """Adverse-impact (EEOC four-fifths) report on a ranking given customer-supplied
-    protected-group labels. The engine never infers protected attributes."""
+    protected-group labels. The engine never infers protected attributes.
+
+    Accepts group_attributes in EITHER shape (so a naive caller can't crash it):
+      - nested:  {"gender": {"CAND_1": "F", ...}}            (multi-attribute)
+      - flat:    {"CAND_1": "F", "CAND_2": "M", ...}          (single attribute)
+    A flat map is auto-wrapped as {"group": {...}}."""
     from talentsignal.eval.compliance import compliance_summary
-    return compliance_summary(args["ranked_ids"], args["group_attributes"],
-                              top_k=int(args.get("top_k", 10)))
+    ga = args["group_attributes"]
+    if not isinstance(ga, dict) or not ga:
+        raise ValueError("group_attributes must be a non-empty object of candidate→group "
+                         "labels, e.g. {\"gender\": {\"CAND_1\": \"F\", \"CAND_2\": \"M\"}}")
+    # Detect the flat form: values are strings (candidate→group) rather than nested dicts.
+    if all(not isinstance(v, dict) for v in ga.values()):
+        ga = {"group": {k: str(v) for k, v in ga.items()}}
+    return compliance_summary(args["ranked_ids"], ga, top_k=int(args.get("top_k", 10)))
 
 
 def tool_explain_ranking(args: dict) -> dict:

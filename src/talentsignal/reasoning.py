@@ -170,9 +170,13 @@ def _concerns(ev: CandidateEvidence, score: ScoreBreakdown, rank: int) -> list[s
         concerns.append(note)
     if ev.notice_period_days and ev.notice_period_days > 90:
         concerns.append(f"a {ev.notice_period_days}-day notice period")
-    if ev.last_active_months >= 6:
+    # Only raise activity/response concerns when we actually HAVE that data. A
+    # pasted/uploaded résumé has no platform signals (last_active defaults to the
+    # 999 sentinel, response_rate to 0) — flagging it as "inactive" would be a false,
+    # misleading concern (unknown != inactive).
+    if 6 <= ev.last_active_months < 999:
         concerns.append("no platform activity in 6+ months")
-    if ev.response_rate < 0.2 and not concerns:
+    if 0.0 < ev.response_rate < 0.2 and not concerns:
         concerns.append(f"a low recruiter response rate ({ev.response_rate:.0%})")
     if score.requirement_coverage and score.requirement_coverage < 0.34 and rank > 20:
         concerns.append("only partial coverage of the must-haves")
@@ -206,6 +210,11 @@ def _comparative_clause(score: ScoreBreakdown, rank: int,
 def generate_reasoning(ev: CandidateEvidence, score: ScoreBreakdown, rank: int,
                        job: JobSpec | None = None,
                        neighbor: ScoreBreakdown | None = None) -> str:
+    # Honest handling of an off-schema / empty record: never call it a "standout".
+    if "insufficient_evidence" in (getattr(score, "risk_flags", None) or ()):
+        return (f"#{rank}: insufficient profile data to assess this record — no usable "
+                f"skills, career history, or title were found. This usually means the "
+                f"input wasn't in a recognized format; not scored on merit.")
     band = _band(rank)
     seed = sum(ord(ch) for ch in ev.candidate_id) + rank
     opener = _OPENERS[band][seed % len(_OPENERS[band])].format(rank=rank, who=_who(ev))
