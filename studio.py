@@ -389,22 +389,21 @@ def _rank_sample_live():
 
 
 def do_challenge(body):
-    """Rank the real 100K LIVE for the standing challenge JD (NOT a frozen CSV).
+    """Serve the challenge's top-100 — the SAME result as the submitted CSV/XLSX.
 
-    Uses the in-memory live cache: ranked once by the real engine, served instantly
-    after, and automatically re-ranked if the candidate pool changes (so a new
-    strong applicant is never hidden by a stale result).
-
-    HOSTED PATH: the full 100K + 146MB index are too big for a small demo box, so
-    when they aren't present we rank a representative ~500-candidate SAMPLE of the
-    real pool LIVE (dynamically, not a frozen list) — proving the engine actually
-    computes — and report the full-100K number as reproduced offline in ~70s."""
+    The 100K tab must show EXACTLY our submitted ranking (one engine, one result —
+    the UI, the CSV, and the XLSX are the same). On the hosted box the full 100K +
+    146MB index don't fit, so we serve the committed submission's top-100 from
+    challenge_prebaked.json (built directly from final_submission.csv). Locally,
+    with the full dataset present, it ranks live and produces the identical top."""
     from talentsignal import live_cache
     if not OFFICIAL_CANDIDATES.exists():
-        if SAMPLE_100K.exists():
-            live = _rank_sample_live()
-            if live is not None:
-                return live
+        # Serve the ACTUAL submitted top-100 (matches the CSV/XLSX exactly).
+        if PREBAKED_CHALLENGE.exists():
+            try:
+                return json.loads(PREBAKED_CHALLENGE.read_text(encoding="utf-8"))
+            except Exception:  # noqa: BLE001
+                pass
         # last-resort fallback to the frozen snapshot if the sample is unavailable
         if PREBAKED_CHALLENGE.exists():
             try:
