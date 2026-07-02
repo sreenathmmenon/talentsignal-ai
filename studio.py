@@ -585,9 +585,22 @@ def main():
     # ~500-candidate sample in ~0.17s, so warming is cheap and doesn't degrade the
     # interactive loop. (The old full-100K path was ~35s, which is why warming used
     # to be deferred — no longer the case.)
+    import threading
+    # Warm the 100K sample so its first click is instant.
     if not OFFICIAL_CANDIDATES.exists() and SAMPLE_100K.exists():
-        import threading
         threading.Thread(target=_rank_sample_live, daemon=True).start()
+    # Warm the embedding model in the background so the FIRST "Watch it rank" /
+    # paste-a-résumé demo is fast (the hybrid engine loads MiniLM on first use;
+    # without this the first live rank waits several seconds for the model). Also
+    # do one tiny encode so the model's lazy graph is fully built.
+    def _warm_model():
+        try:
+            emb = _get_embedder()
+            if emb is not None:
+                emb(["warm up the ranking model"])
+        except Exception:  # noqa: BLE001 - warming is best-effort
+            pass
+    threading.Thread(target=_warm_model, daemon=True).start()
     srv.serve_forever()
 
 
