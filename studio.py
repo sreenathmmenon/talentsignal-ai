@@ -472,12 +472,14 @@ def do_top10detail(body):
                 pass
         return {"error": "Official 100K dataset not found."}
     from talentsignal.api import rank
+    from talentsignal.jd_parser import load_job_spec
     rows = [json.loads(l) for l in open(OFFICIAL_CANDIDATES) if l.strip()]
-    jd = body.get("jd") or (
-        "Senior AI Engineer. Build candidate-JD matching at scale. Must have embeddings, "
-        "retrieval, ranking models, hybrid search, evaluation frameworks (NDCG), strong "
-        "Python. 5-9 years.")
-    res = rank(jd, rows, top_n=10, engine=body.get("engine", "spine"),
+    # Use the SAME job spec + hybrid engine + index as the submission, so this top-10
+    # IS the submitted top-10 (consistent with the CSV/XLSX and the 100K tab).
+    spec = ROOT / "job_specs" / "redrob_senior_ai_engineer.yaml"
+    jd = load_job_spec(spec) if spec.exists() else body.get("jd", "Senior AI Engineer. embeddings retrieval ranking Python 5-9 years.")
+    idx = str(ROOT / "outputs" / "index") if (ROOT / "outputs" / "index").exists() else None
+    res = rank(jd, rows, top_n=10, engine="hybrid", index_dir=idx,
                category="ai_ml_search_ranking")
     by_id = {r["candidate_id"]: r for r in rows}
     old_rank = _old_substring_rank(rows)
