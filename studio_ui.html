@@ -219,9 +219,14 @@ textarea:focus,select:focus,input:focus{outline:none; border-color:var(--violet)
   font-size:13.5px;color:var(--ink-soft);transition:opacity .4s}
 .proof-ticker .r{font-family:var(--mono);font-size:12px;color:var(--cyan);display:block;margin-top:5px}
 .hero-ctas{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:24px}
-.big-cta{font-size:18px!important;padding:18px 34px!important;font-weight:700;
+.big-cta{font-size:17px!important;padding:17px 28px!important;font-weight:700;
   box-shadow:0 8px 30px rgba(139,92,246,.45);animation:ctapulse 2.4s ease-in-out infinite}
 @keyframes ctapulse{0%,100%{box-shadow:0 8px 30px rgba(139,92,246,.35)}50%{box-shadow:0 8px 44px rgba(139,92,246,.6)}}
+/* the hackathon 100K button — distinct (cyan→gold accent), equally prominent */
+.big-cta.alt{background:linear-gradient(110deg,#22D3EE 0%,#8B5CF6 100%);animation:none;
+  box-shadow:0 8px 30px rgba(34,211,238,.4)}
+.big-cta.alt:hover{box-shadow:0 10px 40px rgba(34,211,238,.6)}
+@media (max-width:620px){.hero-ctas{flex-direction:column;align-items:stretch}}
 .hero-go{width:auto;padding:14px 22px;display:inline-flex;align-items:center;gap:9px}
 .go-ghost{appearance:none;background:transparent;border:1px solid var(--line-strong);color:var(--ink-soft);
   font-family:var(--sans);font-weight:600;font-size:14px;padding:14px 20px;border-radius:var(--r-md);cursor:pointer;transition:.2s}
@@ -373,11 +378,11 @@ textarea:focus,select:focus,input:focus{outline:none; border-color:var(--violet)
 </defs></svg>
 <nav>
   <div class="nav-in">
-    <div class="logo"><span class="orb"></span> TalentSignal <span class="sub">Studio</span></div>
+    <div class="logo" onclick="goHome()" style="cursor:pointer" title="Back to home"><span class="orb"></span> TalentSignal</div>
     <div class="tabs">
       <button class="tab active" data-view="rank" onclick="switchView('rank')"><span class="dot"></span>Find talent</button>
       <button class="tab" data-view="transparency" onclick="switchView('transparency')"><span class="dot"></span>Why this score</button>
-      <button class="tab" data-view="challenge" onclick="switchView('challenge')"><span class="dot"></span>Proof at scale</button>
+      <button class="tab" data-view="challenge" onclick="switchView('challenge')"><span class="dot"></span>🏆 The 100K challenge</button>
       <button class="tab" data-view="whatsnew" onclick="switchView('whatsnew')"><span class="dot"></span>Beyond keywords</button>
       <button class="tab" data-view="capabilities" onclick="switchView('capabilities')"><span class="dot"></span>Platform</button>
     </div>
@@ -436,9 +441,10 @@ We will not move forward with keyword-only AI experience or research with no pro
         <div class="eyebrow"><svg class="ic"><use href="#i-sparkle"/></svg> Live hiring intelligence · proven on 100,000 real candidates</div>
         <h1 class="display">Find the people the<br><span class="shine">keyword search will miss.</span></h1>
         <div class="hero-ctas">
-          <button class="go hero-go big-cta" onclick="seeItWork()">▶ Watch it rank — live, in one click</button>
+          <button class="go hero-go big-cta" onclick="seeItWork()">▶ Watch it rank — live</button>
+          <button class="go hero-go big-cta alt" onclick="switchView('challenge')">🏆 Rank the real 100,000 <span style="font-weight:500;opacity:.85">(hackathon)</span></button>
         </div>
-        <div class="hero-hint muted" style="font-size:13px;margin-top:-12px;margin-bottom:22px">No setup — we've pre-loaded a real role and candidates (including one a keyword search would miss). Or <a href="#" onclick="showForm();return false" style="color:var(--cyan-bright)">try your own résumés</a> · <a href="#" onclick="switchView('challenge');return false" style="color:var(--cyan-bright)">see the real 100,000</a>.</div>
+        <div class="hero-hint muted" style="font-size:13px;margin-top:-12px;margin-bottom:22px">Two clicks, zero setup. Left: rank pre-loaded candidates by meaning (incl. one a keyword search misses). Right: the challenge's real 100,000-candidate result. Or <a href="#" onclick="showForm();return false" style="color:var(--cyan-bright)">try your own résumés</a>.</div>
         <div class="kpis2">
           <div class="kpi2 big-kpi"><div class="n num grad" data-count="28" data-suffix="%">0%</div><div class="bar"><i id="rbar"></i></div><div class="l">of our top hires are people a keyword search never surfaces</div></div>
           <div class="kpi2"><div class="n num" data-count="100000" data-fmt="1">0</div><div class="l">candidates ranked in minutes — on one laptop, no cloud</div></div>
@@ -532,6 +538,15 @@ function skillsMatchPanel(sm){
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 
 let formShown=false;  // landing starts with the form HIDDEN — hero + one big CTA only
+function goHome(){
+  // reset to the landing: hero-first, form hidden, results cleared
+  formShown=false;
+  $('out').style.display='none'; $('out').innerHTML='';
+  $('leftcol').style.display='none';
+  $('app').classList.add('wide');
+  switchView('rank');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 function showForm(){
   formShown=true;
   $('leftcol').style.display='flex';
@@ -571,6 +586,7 @@ function scoreChip(s){return `<div class="score-chip num">${(s||0).toFixed(3)}<s
 
 // One-click demo: pre-load a real role + a few candidates (incl. a "found by meaning"
 // one who uses none of the JD's keywords, and a weak off-domain one), then rank live.
+const DEMO_JD=`Senior AI Engineer. Must have production embeddings, retrieval, ranking systems, and strong Python. 5-9 years. We will not move forward with keyword-only AI experience or research with no production deployment.`;
 const DEMO_PASTE=`Asha Menon
 Senior ML Engineer, 7 years, Bangalore
 Built production embeddings-based retrieval and ranking systems in Python. Shipped ranking models to millions of users.
@@ -586,12 +602,15 @@ Backend Engineer, 6 years, Chennai
 Java microservices and SQL databases at an enterprise firm. No ML experience.
 Skills: Java, SQL, Spring`;
 async function seeItWork(){
-  // reveal the form (so the judge sees the JD + candidates that get ranked), fill the
-  // demo candidates, and run — one click, zero typing.
-  showForm();
+  // ONE CLICK -> show the ranked RESULTS. Do NOT reveal the upload form or scroll to
+  // it — the whole point is the judge sees the product work, not a data-entry page.
+  // We fill the demo inputs behind the scenes (form stays hidden) and render results.
   $('paste').value=DEMO_PASTE;
+  $('jd').value=DEMO_JD;
   if($('topn'))$('topn').value='10';
-  await runRank();
+  if($('cat'))$('cat').value='ai_ml_search_ranking';
+  await runRank();               // renders into #out (the results area)
+  window.scrollTo({top:0,behavior:'smooth'});   // keep them at the top, on the results
 }
 async function runRank(){
   const btn=$('go');btn.disabled=true;
@@ -846,7 +865,7 @@ const CAPS=[
    demo:'Open the “Why this score” tab'},
   {ic:'i-arrow',where:'In this app',w:'ui',t:'See it work at full scale',
    d:'Watch it rank 100,000 real candidates in minutes, and see exactly where matching on meaning beats a keyword search — candidate by candidate.',
-   demo:'Open “Proof at scale” / “Beyond keywords”'},
+   demo:'Open “The 100K challenge” / “Beyond keywords”'},
   {ic:'i-flag',where:'For your team',w:'api',t:'Stay fair, and prove it',
    d:'A hiring-bias check on any shortlist, using your own diversity data — the report your legal and HR teams need before any automated screening goes live. It never guesses anyone’s background.',
    demo:'POST your shortlist to /compliance'},
