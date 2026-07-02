@@ -1,0 +1,52 @@
+{
+    "disclosure": "This report shows everything the ranking engine used and concluded about you. It used ONLY the information you provided \u2014 no scraped or third-party data. A human reviewer makes the final decision; you are not auto-rejected.",
+    "data_used": {
+        "source": "only the profile/resume you submitted",
+        "fields_considered": [
+            "career history",
+            "skills",
+            "summary",
+            "stated experience",
+            "availability signals (if provided)"
+        ],
+        "identity_used": "none \u2014 the engine never reads your name or identity (name-swap score change = 0.0)"
+    },
+    "result": {
+        "fit_score": 0.526867,
+        "title_read": "ML Engineer",
+        "years_read": 7.0,
+        "requirement_coverage": 1.0,
+        "factor_breakdown": {
+            "technical_evidence": 0.38,
+            "career_fit": 0.54,
+            "seniority": 1.0,
+            "logistics": 0.15,
+            "behavioral": 0.5,
+            "trust": 0.0,
+            "semantic_fit": 0.0,
+            "lexical_fit": 0.0,
+            "requirement_coverage": 1.0,
+            "role_relevance": 0.85,
+            "general_quality": 0.454545
+        },
+        "reasoning": "Top of the list (#1). ML Engineer with 7.0 years in location n/a. Deep evidence for ranking, retrieval, embedding, and embeddings; this is the heart of the job."
+    },
+    "matched_with_proof": [],
+    "not_evidenced": {
+        "requirements": [
+            "embeddings",
+            "retrieval",
+            "ranking",
+            "Python"
+        ],
+        "note": "We found no evidence for these in what you submitted. If you have this experience, add it to your profile \u2014 this is your chance to correct the record before a human reviews it."
+    },
+    "concerns_flagged": [
+        {
+            "concern": "stale_low_response",
+            "the_two_facts": "stale low response"
+        }
+    ],
+    "public_evidence": null,
+    "your_rights": "You can request this report, dispute anything inaccurate, and a human reviews the final decision. The scoring is deterministic and reproducible."
+}

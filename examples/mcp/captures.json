@@ -1,0 +1,555 @@
+{
+  "initialize": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "protocolVersion": "2024-11-05",
+      "capabilities": {
+        "tools": {},
+        "prompts": {}
+      },
+      "serverInfo": {
+        "name": "talentsignal",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "tools_list": {
+    "tools": [
+      "rank_candidates",
+      "ingest_jd",
+      "screen_resume",
+      "audit_candidate",
+      "candidate_report",
+      "compliance",
+      "explain_ranking",
+      "compare_candidates",
+      "build_interview_kit"
+    ]
+  },
+  "prompts_list": {
+    "prompts": [
+      "shortlist_for_role",
+      "fair_hiring_review",
+      "prep_interview",
+      "explain_to_candidate"
+    ]
+  },
+  "rank_candidates": {
+    "job_title": "Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years.",
+    "job_id": "ingested_jd",
+    "engine": "hybrid",
+    "candidate_count": 3,
+    "elapsed_seconds": 0.131,
+    "api_version": "1.0.0",
+    "notes": [],
+    "requirements": [
+      {
+        "text": "embeddings",
+        "kind": "must_have",
+        "weight": 1.25
+      },
+      {
+        "text": "retrieval",
+        "kind": "must_have",
+        "weight": 1.25
+      },
+      {
+        "text": "ranking",
+        "kind": "must_have",
+        "weight": 1.25
+      },
+      {
+        "text": "Python",
+        "kind": "must_have",
+        "weight": 1.25
+      }
+    ],
+    "ranked": [
+      {
+        "candidate_id": "CAND_A",
+        "rank": 1,
+        "score": 0.381796,
+        "reasoning": "Top of the list (#1). ML Engineer with 7.0 years in location n/a. Has done the real work in ranking, retrieval, owned, and python. Edges out #2 on seniority match.",
+        "title": "ML Engineer",
+        "years": 7.0,
+        "location": "",
+        "factors": {
+          "technical_evidence": 0.5288,
+          "career_fit": 0.583525,
+          "seniority": 1.0,
+          "logistics": 0.15,
+          "behavioral": 0.5,
+          "trust": 0.25,
+          "semantic_fit": 0.4735,
+          "lexical_fit": 0.75,
+          "requirement_coverage": 0.75,
+          "role_relevance": 0.560425,
+          "general_quality": 0.494318
+        },
+        "requirement_matches": [
+          {
+            "requirement": "ranking",
+            "kind": "must_have",
+            "score": 0.0,
+            "dense": 0.0,
+            "lexical": 0.0,
+            "matched_keywords": [
+              "ranking"
+            ],
+            "evidence_span": "ML Engineer owned ranking and retrieval; A/B tested Python Recommendation"
+          },
+          {
+            "requirement": "Python",
+            "kind": "must_have",
+            "score": 0.0,
+            "dense": 0.0,
+            "lexical": 0.0,
+            "matched_keywords": [
+              "python"
+            ],
+            "evidence_span": "ML Engineer owned ranking and retrieval; A/B tested Python Recommendation"
+          },
+          {
+            "requirement": "retrieval",
+            "kind": "must_have",
+            "score": 0.0,
+            "dense": 0.0,
+            "lexical": 0.0,
+            "matched_keywords": [
+              "retrieval"
+            ],
+            "evidence_span": "ML Engineer owned ranking and retrieval; A/B tested Python Recommendation"
+          }
+        ],
+        "risk_flags": [],
+        "top10_eligible": true,
+        "confidence": 0.680213,
+        "cross_encoder_score": 0.0,
+        "reachability_label": "unknown",
+        "reachability_score": 0.5
+      },
+      {
+        "candidate_id": "CAND_B",
+        "rank": 2,
+        "score": 0.0,
+        "reasoning": "#2 — a clear recommendation. AI Expert with 9.0 years in location n/a. Solid track record in embedding, embeddings, ranking, and retrieval. Edges out #3 on production & career evidence. Flags: claims 9.0 years but career tenure sums to 180 months (15.0 years); claims 'expert' skills but has 0 endorsements and no assessment scores.",
+        "title": "AI Expert",
+        "years": 9.0,
+        "location": "",
+        "factors": {
+          "technical_evidence": 0.698,
+          "career_fit": 0.693375,
+          "seniority": 0.88,
+          "logistics": 0.15,
+          "behavioral": 0.5,
+          "trust": 0.25,
+          "semantic_fit": 0.6225,
+          "lexical_fit": 1.0,
+          "requirement_coverage": 1.0,
+          "role_relevance": 0.679875,
+          "general_quality": 0.467045
+        },
+        "requirement_matches": [
+          {
+            "requirement": "ranking",
+            "kind": "must_have",
+            "score": 0.0,
+            "dense": 0.0,
+            "lexical": 0.0,
+            "matched_keywords": [
+              "ranking"
+            ],
+            "evidence_span": "embeddings retrieval ranking python expert AI Lead embeddings Embeddings"
+          },
+          {
+            "requirement": "embeddings",
+            "kind": "must_have",
+            "score": 0.0,
+            "dense": 0.0,
+            "lexical": 0.0,
+            "matched_keywords": [
+              "embeddings"
+            ],
+            "evidence_span": "embeddings retrieval ranking python expert AI Lead embeddings Embeddings"
+          },
+          {
+            "requirement": "retrieval",
+            "kind": "must_have",
+            "score": 0.0,
+            "dense": 0.0,
+            "lexical": 0.0,
+            "matched_keywords": [
+              "retrieval"
+            ],
+            "evidence_span": "embeddings retrieval ranking python expert AI Lead embeddings Embeddings"
+          },
+          {
+            "requirement": "Python",
+            "kind": "must_have",
+            "score": 0.0,
+            "dense": 0.0,
+            "lexical": 0.0,
+            "matched_keywords": [
+              "python"
+            ],
+            "evidence_span": "embeddings retrieval ranking python expert AI Lead embeddings Embeddings"
+          }
+        ],
+        "risk_flags": [
+          {
+            "code": "tenure_exceeds_experience",
+            "detail": "claims 9.0 years but career tenure sums to 180 months (15.0 years)"
+          },
+          {
+            "code": "endorsement_inconsistency",
+            "detail": "claims 'expert' skills but has 0 endorsements and no assessment scores"
+          }
+        ],
+        "top10_eligible": false,
+        "confidence": 0.589938,
+        "cross_encoder_score": 0.0,
+        "reachability_label": "unknown",
+        "reachability_score": 0.5
+      },
+      {
+        "candidate_id": "CAND_C",
+        "rank": 3,
+        "score": 0.0,
+        "reasoning": "Top of the list (#3). Backend Engineer with 6.0 years in location n/a. Adjacent technical signals, but limited direct evidence for the must-haves.",
+        "title": "Backend Engineer",
+        "years": 6.0,
+        "location": "",
+        "factors": {
+          "technical_evidence": 0.0,
+          "career_fit": 0.0,
+          "seniority": 1.0,
+          "logistics": 0.15,
+          "behavioral": 0.5,
+          "trust": 0.25,
+          "semantic_fit": 0.0,
+          "lexical_fit": 0.0,
+          "requirement_coverage": 0.0,
+          "role_relevance": 0.0,
+          "general_quality": 0.494318
+        },
+        "requirement_matches": [],
+        "risk_flags": [],
+        "top10_eligible": false,
+        "confidence": 0.1,
+        "cross_encoder_score": 0.0,
+        "reachability_label": "unknown",
+        "reachability_score": 0.5
+      }
+    ]
+  },
+  "ingest_jd": {
+    "title": "Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years.",
+    "min_years": 5.0,
+    "max_years": 9.0,
+    "preferred_locations": [],
+    "requirements": [
+      {
+        "text": "embeddings",
+        "kind": "must_have",
+        "weight": 1.25,
+        "keywords": [
+          "embeddings"
+        ]
+      },
+      {
+        "text": "retrieval",
+        "kind": "must_have",
+        "weight": 1.25,
+        "keywords": [
+          "retrieval"
+        ]
+      },
+      {
+        "text": "ranking",
+        "kind": "must_have",
+        "weight": 1.25,
+        "keywords": [
+          "ranking"
+        ]
+      },
+      {
+        "text": "Python",
+        "kind": "must_have",
+        "weight": 1.25,
+        "keywords": [
+          "python"
+        ]
+      }
+    ]
+  },
+  "screen_resume": {
+    "candidate_id": "CAND_750318634010152",
+    "profile": {
+      "anonymized_name": "Candidate",
+      "headline": "ML Engineer",
+      "summary": "Asha - ML Engineer, 7 yrs. Ranking, retrieval. Python.",
+      "location": "",
+      "country": "",
+      "years_of_experience": 0.0,
+      "current_title": "ML Engineer",
+      "current_company": "",
+      "current_company_size": "51-200",
+      "current_industry": ""
+    },
+    "career_history": [
+      {
+        "title": "ML Engineer",
+        "company": "",
+        "description": "Asha - ML Engineer, 7 yrs. Ranking, retrieval. Python.",
+        "start_date": "",
+        "end_date": null,
+        "is_current": true,
+        "duration_months": 0,
+        "industry": "",
+        "company_size": "51-200"
+      }
+    ],
+    "education": [],
+    "skills": [
+      {
+        "name": "Python",
+        "proficiency": "intermediate",
+        "endorsements": 0,
+        "duration_months": 12
+      },
+      {
+        "name": "Ranking",
+        "proficiency": "intermediate",
+        "endorsements": 0,
+        "duration_months": 12
+      }
+    ],
+    "redrob_signals": {
+      "profile_completeness_score": 84,
+      "verified_email": false
+    },
+    "_ingest": {
+      "source": "resume:local",
+      "confidence": 0.68
+    }
+  },
+  "audit_candidate": {
+    "is_impossible": true,
+    "penalty": 0.38,
+    "flags": [
+      {
+        "code": "tenure_exceeds_experience",
+        "detail": "claims 9.0 years but career tenure sums to 180 months (15.0 years)"
+      },
+      {
+        "code": "endorsement_inconsistency",
+        "detail": "claims 'expert' skills but has 0 endorsements and no assessment scores"
+      }
+    ]
+  },
+  "candidate_report": {
+    "disclosure": "This report shows everything the ranking engine used and concluded about you. It used ONLY the information you provided — no scraped or third-party data. A human reviewer makes the final decision; you are not auto-rejected.",
+    "data_used": {
+      "source": "only the profile/resume you submitted",
+      "fields_considered": [
+        "career history",
+        "skills",
+        "summary",
+        "stated experience",
+        "availability signals (if provided)"
+      ],
+      "identity_used": "none — the engine never reads your name or identity (name-swap score change = 0.0)"
+    },
+    "result": {
+      "fit_score": 0.383945,
+      "title_read": "ML Engineer",
+      "years_read": 7.0,
+      "requirement_coverage": 0.75,
+      "factor_breakdown": {
+        "technical_evidence": 0.425,
+        "career_fit": 0.66,
+        "seniority": 1.0,
+        "logistics": 0.15,
+        "behavioral": 0.5,
+        "trust": 0.0,
+        "semantic_fit": 0.0,
+        "lexical_fit": 0.0,
+        "requirement_coverage": 0.75,
+        "role_relevance": 0.6375,
+        "general_quality": 0.454545
+      },
+      "reasoning": "Top of the list (#1). ML Engineer with 7.0 years in location n/a. Has done the real work in ranking, retrieval, and owned."
+    },
+    "matched_with_proof": [],
+    "not_evidenced": {
+      "requirements": [
+        "embeddings",
+        "retrieval",
+        "ranking",
+        "Python"
+      ],
+      "note": "We found no evidence for these in what you submitted. If you have this experience, add it to your profile — this is your chance to correct the record before a human reviews it."
+    },
+    "concerns_flagged": [
+      {
+        "concern": "stale_low_response",
+        "the_two_facts": "stale low response"
+      }
+    ],
+    "public_evidence": null,
+    "your_rights": "You can request this report, dispute anything inaccurate, and a human reviews the final decision. The scoring is deterministic and reproducible."
+  },
+  "compliance": {
+    "top_k": 2,
+    "overall_passes_four_fifths": null,
+    "assessed_attributes": [],
+    "attributes": {
+      "group": {
+        "attribute": "group",
+        "top_k": 2,
+        "groups": [
+          {
+            "group": "F",
+            "selected": 1,
+            "total": 2,
+            "selection_rate": 0.5,
+            "impact_ratio": 0.0
+          },
+          {
+            "group": "M",
+            "selected": 1,
+            "total": 2,
+            "selection_rate": 0.5,
+            "impact_ratio": 0.0
+          }
+        ],
+        "min_impact_ratio": null,
+        "passes_four_fifths_rule": null,
+        "assessed": false,
+        "notes": [
+          "groups with <5 members excluded from the ratio (too small to be statistically meaningful): F, M",
+          "not assessed — need at least 2 groups with >=5 members for a four-fifths analysis"
+        ]
+      }
+    },
+    "method": "EEOC Uniform Guidelines four-fifths (80%) rule",
+    "engine_property": "identity-blind by construction (scores never read name/identity; name-swap score delta = 0.0)"
+  },
+  "explain_ranking": {
+    "explanations": [
+      {
+        "rank": 1,
+        "candidate_id": "CAND_A",
+        "score": 0.383945,
+        "reasoning": "Top of the list (#1). ML Engineer with 7.0 years in location n/a. Has done the real work in ranking, retrieval, and owned. Edges out #2 on production & career evidence."
+      },
+      {
+        "rank": 2,
+        "candidate_id": "CAND_B",
+        "score": 0.0,
+        "reasoning": "#2 — a clear recommendation. AI Expert with 9.0 years in location n/a. Has actually shipped embedding and embeddings, which is exactly what the role turns on."
+      }
+    ]
+  },
+  "compare_candidates": {
+    "left_candidate_id": "CAND_A",
+    "right_candidate_id": "CAND_C",
+    "left_rank": 1,
+    "right_rank": 3,
+    "left_score": "0.449910",
+    "right_score": "0.000000",
+    "score_delta": 0.44991,
+    "factor_deltas": [
+      {
+        "factor": "technical_evidence",
+        "label": "Skills",
+        "left": 0.66,
+        "right": 0.0,
+        "delta": 0.66
+      },
+      {
+        "factor": "confidence",
+        "label": "Strength of evidence",
+        "left": 0.725313,
+        "right": 0.1,
+        "delta": 0.625313
+      },
+      {
+        "factor": "career_fit",
+        "label": "Experience",
+        "left": 0.608125,
+        "right": 0.0,
+        "delta": 0.608125
+      },
+      {
+        "factor": "seniority",
+        "label": "Seniority",
+        "left": 1.0,
+        "right": 1.0,
+        "delta": 0.0
+      },
+      {
+        "factor": "logistics",
+        "label": "Location & logistics",
+        "left": 0.15,
+        "right": 0.15,
+        "delta": 0.0
+      },
+      {
+        "factor": "behavioral",
+        "label": "Availability",
+        "left": 0.5,
+        "right": 0.5,
+        "delta": 0.0
+      },
+      {
+        "factor": "trust",
+        "label": "Credibility",
+        "left": 0.25,
+        "right": 0.25,
+        "delta": 0.0
+      }
+    ],
+    "left_strongest_factor": {
+      "factor": "seniority",
+      "label": "Seniority",
+      "value": 1.0
+    },
+    "right_strongest_factor": {
+      "factor": "seniority",
+      "label": "Seniority",
+      "value": 1.0
+    },
+    "recommendation": "#1 stays ahead of #3: the biggest gap is skills, and the rest of the scorecard points the same way."
+  },
+  "build_interview_kit": {
+    "candidate_id": "CAND_A",
+    "rank": 1,
+    "job_title": "Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years.",
+    "focus": "Validate CAND_A against Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years. using evidence, weak areas, and risk signals.",
+    "questions": [
+      {
+        "type": "technical_or_functional_depth",
+        "question": "Walk through the most relevant work behind ranking, retrieval. What was your role, what tradeoffs did you make, and how did you measure success?"
+      },
+      {
+        "type": "production_or_execution_validation",
+        "question": "Describe a shipped system or business outcome connected to owned. What broke, what did you monitor, and what changed after launch?"
+      },
+      {
+        "type": "weak_area_probe",
+        "question": "The weakest current factor is Location & logistics at 0.150. What evidence should the hiring team use to validate or override this concern?"
+      },
+      {
+        "type": "role_commitment",
+        "question": "Why is this Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years. role the right next move, and what would you ship in the first 90 days?"
+      }
+    ],
+    "decision_rubric": [
+      "Hire only if the candidate can explain concrete shipped work behind the strongest evidence terms.",
+      "Downgrade if examples stay generic or cannot connect profile claims to outcomes.",
+      "Use weak-factor and risk answers to decide whether the ranking should stand."
+    ]
+  }
+}

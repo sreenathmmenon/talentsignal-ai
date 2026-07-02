@@ -1,0 +1,136 @@
+{
+    "job_title": "Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years.",
+    "job_id": "ingested_jd",
+    "engine": "hybrid",
+    "candidate_count": 2,
+    "elapsed_seconds": 0.249,
+    "api_version": "1.0.0",
+    "notes": [],
+    "requirements": [
+        {
+            "text": "embeddings",
+            "kind": "must_have",
+            "weight": 1.25
+        },
+        {
+            "text": "retrieval",
+            "kind": "must_have",
+            "weight": 1.25
+        },
+        {
+            "text": "ranking",
+            "kind": "must_have",
+            "weight": 1.25
+        },
+        {
+            "text": "Python",
+            "kind": "must_have",
+            "weight": 1.25
+        }
+    ],
+    "ranked": [
+        {
+            "candidate_id": "CAND_0000001",
+            "rank": 1,
+            "score": 0.520701,
+            "reasoning": "Top of the list (#1). ML Engineer with 7.0 years in location n/a. Deep evidence for ranking, retrieval, owned, and production; this is the heart of the job. Edges out #2 on production & career evidence.",
+            "title": "ML Engineer",
+            "years": 7.0,
+            "location": "",
+            "factors": {
+                "technical_evidence": 0.73536,
+                "career_fit": 0.75038,
+                "seniority": 1.0,
+                "logistics": 0.15,
+                "behavioral": 0.5,
+                "trust": 0.25,
+                "semantic_fit": 0.6692,
+                "lexical_fit": 1.0,
+                "requirement_coverage": 1.0,
+                "role_relevance": 0.74306,
+                "general_quality": 0.494318
+            },
+            "requirement_matches": [
+                {
+                    "requirement": "ranking",
+                    "kind": "must_have",
+                    "score": 0.0,
+                    "dense": 0.0,
+                    "lexical": 0.0,
+                    "matched_keywords": [
+                        "ranking"
+                    ],
+                    "evidence_span": "Python Ranking Embeddings"
+                },
+                {
+                    "requirement": "embeddings",
+                    "kind": "must_have",
+                    "score": 0.0,
+                    "dense": 0.0,
+                    "lexical": 0.0,
+                    "matched_keywords": [
+                        "embeddings"
+                    ],
+                    "evidence_span": "Python Ranking Embeddings"
+                },
+                {
+                    "requirement": "retrieval",
+                    "kind": "must_have",
+                    "score": 0.0,
+                    "dense": 0.0,
+                    "lexical": 0.0,
+                    "matched_keywords": [
+                        "retrieval"
+                    ],
+                    "evidence_span": "Built embeddings-based retrieval and ranking in Python."
+                },
+                {
+                    "requirement": "Python",
+                    "kind": "must_have",
+                    "score": 0.0,
+                    "dense": 0.0,
+                    "lexical": 0.0,
+                    "matched_keywords": [
+                        "python"
+                    ],
+                    "evidence_span": "Python Ranking Embeddings"
+                }
+            ],
+            "risk_flags": [],
+            "top10_eligible": true,
+            "confidence": 0.82153,
+            "cross_encoder_score": 0.0,
+            "reachability_label": "unknown",
+            "reachability_score": 0.5
+        },
+        {
+            "candidate_id": "CAND_0000002",
+            "rank": 2,
+            "score": 0.0,
+            "reasoning": "#2 \u2014 a clear recommendation. Backend Engineer with 6.0 years in location n/a. Adjacent technical signals, but limited direct evidence for the must-haves.",
+            "title": "Backend Engineer",
+            "years": 6.0,
+            "location": "",
+            "factors": {
+                "technical_evidence": 0.0,
+                "career_fit": 0.0,
+                "seniority": 1.0,
+                "logistics": 0.15,
+                "behavioral": 0.5,
+                "trust": 0.25,
+                "semantic_fit": 0.0,
+                "lexical_fit": 0.0,
+                "requirement_coverage": 0.0,
+                "role_relevance": 0.0,
+                "general_quality": 0.494318
+            },
+            "requirement_matches": [],
+            "risk_flags": [],
+            "top10_eligible": false,
+            "confidence": 0.1,
+            "cross_encoder_score": 0.0,
+            "reachability_label": "unknown",
+            "reachability_score": 0.5
+        }
+    ]
+}

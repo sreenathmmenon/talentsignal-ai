@@ -1,0 +1,28 @@
+{
+    "title": "Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years.",
+    "min_years": 5.0,
+    "max_years": 9.0,
+    "preferred_locations": [],
+    "requirements": [
+        {
+            "text": "embeddings",
+            "kind": "must_have",
+            "weight": 1.25
+        },
+        {
+            "text": "retrieval",
+            "kind": "must_have",
+            "weight": 1.25
+        },
+        {
+            "text": "ranking",
+            "kind": "must_have",
+            "weight": 1.25
+        },
+        {
+            "text": "Python",
+            "kind": "must_have",
+            "weight": 1.25
+        }
+    ]
+}

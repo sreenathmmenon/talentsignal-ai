@@ -1,0 +1,14 @@
+{
+    "is_impossible": true,
+    "penalty": 0.38,
+    "flags": [
+        {
+            "code": "tenure_exceeds_experience",
+            "detail": "claims 4.0 years but career tenure sums to 180 months (15.0 years)"
+        },
+        {
+            "code": "endorsement_inconsistency",
+            "detail": "claims 'expert' skills but has 0 endorsements and no assessment scores"
+        }
+    ]
+}

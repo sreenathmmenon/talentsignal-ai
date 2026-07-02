@@ -1,0 +1,36 @@
+{
+    "top_k": 2,
+    "overall_passes_four_fifths": null,
+    "assessed_attributes": [],
+    "attributes": {
+        "gender": {
+            "attribute": "gender",
+            "top_k": 2,
+            "groups": [
+                {
+                    "group": "F",
+                    "selected": 1,
+                    "total": 2,
+                    "selection_rate": 0.5,
+                    "impact_ratio": 0.0
+                },
+                {
+                    "group": "M",
+                    "selected": 1,
+                    "total": 2,
+                    "selection_rate": 0.5,
+                    "impact_ratio": 0.0
+                }
+            ],
+            "min_impact_ratio": null,
+            "passes_four_fifths_rule": null,
+            "assessed": false,
+            "notes": [
+                "groups with <5 members excluded from the ratio (too small to be statistically meaningful): F, M",
+                "not assessed \u2014 need at least 2 groups with >=5 members for a four-fifths analysis"
+            ]
+        }
+    },
+    "method": "EEOC Uniform Guidelines four-fifths (80%) rule",
+    "engine_property": "identity-blind by construction (scores never read name/identity; name-swap score delta = 0.0)"
+}

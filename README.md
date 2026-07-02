@@ -35,6 +35,8 @@ Reproduces, on the organizers' own 100K, the three core claims with their source
 6. **Extensible.** A signal-plugin framework means new intelligence (background verification, GitHub-repo analysis) is added without touching the core.
 
 ## Surfaces (quickstart)
+> **Live examples + validators:** see [`examples/`](examples/) — captured real request/response pairs for every REST endpoint and all 9 MCP tools, plus one-command validators (`bash examples/rest/validate_rest.sh`, `python3 examples/mcp/validate_mcp.py`) and a Claude Desktop config.
+
 
 ```bash
 # Studio — the product UI: upload any JD + resumes, see a ranked explainable shortlist

@@ -1,0 +1,8 @@
+{
+  "jd": "Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years.",
+  "candidates": [
+    {"candidate_id":"CAND_0000001","profile":{"current_title":"ML Engineer","years_of_experience":7,"summary":"Built embeddings-based retrieval and ranking in Python."},"career_history":[{"title":"ML Engineer","description":"Owned ranking + retrieval; shipped to production."}],"skills":["Python","Ranking","Embeddings"]},
+    {"candidate_id":"CAND_0000002","profile":{"current_title":"Backend Engineer","years_of_experience":6,"summary":"Java microservices"},"career_history":[{"title":"Backend","description":"java services"}],"skills":["Java"]}
+  ],
+  "top_n": 2
+}
