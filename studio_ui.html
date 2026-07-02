@@ -197,6 +197,7 @@ textarea:focus,select:focus,input:focus{outline:none; border-color:var(--violet)
 .hero2-aurora{position:absolute;width:480px;height:480px;right:-120px;top:-160px;border-radius:50%;
   background:var(--aurora-conic);filter:blur(60px);opacity:.34;animation:spin 20s linear infinite;z-index:0}
 .hero2 > *{position:relative;z-index:1}
+.hero2 > .hero2-aurora{position:absolute}  /* keep the aurora out of flow (was pushing content ~480px down) */
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;
   letter-spacing:.08em;text-transform:uppercase;color:var(--cyan-bright);margin-bottom:20px}
 .eyebrow .ic{color:var(--violet-bright)}
@@ -218,6 +219,9 @@ textarea:focus,select:focus,input:focus{outline:none; border-color:var(--violet)
   font-size:13.5px;color:var(--ink-soft);transition:opacity .4s}
 .proof-ticker .r{font-family:var(--mono);font-size:12px;color:var(--cyan);display:block;margin-top:5px}
 .hero-ctas{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:24px}
+.big-cta{font-size:18px!important;padding:18px 34px!important;font-weight:700;
+  box-shadow:0 8px 30px rgba(139,92,246,.45);animation:ctapulse 2.4s ease-in-out infinite}
+@keyframes ctapulse{0%,100%{box-shadow:0 8px 30px rgba(139,92,246,.35)}50%{box-shadow:0 8px 44px rgba(139,92,246,.6)}}
 .hero-go{width:auto;padding:14px 22px;display:inline-flex;align-items:center;gap:9px}
 .go-ghost{appearance:none;background:transparent;border:1px solid var(--line-strong);color:var(--ink-soft);
   font-family:var(--sans);font-weight:600;font-size:14px;padding:14px 20px;border-radius:var(--r-md);cursor:pointer;transition:.2s}
@@ -226,6 +230,19 @@ textarea:focus,select:focus,input:focus{outline:none; border-color:var(--violet)
 .schip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;
   padding:5px 11px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft)}
 .empty{align-items:start;min-height:auto;padding-top:8px}
+/* LANDING mode: form hidden, hero centered + pulled to the top so the headline and the
+   big "Watch it rank" CTA are the FIRST things a judge sees (above the fold). */
+.app.wide{padding-top:10px;align-items:start}
+.app.wide #results{align-self:start}
+.app.wide #empty{display:flex!important;flex-direction:column;justify-content:flex-start!important;
+  align-items:center!important;min-height:auto!important;height:auto!important;padding-top:0}
+.app.wide #empty .hero2{max-width:840px;text-align:center;margin:0 auto;padding-top:0}
+.app.wide #empty .hero2-aurora{top:-80px;right:auto;left:50%;transform:translateX(-50%);opacity:.22}
+.app.wide #empty .eyebrow{margin-bottom:12px}
+.app.wide #empty .display{margin:0 0 20px}
+.app.wide #empty .hero-ctas{justify-content:center;margin-bottom:14px}
+.app.wide #empty .surfaces{justify-content:center}
+.app.wide #empty .kpis2{max-width:720px;margin:0 auto 20px}
 /* ---- rescued-by-meaning callout + action hint on a result ---- */
 .rescue-callout{display:flex;align-items:flex-start;gap:11px;margin:0 0 12px;padding:13px 16px;
   border-radius:var(--r-md);border:1px solid var(--line-glow);
@@ -418,6 +435,10 @@ We will not move forward with keyword-only AI experience or research with no pro
         <div class="hero2-aurora"></div>
         <div class="eyebrow"><svg class="ic"><use href="#i-sparkle"/></svg> Live hiring intelligence · proven on 100,000 real candidates</div>
         <h1 class="display">Find the people the<br><span class="shine">keyword search will miss.</span></h1>
+        <div class="hero-ctas">
+          <button class="go hero-go big-cta" onclick="seeItWork()">▶ Watch it rank — live, in one click</button>
+        </div>
+        <div class="hero-hint muted" style="font-size:13px;margin-top:-12px;margin-bottom:22px">No setup — we've pre-loaded a real role and candidates (including one a keyword search would miss). Or <a href="#" onclick="showForm();return false" style="color:var(--cyan-bright)">try your own résumés</a> · <a href="#" onclick="switchView('challenge');return false" style="color:var(--cyan-bright)">see the real 100,000</a>.</div>
         <div class="kpis2">
           <div class="kpi2 big-kpi"><div class="n num grad" data-count="28" data-suffix="%">0%</div><div class="bar"><i id="rbar"></i></div><div class="l">of our top hires are people a keyword search never surfaces</div></div>
           <div class="kpi2"><div class="n num" data-count="100000" data-fmt="1">0</div><div class="l">candidates ranked in minutes — on one laptop, no cloud</div></div>
@@ -426,11 +447,6 @@ We will not move forward with keyword-only AI experience or research with no pro
           <div class="kpi2"><div class="n"><svg class="ic"><use href="#i-check"/></svg> Every call</div><div class="l">explained in the candidate's own words</div></div>
         </div>
         <div class="proof-ticker" id="ticker"></div>
-        <div class="hero-ctas">
-          <button class="go hero-go" onclick="seeItWork()">See it rank — live, right now <svg class="ic"><use href="#i-arrow"/></svg></button>
-          <button class="go-ghost" onclick="switchView('challenge')">Or see the real 100,000</button>
-        </div>
-        <div class="hero-hint muted" style="font-size:12.5px;margin-top:-14px">One click — we've pre-loaded a real role and a few candidates (including one a keyword search would miss). No setup.</div>
         <div class="surfaces"><span class="muted">Use it your way:</span>
           <span class="schip"><svg class="ic"><use href="#i-lens"/></svg> this app</span>
           <span class="schip">in your ATS (API)</span>
@@ -515,12 +531,22 @@ function skillsMatchPanel(sm){
   </div>`;}
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 
+let formShown=false;  // landing starts with the form HIDDEN — hero + one big CTA only
+function showForm(){
+  formShown=true;
+  $('leftcol').style.display='flex';
+  $('app').classList.remove('wide');
+  $('jd').scrollIntoView({behavior:'smooth'});
+}
 function switchView(v){
   view=v;
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
-  const usesControls=(v==='rank'||v==='transparency');
-  $('leftcol').style.display=usesControls?'flex':'none';
-  $('app').classList.toggle('wide',!usesControls);
+  // On the landing (rank) view, keep the form hidden + hero full-width until the user
+  // asks for it — so a judge lands on the demo, not a data-entry form.
+  const showControls=(v==='transparency') || (v==='rank' && formShown);
+  $('leftcol').style.display=showControls?'flex':'none';
+  $('app').classList.toggle('wide',!showControls);
+  if(v==='transparency')formShown=true;   // transparency needs the input
   $('go').textContent=v==='transparency'?'Explain this candidate →':'Rank these candidates →';
   $('go').setAttribute('onclick',v==='transparency'?'runTransparency()':'runRank()');
   if(v==='challenge')loadChallenge();
@@ -560,8 +586,9 @@ Backend Engineer, 6 years, Chennai
 Java microservices and SQL databases at an enterprise firm. No ML experience.
 Skills: Java, SQL, Spring`;
 async function seeItWork(){
-  // fill the inputs so the user sees what was ranked, then run it
-  if($('jd') && !$('jd').value.trim()) {/* keep the pre-filled JD */}
+  // reveal the form (so the judge sees the JD + candidates that get ranked), fill the
+  // demo candidates, and run — one click, zero typing.
+  showForm();
   $('paste').value=DEMO_PASTE;
   if($('topn'))$('topn').value='10';
   await runRank();
@@ -851,9 +878,13 @@ function renderCapabilities(){
 }
 // animate the proof hero on first load
 initHero();
+// LANDING: hide the input form + go full-width hero so a judge lands on the demo,
+// not a data-entry form. The form appears when they click "try your own" or run the demo.
+$('leftcol').style.display='none';
+$('app').classList.add('wide');
 // deep-link: ?view=challenge opens that tab on load
 (function(){const v=new URLSearchParams(location.search).get('view');
-  if(v&&['rank','transparency','challenge','whatsnew','capabilities'].includes(v))switchView(v);})();
+  if(v&&['rank','transparency','challenge','whatsnew','capabilities'].includes(v)){formShown=true;switchView(v);}})();
 </script>
 </body>
 </html>
