@@ -423,7 +423,11 @@ def handle(request: dict) -> dict | None:
             "capabilities": {"tools": {}, "prompts": {}},
             "serverInfo": SERVER_INFO,
         })
-    if method == "notifications/initialized":
+    if method == "ping":
+        # standard MCP keepalive — respond with an empty result
+        return _result(req_id, {})
+    if method and method.startswith("notifications/"):
+        # notifications (initialized, cancelled, progress, …) get no response
         return None
     if method == "tools/list":
         return _result(req_id, {"tools": TOOLS})
@@ -438,19 +442,73 @@ def handle(request: dict) -> dict | None:
     if method == "tools/call":
         params = request.get("params", {})
         name = params.get("name")
-        args = params.get("arguments", {})
+        args = params.get("arguments") or {}
         fn = TOOL_FUNCS.get(name)
         if fn is None:
             return _error(req_id, -32601, f"unknown tool: {name}")
+        # Validate inputs and return a FRIENDLY, agent-readable error (isError result)
+        # instead of a raw Python exception — so an agent can read it and self-correct.
+        problem = _validate_args(name, args)
+        if problem:
+            return _tool_error(req_id, problem)
         try:
             result = fn(args)
             return _result(req_id, {"content": [{"type": "text",
                                                   "text": json.dumps(result, ensure_ascii=False)}]})
-        except Exception as exc:  # noqa: BLE001
-            return _error(req_id, -32000, f"{type(exc).__name__}: {exc}")
+        except (KeyError, ValueError, TypeError) as exc:
+            # user-input-shaped failures -> readable tool error, not a protocol crash
+            return _tool_error(req_id, f"invalid input to {name}: {exc}")
+        except Exception as exc:  # noqa: BLE001 - unexpected: still don't crash the server
+            return _tool_error(req_id, f"{name} failed: {type(exc).__name__}: {exc}")
     if req_id is not None:
         return _error(req_id, -32601, f"unknown method: {method}")
     return None
+
+
+_SCHEMA_BY_TOOL = {t["name"]: t["inputSchema"] for t in TOOLS}
+
+# JSON-schema type -> python types, for coercion-friendly validation.
+_PYTYPE = {"string": str, "integer": int, "number": (int, float), "boolean": bool,
+           "array": list, "object": dict}
+
+
+def _validate_args(name: str, args: dict) -> str | None:
+    """Schema-driven input validation (reads each tool's own inputSchema — no
+    per-tool hardcoding). Returns a friendly problem string, or None if OK."""
+    if not isinstance(args, dict):
+        return "arguments must be a JSON object"
+    schema = _SCHEMA_BY_TOOL.get(name, {})
+    props = schema.get("properties", {})
+    for req in schema.get("required", []):
+        if req not in args or args[req] is None:
+            return (f"'{req}' is required. This tool needs: "
+                    f"{', '.join(schema.get('required', [])) or '(none)'}.")
+    for key, val in args.items():
+        spec = props.get(key)
+        if not spec or val is None:
+            continue
+        allowed = spec.get("type")
+        types = allowed if isinstance(allowed, list) else [allowed]
+        py = tuple(t for jt in types for t in ((_PYTYPE.get(jt),) if not isinstance(_PYTYPE.get(jt), tuple) else _PYTYPE[jt]) if t)
+        # accept numeric strings for integer fields (agents often send "5")
+        if py and int in py and isinstance(val, str) and val.strip().lstrip("-").isdigit():
+            continue
+        if py and not isinstance(val, py):
+            return (f"'{key}' should be {' or '.join(types)}, got "
+                    f"{type(val).__name__}.")
+    # a couple of high-value semantic checks agents trip on
+    if "candidates" in props and isinstance(args.get("candidates"), list) and not args["candidates"]:
+        return "'candidates' is empty — provide at least one candidate record or résumé text."
+    return None
+
+
+def _tool_error(req_id, message: str) -> dict:
+    """A tool-level error the AGENT can read and act on (isError result), rather
+    than a JSON-RPC protocol error that surfaces as an opaque failure."""
+    return _result(req_id, {
+        "isError": True,
+        "content": [{"type": "text", "text": json.dumps({"error": message})}],
+    })
 
 
 def _result(req_id, result) -> dict:

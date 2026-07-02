@@ -101,3 +101,53 @@ def test_unknown_tool_errors():
     r = M.handle({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
                   "params": {"name": "does_not_exist", "arguments": {}}})
     assert "error" in r
+
+
+def _raw(name, args):
+    """tools/call returning the raw result dict (may be an isError result)."""
+    return M.handle({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
+                     "params": {"name": name, "arguments": args}})["result"]
+
+
+def test_ping_supported():
+    r = M.handle({"jsonrpc": "2.0", "id": 1, "method": "ping"})
+    assert r["result"] == {}
+
+
+def test_missing_required_arg_returns_friendly_iserror():
+    res = _raw("rank_candidates", {"jd": "AI Engineer"})   # no candidates
+    assert res.get("isError") is True
+    msg = json.loads(res["content"][0]["text"])["error"]
+    assert "candidates" in msg and "required" in msg
+
+
+def test_empty_candidates_list_is_friendly():
+    res = _raw("rank_candidates", {"jd": "AI", "candidates": []})
+    assert res.get("isError") and "empty" in json.loads(res["content"][0]["text"])["error"]
+
+
+def test_wrong_type_arg_is_friendly():
+    res = _raw("rank_candidates", {"jd": "AI",
+               "candidates": [{"candidate_id": "C1", "profile": {"summary": "x"}}],
+               "top_n": "five"})
+    assert res.get("isError") and "top_n" in json.loads(res["content"][0]["text"])["error"]
+
+
+def test_numeric_string_top_n_accepted():
+    res = _raw("rank_candidates", {"jd": "AI",
+               "candidates": [{"candidate_id": "C1", "profile": {"summary": "ranking"}}],
+               "top_n": "5"})
+    assert not res.get("isError")   # "5" is coerced, not rejected
+
+
+def test_notification_gets_no_response():
+    assert M.handle({"jsonrpc": "2.0", "method": "notifications/cancelled", "params": {}}) is None
+
+
+def test_bad_tool_result_never_raises_protocol_error():
+    # a business failure (rank not in shortlist) comes back as a readable tool result
+    res = _raw("compare_candidates", {"jd": "AI Engineer embeddings ranking 5-9y",
+               "candidates": [{"candidate_id": "C1", "profile": {"summary": "ranking"}, "skills": ["Python"]}],
+               "left_rank": 1, "right_rank": 9})
+    body = json.loads(res["content"][0]["text"])
+    assert "error" in body and "shortlist" in body["error"]
