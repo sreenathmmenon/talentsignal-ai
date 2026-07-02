@@ -74,3 +74,6 @@ clean:
 
 prove:
 	python3 scripts/prove.py
+
+xlsx: ## regenerate the submission XLSX from the validated CSV (stdlib only)
+	python3 scripts/make_xlsx.py

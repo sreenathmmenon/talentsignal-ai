@@ -14,7 +14,13 @@ Built for the Redrob *Intelligent Candidate Discovery & Ranking Challenge* — t
 **Live now (all three surfaces deployed):**
 - Studio UI → https://talentsignal-production.up.railway.app
 - REST API + interactive Swagger docs → https://talentsignal-api-production.up.railway.app/docs
-- MCP server → `python mcp_server.py` (9 tools + 4 hiring-workflow prompts; connects to Claude Desktop)
+- MCP server → `python mcp_server.py` (9 tools + 4 hiring-workflow prompts; connects to Claude Desktop over local stdio, the standard MCP transport)
+
+**Submission artifacts** (the ranked top-100, produced by the `hybrid` engine — identical content in both formats):
+- [`outputs/final_submission.csv`](outputs/final_submission.csv) — passes the official validator; the byte-identical target of `make reproduce`.
+- [`outputs/final_submission.xlsx`](outputs/final_submission.xlsx) — same 4 columns (`candidate_id, rank, score, reasoning`), 100 rows; the XLSX the submission portal asks for.
+
+Both are the **same ranking** from the same one engine — see [Reproduce Final Submission](#reproduce-final-submission).
 
 ### Verify the headline claims yourself (~1 min)
 
@@ -159,6 +165,12 @@ diff outputs/repro_submission.csv outputs/final_submission.csv   # must be ident
 ```
 
 If the index is an un-pulled LFS pointer, the hybrid engine aborts with an actionable `git lfs pull` message (it will not silently produce a different ranking). The zero-dependency `spine` engine — omit `--engine`/`--index-dir` — produces a different, also-valid top-100 without the embedding index.
+
+The **XLSX** the portal asks for is generated deterministically from that CSV (stdlib only, same 4 columns, never hand-edited):
+
+```bash
+python3 scripts/make_xlsx.py   # outputs/final_submission.csv -> outputs/final_submission.xlsx
+```
 
 This also writes:
 
