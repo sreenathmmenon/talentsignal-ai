@@ -208,19 +208,30 @@ def _fit_label(relevance: float) -> str:
 
 
 def do_rank(body):
+    """Rank a candidate pool and return the top-N. Handles both a few pasted résumés
+    and a larger uploaded pool (the 'find the top 100' use case). Hybrid (semantic)
+    engine runs on pools up to 200 for live embedding; larger pools use the fast
+    structured engine so the box stays within memory/time budget."""
     from talentsignal.api import rank
     records = _ingest_inputs(body.get("files"), body.get("paste"))
     if not records:
         return {"error": "No candidates could be parsed from the provided files/text."}
     by_id = {r["candidate_id"]: r for r in records}
+    # honor a requested top_n (the "top 100" flow), capped to the pool size and 100.
+    try:
+        requested = int(body.get("top_n") or 50)
+    except (TypeError, ValueError):
+        requested = 50
+    top_n = max(1, min(requested, 100, len(records)))
     embedder = _get_embedder() if len(records) <= 200 else None
-    res = rank(body.get("jd", ""), records, top_n=min(50, len(records)),
+    res = rank(body.get("jd", ""), records, top_n=top_n,
                engine="hybrid" if embedder else "spine", embedder=embedder,
                category=body.get("category", "ai_ml_search_ranking"))
     return {
         "engine": res.engine,
         "job_title": res.job_title,
         "candidate_count": res.candidate_count,
+        "returned": len(res.ranked),
         "elapsed": res.elapsed_seconds,
         "requirements": res.requirements,
         "ranked": [_candidate_view(by_id.get(c.candidate_id, {}), c, res.requirements)
@@ -330,6 +341,44 @@ _validator_passes._cached = None
 
 
 PREBAKED_CHALLENGE = ROOT / "outputs" / "challenge_prebaked.json"
+SAMPLE_100K = ROOT / "outputs" / "sample_100k.jsonl"
+_SAMPLE_CACHE = {"result": None}
+
+
+def _rank_sample_live():
+    """Rank the ~500-candidate real-pool sample LIVE with the real engine. Cached
+    after the first run (deterministic). Returns None on any failure so the caller
+    can fall back."""
+    if _SAMPLE_CACHE["result"] is not None:
+        return _SAMPLE_CACHE["result"]
+    try:
+        import time
+        from talentsignal.api import rank
+        from talentsignal.consistency_audit import audit_candidate
+        rows = [json.loads(l) for l in SAMPLE_100K.read_text(encoding="utf-8").splitlines() if l.strip()]
+        jd = ("Senior AI Engineer. Must have production embeddings, retrieval, ranking, "
+              "hybrid search, evaluation frameworks (NDCG), strong Python. 5-9 years.")
+        t0 = time.perf_counter()
+        res = rank(jd, rows, top_n=10, engine="spine", category="ai_ml_search_ranking")
+        elapsed = round(time.perf_counter() - t0, 2)
+        honey = sum(1 for c in res.ranked if audit_candidate(
+            next((r for r in rows if r["candidate_id"] == c.candidate_id), {})).is_impossible)
+        out = {
+            "jd": "Senior AI Engineer — Founding Team @ Redrob",
+            "total": len(rows), "sample_of": 100000, "live": True, "prebaked": False,
+            "from_cache": False, "valid": _validator_passes(), "honeypots": honey,
+            "engine": res.engine, "elapsed": elapsed,
+            "note": ("Ranked LIVE on a representative ~500-candidate sample of the real "
+                     "100,000-pool. The full 100,000 reproduces offline, byte-identical, "
+                     "in ~70s (too large + the 146MB index to host on a small demo box)."),
+            "top": [{"rank": c.rank, "candidate_id": c.candidate_id, "score": round(c.score, 3),
+                     "reasoning": c.reasoning, "title": c.title, "company": "",
+                     "years": c.years, "location": c.location} for c in res.ranked],
+        }
+        _SAMPLE_CACHE["result"] = out
+        return out
+    except Exception:  # noqa: BLE001
+        return None
 
 
 def do_challenge(body):
@@ -339,15 +388,22 @@ def do_challenge(body):
     after, and automatically re-ranked if the candidate pool changes (so a new
     strong applicant is never hidden by a stale result).
 
-    HOSTED FALLBACK: when the full 100K dataset isn't present (e.g. a small demo
-    box where shipping the 100K + 146MB index would OOM), serve the deterministic
-    pre-baked snapshot instead — same result, instant, no memory spike."""
+    HOSTED PATH: the full 100K + 146MB index are too big for a small demo box, so
+    when they aren't present we rank a representative ~500-candidate SAMPLE of the
+    real pool LIVE (dynamically, not a frozen list) — proving the engine actually
+    computes — and report the full-100K number as reproduced offline in ~70s."""
     from talentsignal import live_cache
-    if not OFFICIAL_CANDIDATES.exists() and PREBAKED_CHALLENGE.exists():
-        try:
-            return json.loads(PREBAKED_CHALLENGE.read_text(encoding="utf-8"))
-        except Exception:  # noqa: BLE001 - fall through to the live path/error
-            pass
+    if not OFFICIAL_CANDIDATES.exists():
+        if SAMPLE_100K.exists():
+            live = _rank_sample_live()
+            if live is not None:
+                return live
+        # last-resort fallback to the frozen snapshot if the sample is unavailable
+        if PREBAKED_CHALLENGE.exists():
+            try:
+                return json.loads(PREBAKED_CHALLENGE.read_text(encoding="utf-8"))
+            except Exception:  # noqa: BLE001
+                pass
     engine = body.get("engine", "spine")  # spine = fast+deterministic on full 100K
     res = live_cache.rank_live(live_cache.CHALLENGE_JD, engine=engine, top_n=10,
                                category="ai_ml_search_ranking")

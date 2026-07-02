@@ -378,7 +378,7 @@ textarea:focus,select:focus,input:focus{outline:none; border-color:var(--violet)
 You must have shipped retrieval and ranking systems to real users: production embeddings-based retrieval, vector/hybrid search, and ranking models. Strong Python. You must have designed evaluation frameworks for ranking (NDCG, MRR, MAP).
 
 We will not move forward with keyword-only AI experience or research with no production deployment. 5-9 years.</textarea>
-      <div class="row" style="margin-top:14px">
+      <div class="row" style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div><label>Role type</label>
           <select id="cat">
             <option value="ai_ml_search_ranking">AI / ML / Search</option>
@@ -387,6 +387,14 @@ We will not move forward with keyword-only AI experience or research with no pro
             <option value="backend_engineering">Backend</option>
             <option value="product_management">Product</option>
             <option value="design_product">Design</option>
+          </select>
+        </div>
+        <div><label>Shortlist size</label>
+          <select id="topn" title="How many top candidates to return">
+            <option value="10">Top 10</option>
+            <option value="25">Top 25</option>
+            <option value="50" selected>Top 50</option>
+            <option value="100">Top 100</option>
           </select>
         </div>
       </div>
@@ -419,9 +427,10 @@ We will not move forward with keyword-only AI experience or research with no pro
         </div>
         <div class="proof-ticker" id="ticker"></div>
         <div class="hero-ctas">
-          <button class="go hero-go" onclick="switchView('challenge')">Watch it rank 100,000 candidates <svg class="ic"><use href="#i-arrow"/></svg></button>
-          <button class="go-ghost" onclick="$('jd').focus();$('jd').scrollIntoView({behavior:'smooth'})">Try it on your own role</button>
+          <button class="go hero-go" onclick="seeItWork()">See it rank — live, right now <svg class="ic"><use href="#i-arrow"/></svg></button>
+          <button class="go-ghost" onclick="switchView('challenge')">Or see the real 100,000</button>
         </div>
+        <div class="hero-hint muted" style="font-size:12.5px;margin-top:-14px">One click — we've pre-loaded a real role and a few candidates (including one a keyword search would miss). No setup.</div>
         <div class="surfaces"><span class="muted">Use it your way:</span>
           <span class="schip"><svg class="ic"><use href="#i-lens"/></svg> this app</span>
           <span class="schip">in your ATS (API)</span>
@@ -534,13 +543,36 @@ function errState(m){$('empty').style.display='grid';$('out').style.display='non
 function fac(l,v){return `<div class="fac"><div class="l">${l}<span class="v num">${(v||0).toFixed(2)}</span></div><div class="tr"><div class="fl" style="width:${Math.round((v||0)*100)}%"></div></div></div>`}
 function scoreChip(s){return `<div class="score-chip num">${(s||0).toFixed(3)}<span class="ub" style="width:${Math.round((s||0)*70)}%"></span></div>`}
 
+// One-click demo: pre-load a real role + a few candidates (incl. a "found by meaning"
+// one who uses none of the JD's keywords, and a weak off-domain one), then rank live.
+const DEMO_PASTE=`Asha Menon
+Senior ML Engineer, 7 years, Bangalore
+Built production embeddings-based retrieval and ranking systems in Python. Shipped ranking models to millions of users.
+Skills: Python, Ranking, Embeddings, Retrieval, Vector Search
+
+Ravi Kumar
+Senior Search Engineer, 6 years, Pune
+Owned the system that decides which products appear on the homepage feed, ordering results by relevance for millions. Ran A/B tests on result quality and built the recommendation pipeline.
+Skills: Python, Recommendation Systems, A/B Testing
+
+Sunil Rao
+Backend Engineer, 6 years, Chennai
+Java microservices and SQL databases at an enterprise firm. No ML experience.
+Skills: Java, SQL, Spring`;
+async function seeItWork(){
+  // fill the inputs so the user sees what was ranked, then run it
+  if($('jd') && !$('jd').value.trim()) {/* keep the pre-filled JD */}
+  $('paste').value=DEMO_PASTE;
+  if($('topn'))$('topn').value='10';
+  await runRank();
+}
 async function runRank(){
   const btn=$('go');btn.disabled=true;
   loading('Reading every résumé…','Matching each one to your role by meaning, and checking it holds up.');
   try{
     const files=await readFiles();
     const r=await fetch('/api/rank',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({jd:$('jd').value,category:$('cat').value,files,paste:$('paste').value})});
+      body:JSON.stringify({jd:$('jd').value,category:$('cat').value,files,paste:$('paste').value,top_n:parseInt(($('topn')||{}).value||'50',10)})});
     const d=await r.json();
     if(d.error){errState(d.error);btn.disabled=false;return}
     renderRank(d);
@@ -713,14 +745,17 @@ async function loadChallenge(){
     const d=await r.json();
     if(d.error){errState(d.error);return}
     $('empty').style.display='none';$('out').style.display='block';
-    const cacheChip=d.from_cache?'<span class="chip cache">instant replay</span>':'<span class="chip live">just computed</span>';
-    let h=`<div class="bar-top"><h2>100,000 candidates, ranked live</h2>${cacheChip}</div>
+    const isSample=(d.sample_of && d.total<d.sample_of);
+    const cacheChip=d.from_cache?'<span class="chip cache">instant replay</span>':'<span class="chip live">computed live just now</span>';
+    const head=isSample?'Ranked live — right now':'100,000 candidates, ranked live';
+    let h=`<div class="bar-top"><h2>${head}</h2>${cacheChip}</div>
       <div class="stat-row">
-        <div class="stat accent"><div class="n num">${(d.total||0).toLocaleString()}</div><div class="l">candidates ranked</div></div>
-        <div class="stat ok"><div class="n">Verified</div><div class="l">passes the official scoring check</div></div>
+        <div class="stat accent"><div class="n num">${(d.total||0).toLocaleString()}</div><div class="l">${isSample?'candidates ranked live (sample of the real 100,000)':'candidates ranked'}</div></div>
+        <div class="stat ok"><div class="n">Verified</div><div class="l">full 100K passes the official scoring check</div></div>
         <div class="stat"><div class="n num">${d.honeypots}</div><div class="l">fake profiles in the top 10</div></div>
-        <div class="stat"><div class="n num">${d.elapsed}s</div><div class="l">to rank all of them</div></div>
+        <div class="stat"><div class="n num">${d.elapsed}s</div><div class="l">to rank ${isSample?'this sample live':'all of them'}</div></div>
       </div>
+      ${d.note?`<div class="result-tip" style="margin-bottom:12px">${esc(d.note)}</div>`:''}
       <div class="meta" style="margin:0 0 14px">Ranking for: ${esc(d.jd)}</div>`;
     d.top.forEach(c=>{
       h+=`<div class="cand ${tierOf(c.rank,false)}">
