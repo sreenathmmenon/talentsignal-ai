@@ -223,7 +223,14 @@ def do_rank(body):
     except (TypeError, ValueError):
         requested = 50
     top_n = max(1, min(requested, 100, len(records)))
-    embedder = _get_embedder() if len(records) <= 200 else None
+    # Engine: default hybrid (semantic) when a model is available for small pools;
+    # callers can force "spine" for an instant response (e.g. the one-click demo,
+    # where the fast structured engine already gives the right ranking + verdicts).
+    want = body.get("engine")
+    if want == "spine":
+        embedder = None
+    else:
+        embedder = _get_embedder() if len(records) <= 200 else None
     res = rank(body.get("jd", ""), records, top_n=top_n,
                engine="hybrid" if embedder else "spine", embedder=embedder,
                category=body.get("category", "ai_ml_search_ranking"))

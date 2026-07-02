@@ -609,16 +609,17 @@ async function seeItWork(){
   $('jd').value=DEMO_JD;
   if($('topn'))$('topn').value='10';
   if($('cat'))$('cat').value='ai_ml_search_ranking';
-  await runRank();               // renders into #out (the results area)
+  await runRank('spine');         // instant structured engine for the one-click demo
   window.scrollTo({top:0,behavior:'smooth'});   // keep them at the top, on the results
 }
-async function runRank(){
+async function runRank(engineOverride){
   const btn=$('go');btn.disabled=true;
-  loading('Reading every résumé…','Matching each one to your role by meaning, and checking it holds up.');
+  loading('Ranking by meaning…','');
   try{
     const files=await readFiles();
-    const r=await fetch('/api/rank',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({jd:$('jd').value,category:$('cat').value,files,paste:$('paste').value,top_n:parseInt(($('topn')||{}).value||'50',10)})});
+    const body={jd:$('jd').value,category:$('cat').value,files,paste:$('paste').value,top_n:parseInt(($('topn')||{}).value||'50',10)};
+    if(engineOverride)body.engine=engineOverride;
+    const r=await fetch('/api/rank',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     const d=await r.json();
     if(d.error){errState(d.error);btn.disabled=false;return}
     renderRank(d);
