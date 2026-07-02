@@ -534,6 +534,11 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(data)))
+        # Never let a browser/CDN serve a stale page after a redeploy — the demo must
+        # always reflect the latest build (judges shouldn't need a hard refresh).
+        if ctype.startswith("text/html"):
+            self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+            self.send_header("Pragma", "no-cache")
         self.end_headers()
         self.wfile.write(data)
 
