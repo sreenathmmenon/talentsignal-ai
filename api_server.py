@@ -72,6 +72,21 @@ _EX_CAND = {"candidate_id": "CAND_0000001",
             "career_history": [{"title": "ML Engineer", "company": "Acme",
                                 "description": "Owned ranking + retrieval; shipped to production."}],
             "skills": ["Python", "Ranking", "Embeddings"], "redrob_signals": {}}
+# A "found by meaning" example: describes ranking/retrieval work in her OWN words with
+# NONE of the JD's keywords — a keyword filter misses her; the engine surfaces her.
+_EX_CAND2 = {"candidate_id": "CAND_0000002",
+             "profile": {"current_title": "Search Engineer", "years_of_experience": 6,
+                         "summary": "Built the system that decides which products show on the "
+                                    "homepage feed, ordering results by relevance. Shipped to millions."},
+             "career_history": [{"title": "Search Engineer", "company": "Flipkart",
+                                 "description": "owned relevance and result ordering; ran A/B tests"}],
+             "skills": ["Python"], "redrob_signals": {}}
+# A weak (off-domain) example so the ranking is illustrative.
+_EX_CAND_WEAK = {"candidate_id": "CAND_0000003",
+                 "profile": {"current_title": "Backend Engineer", "years_of_experience": 6,
+                             "summary": "Java microservices and SQL."},
+                 "career_history": [{"title": "Backend Engineer", "description": "java services"}],
+                 "skills": ["Java", "SQL"], "redrob_signals": {}}
 
 
 def _json_body(schema, example):
@@ -118,7 +133,7 @@ OPENAPI = {
                      "top_n": {"type": "integer", "default": 10},
                      "engine": {"type": "string", "enum": ["hybrid", "spine"]},
                      "category": {"type": "string", "default": "ai_ml_search_ranking"}}},
-                {"jd": _EX_JD, "candidates": [_EX_CAND], "top_n": 5}),
+                {"jd": _EX_JD, "candidates": [_EX_CAND, _EX_CAND2, _EX_CAND_WEAK], "top_n": 3}),
             "responses": _json_resp("Ranked shortlist", {
                 "job_title": "Senior AI Engineer", "engine": "hybrid", "candidate_count": 1,
                 "ranked": [{"rank": 1, "candidate_id": "CAND_0000001", "score": 0.57,
