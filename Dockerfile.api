@@ -1,0 +1,30 @@
+# Hosted REST API image (Railway / Fly / any container host).
+#
+# Serves api_server.py — the REST surface with interactive Swagger docs at /docs.
+# The semantic (hybrid) engine runs on small pools; the MiniLM model is baked into
+# the image at build time so there is NO runtime download and no network at request
+# time. Same shape as Dockerfile.web (the Studio), ~450 MB.
+FROM python:3.11-slim
+
+ENV TOKENIZERS_PARALLELISM=false \
+    PYTHONUNBUFFERED=1 \
+    HF_HOME=/models
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch==2.7.0 \
+ && pip install --no-cache-dir numpy==1.26.4 sentence-transformers==5.1.2 transformers==4.52.4
+
+# Bake MiniLM at build time (needs network here); go offline at runtime below.
+RUN python -c "from sentence_transformers import SentenceTransformer; \
+    SentenceTransformer('all-MiniLM-L6-v2')"
+
+COPY . /app
+
+# Model is baked -> run fully offline at request time.
+ENV HF_HUB_OFFLINE=1 \
+    TRANSFORMERS_OFFLINE=1
+
+EXPOSE 8900
+# Railway/Fly inject $PORT; api_server.py reads it and binds 0.0.0.0 automatically.
+CMD ["python", "api_server.py"]

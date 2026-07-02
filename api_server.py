@@ -394,8 +394,10 @@ class Handler(BaseHTTPRequestHandler):
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--host", default="127.0.0.1")
-    ap.add_argument("--port", type=int, default=8900)
+    # Bind 0.0.0.0 when a platform injects $PORT (Railway/Fly), else localhost.
+    _default_host = os.environ.get("HOST") or ("0.0.0.0" if os.environ.get("PORT") else "127.0.0.1")
+    ap.add_argument("--host", default=_default_host)
+    ap.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8900")))
     args = ap.parse_args()
     server = ThreadingHTTPServer((args.host, args.port), Handler)
     print(f"TalentSignal API on http://{args.host}:{args.port}  (POST /rank, /ingest/jd, /ingest/resume, /audit)")
