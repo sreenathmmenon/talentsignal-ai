@@ -39,6 +39,21 @@ python mcp_server.py     # stdio JSON-RPC MCP server
 No third-party dependency — the server is a hand-rolled MCP (stdio) implementation
 that wraps the same `talentsignal.api` facade as the CLI, REST API, and UI.
 
+## Built for real agents (robustness)
+
+- **Friendly, self-correcting errors.** Missing / wrong-typed / empty arguments come
+  back as a readable `isError` tool result (e.g. *"'candidates' is required. This tool
+  needs: jd, candidates."*) — not a raw Python exception — so an agent can read it and
+  retry. Numeric strings (`"5"`) are coerced; `"five"` is rejected with a clear message.
+- **Chained-workflow consistency.** `rank_candidates`, `compare_candidates`, and
+  `build_interview_kit` agree on the shortlist order, so an agent that chains them never
+  gets contradictory advice.
+- **Protocol-complete & crash-proof.** Implements `initialize`, `tools/list`, `tools/call`,
+  `prompts/list`, `prompts/get`, and `ping`; notifications get no response; a malformed
+  JSON line returns `-32700` without killing the server.
+- **Handles real inputs:** résumés as records *or* pasted text, unicode / non-English
+  résumés, very long résumés, and vague JDs — all validated in the test suite.
+
 ## Register with an MCP client (e.g. Claude Desktop)
 
 Add to the client's MCP config:
