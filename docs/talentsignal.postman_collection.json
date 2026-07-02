@@ -1,0 +1,74 @@
+{
+  "info": {
+    "name": "TalentSignal API",
+    "description": "Rank any candidate against any JD by meaning. Import and hit Send. Set {{baseUrl}} (default http://localhost:8900) and optionally {{apiKey}}.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "baseUrl", "value": "http://localhost:8900"},
+    {"key": "apiKey", "value": ""}
+  ],
+  "item": [
+    {
+      "name": "Rank candidates",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "X-API-Key", "value": "{{apiKey}}"}
+        ],
+        "url": {"raw": "{{baseUrl}}/rank", "host": ["{{baseUrl}}"], "path": ["rank"]},
+        "body": {"mode": "raw", "raw": "{\n  \"jd\": \"Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years.\",\n  \"candidates\": [\n    {\"candidate_id\":\"CAND_0000001\",\n     \"profile\":{\"current_title\":\"ML Engineer\",\"years_of_experience\":7,\"summary\":\"Built embeddings-based retrieval and ranking in Python.\"},\n     \"career_history\":[{\"title\":\"ML Engineer\",\"description\":\"Owned ranking + retrieval; shipped to production.\"}],\n     \"skills\":[\"Python\",\"Ranking\",\"Embeddings\"]}\n  ],\n  \"top_n\": 5\n}"}
+      }
+    },
+    {
+      "name": "Ingest JD",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "X-API-Key", "value": "{{apiKey}}"}],
+        "url": {"raw": "{{baseUrl}}/ingest/jd", "host": ["{{baseUrl}}"], "path": ["ingest", "jd"]},
+        "body": {"mode": "raw", "raw": "{\"jd\":\"Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years.\"}"}
+      }
+    },
+    {
+      "name": "Ingest resume",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "X-API-Key", "value": "{{apiKey}}"}],
+        "url": {"raw": "{{baseUrl}}/ingest/resume", "host": ["{{baseUrl}}"], "path": ["ingest", "resume"]},
+        "body": {"mode": "raw", "raw": "{\"resume\":\"Asha - ML Engineer, 7 yrs. Built ranking & retrieval. Skills: Python.\"}"}
+      }
+    },
+    {
+      "name": "Audit candidate (fabrication check)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "X-API-Key", "value": "{{apiKey}}"}],
+        "url": {"raw": "{{baseUrl}}/audit", "host": ["{{baseUrl}}"], "path": ["audit"]},
+        "body": {"mode": "raw", "raw": "{\"candidate\":{\"candidate_id\":\"CAND_X\",\"skills\":[{\"name\":\"Embeddings\",\"proficiency\":\"expert\",\"months_used\":0}],\"career_history\":[{\"title\":\"AI Lead\",\"duration_months\":180}],\"profile\":{\"years_of_experience\":4}}}"}
+      }
+    },
+    {
+      "name": "Compliance (four-fifths)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "X-API-Key", "value": "{{apiKey}}"}],
+        "url": {"raw": "{{baseUrl}}/compliance", "host": ["{{baseUrl}}"], "path": ["compliance"]},
+        "body": {"mode": "raw", "raw": "{\"ranked_ids\":[\"CAND_1\",\"CAND_2\",\"CAND_3\",\"CAND_4\"],\"group_attributes\":{\"gender\":{\"CAND_1\":\"F\",\"CAND_2\":\"M\",\"CAND_3\":\"F\",\"CAND_4\":\"M\"}},\"top_k\":2}"}
+      }
+    },
+    {
+      "name": "Candidate report (transparency)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "X-API-Key", "value": "{{apiKey}}"}],
+        "url": {"raw": "{{baseUrl}}/candidate_report", "host": ["{{baseUrl}}"], "path": ["candidate_report"]},
+        "body": {"mode": "raw", "raw": "{\"candidate\":{\"candidate_id\":\"CAND_0000001\",\"profile\":{\"summary\":\"Built ranking and retrieval.\"},\"skills\":[\"Python\"]},\"jd\":\"Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years.\"}"}
+      }
+    },
+    {
+      "name": "Health",
+      "request": {"method": "GET", "header": [], "url": {"raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"]}}
+    }
+  ]
+}

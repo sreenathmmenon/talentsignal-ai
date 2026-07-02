@@ -61,23 +61,158 @@ Rank candidates by meaning (not keywords), reject fabricated profiles, get groun
   "jd": "Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years.",
   "candidates": [{"candidate_id":"C1","profile":{"summary":"built embeddings retrieval ranking in python"}}]
 }'</pre>
-<p class=mut>Full spec: <a href="/openapi.json">/openapi.json</a> · Studio UI: run <code>python studio.py</code> (:8888)
-· Also available as 7 <b>MCP tools</b> for agents.</p>
+<p class=mut>Interactive docs: <a href="/docs"><b>/docs</b> (Swagger UI)</a> · spec: <a href="/openapi.json">/openapi.json</a>
+· Studio UI: run <code>python studio.py</code> (:8888) · Also available as <b>MCP tools</b> for agents.</p>
 </div></body></html>"""
+
+_EX_JD = "Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years."
+_EX_CAND = {"candidate_id": "CAND_0000001",
+            "profile": {"current_title": "ML Engineer", "years_of_experience": 7,
+                        "summary": "Built embeddings-based retrieval and ranking systems in Python."},
+            "career_history": [{"title": "ML Engineer", "company": "Acme",
+                                "description": "Owned ranking + retrieval; shipped to production."}],
+            "skills": ["Python", "Ranking", "Embeddings"], "redrob_signals": {}}
+
+
+def _json_body(schema, example):
+    return {"required": True, "content": {"application/json": {
+        "schema": schema, "example": example}}}
+
+
+def _json_resp(desc, example):
+    return {"200": {"description": desc, "content": {"application/json": {"example": example}}},
+            "400": {"description": "Invalid input (missing field / bad JSON)"}}
+
 
 OPENAPI = {
     "openapi": "3.0.0",
-    "info": {"title": "TalentSignal API", "version": API_VERSION,
-             "description": "Universal candidate-intelligence ranking engine."},
+    "info": {
+        "title": "TalentSignal API",
+        "version": API_VERSION,
+        "description": (
+            "Rank any candidate against any job description **by meaning, not keywords** — "
+            "reject fabricated résumés, and get grounded, explainable reasoning for every "
+            "decision. The same engine behind the Studio UI and the MCP tools, exposed as a "
+            "clean REST service any ATS, career portal, or product can call.\n\n"
+            "No LLM, no GPU, no per-token cost. Deterministic and offline-capable."),
+        "contact": {"name": "TalentSignal", "email": "sreenathmmmenon@gmail.com"},
+    },
+    "tags": [
+        {"name": "Ranking", "description": "Score and order candidates for a role."},
+        {"name": "Ingest", "description": "Turn any JD or résumé into structured data."},
+        {"name": "Trust & fairness", "description": "Fabrication audit and adverse-impact compliance."},
+        {"name": "Ops", "description": "Health and spec."},
+    ],
     "paths": {
-        "/rank": {"post": {"summary": "Rank candidates against a JD"}},
-        "/ingest/jd": {"post": {"summary": "Parse a JD into requirements"}},
-        "/ingest/resume": {"post": {"summary": "Parse a resume into a profile"}},
-        "/audit": {"post": {"summary": "Audit a candidate for contradictions"}},
-        "/compliance": {"post": {"summary": "Adverse-impact (four-fifths) report on a ranking"}},
-        "/health": {"get": {"summary": "Health check"}},
+        "/rank": {"post": {
+            "tags": ["Ranking"], "summary": "Rank candidates against a JD",
+            "description": "Returns a ranked, explained shortlist. Uses the semantic (hybrid) "
+                           "engine on small pools when a model is available, else the "
+                           "zero-dependency structured engine.",
+            "requestBody": _json_body(
+                {"type": "object", "required": ["jd", "candidates"],
+                 "properties": {
+                     "jd": {"type": "string", "description": "Job description (free text or path)."},
+                     "candidates": {"type": "array", "items": {"type": "object"},
+                                    "description": "Candidate records (or plain-text résumés)."},
+                     "top_n": {"type": "integer", "default": 10},
+                     "engine": {"type": "string", "enum": ["hybrid", "spine"]},
+                     "category": {"type": "string", "default": "ai_ml_search_ranking"}}},
+                {"jd": _EX_JD, "candidates": [_EX_CAND], "top_n": 5}),
+            "responses": _json_resp("Ranked shortlist", {
+                "job_title": "Senior AI Engineer", "engine": "hybrid", "candidate_count": 1,
+                "ranked": [{"rank": 1, "candidate_id": "CAND_0000001", "score": 0.57,
+                            "title": "ML Engineer", "reasoning": "Strong fit at #1: …",
+                            "reachability_label": "reachable",
+                            "factors": {"technical_evidence": 0.9, "career_fit": 0.8}}]}),
+        }},
+        "/ingest/jd": {"post": {
+            "tags": ["Ingest"], "summary": "Parse a JD into a weighted requirement model",
+            "requestBody": _json_body(
+                {"type": "object", "required": ["jd"],
+                 "properties": {"jd": {"type": "string"}}}, {"jd": _EX_JD}),
+            "responses": _json_resp("Structured requirements", {
+                "title": "Senior AI Engineer", "min_years": 5.0, "max_years": 9.0,
+                "requirements": [{"text": "embeddings", "kind": "must_have", "weight": 1.0}]}),
+        }},
+        "/ingest/resume": {"post": {
+            "tags": ["Ingest"], "summary": "Parse a résumé (any text) into a candidate profile",
+            "requestBody": _json_body(
+                {"type": "object", "required": ["resume"],
+                 "properties": {"resume": {"type": "string"},
+                                "use_llm": {"type": "boolean", "default": False}}},
+                {"resume": "Asha — ML Engineer, 7 yrs. Built ranking & retrieval. Skills: Python."}),
+            "responses": _json_resp("Structured candidate record", _EX_CAND),
+        }},
+        "/audit": {"post": {
+            "tags": ["Trust & fairness"], "summary": "Audit a candidate for internal contradictions",
+            "description": "Role-independent fabrication/honeypot check — flags impossible "
+                           "profiles (e.g. expert skill with 0 months, tenure > career length).",
+            "requestBody": _json_body(
+                {"type": "object", "required": ["candidate"],
+                 "properties": {"candidate": {"type": "object"}}}, {"candidate": _EX_CAND}),
+            "responses": _json_resp("Consistency report", {
+                "is_impossible": False, "penalty": 0.0, "flags": []}),
+        }},
+        "/compliance": {"post": {
+            "tags": ["Trust & fairness"],
+            "summary": "Adverse-impact (four-fifths) report on a ranking",
+            "description": "The report legal/compliance needs before deploying automated "
+                           "selection. Group labels are CALLER-supplied from your own HR data; "
+                           "the engine never infers protected attributes.",
+            "requestBody": _json_body(
+                {"type": "object", "required": ["ranked_ids", "group_attributes"],
+                 "properties": {
+                     "ranked_ids": {"type": "array", "items": {"type": "string"}},
+                     "group_attributes": {"type": "object"},
+                     "top_k": {"type": "integer", "default": 10}}},
+                {"ranked_ids": ["CAND_1", "CAND_2", "CAND_3", "CAND_4"],
+                 "group_attributes": {"gender": {"CAND_1": "F", "CAND_2": "M",
+                                                 "CAND_3": "F", "CAND_4": "M"}}, "top_k": 2}),
+            "responses": _json_resp("Adverse-impact summary", {
+                "method": "four_fifths_rule", "overall_passes_four_fifths": True,
+                "assessed_attributes": ["gender"]}),
+        }},
+        "/candidate_report": {"post": {
+            "tags": ["Trust & fairness"],
+            "summary": "Candidate-facing transparency report",
+            "description": "What the engine used and concluded about ONE candidate — proof "
+                           "from their own words, unmet requirements they can dispute. The "
+                           "human-in-the-loop answer to opaque auto-rejection.",
+            "requestBody": _json_body(
+                {"type": "object", "required": ["candidate", "jd"],
+                 "properties": {"candidate": {"type": "object"}, "jd": {"type": "string"}}},
+                {"candidate": _EX_CAND, "jd": _EX_JD}),
+            "responses": _json_resp("Transparency report", {
+                "disclosure": "This report shows everything the engine used …",
+                "matched_with_proof": [], "not_evidenced": {"requirements": []}}),
+        }},
+        "/health": {"get": {
+            "tags": ["Ops"], "summary": "Health check",
+            "responses": {"200": {"description": "OK", "content": {"application/json": {
+                "example": {"status": "ok", "api_version": API_VERSION}}}}},
+        }},
+        "/openapi.json": {"get": {"tags": ["Ops"], "summary": "This OpenAPI spec (machine-readable)",
+                                  "responses": {"200": {"description": "OpenAPI 3.0 document"}}}},
     },
 }
+
+
+# Self-hosted Swagger UI — interactive API docs at GET /docs. The UI assets load
+# from a CDN (no new runtime dependency); the spec is served from /openapi.json.
+_SWAGGER_HTML = """<!doctype html><html><head><meta charset=utf-8>
+<title>TalentSignal API — docs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css">
+<style>body{margin:0}.topbar{display:none}
+.info{margin:22px 0}.swagger-ui .info .title{color:#1b1b2f}</style>
+</head><body>
+<div id="swagger-ui"></div>
+<script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+<script>
+window.onload=()=>{window.ui=SwaggerUIBundle({url:'/openapi.json',dom_id:'#swagger-ui',
+  deepLinking:true,tryItOutEnabled:true,defaultModelsExpandDepth:-1});};
+</script></body></html>"""
 
 
 def _coerce_candidates(items):
@@ -201,6 +336,13 @@ class Handler(BaseHTTPRequestHandler):
                                        "engine": "talentsignal"})
         elif path == "/openapi.json":
             self._send(HTTPStatus.OK, OPENAPI)
+        elif path in ("/docs", "/docs/"):
+            body = _SWAGGER_HTML.encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
         elif path in ("/", "/index.html"):
             host = self.headers.get("Host", "localhost:8900")
             body = _API_LANDING.replace("localhost:PORT", host).encode("utf-8")

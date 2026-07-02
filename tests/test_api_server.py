@@ -55,5 +55,23 @@ def test_openapi_and_404():
         c = TalentSignalClient(f"http://127.0.0.1:{port}")
         spec = c._get("/openapi.json")
         assert spec["info"]["title"] == "TalentSignal API"
+        # the spec is now rich: every endpoint documented, POSTs carry examples
+        paths = spec["paths"]
+        for ep in ("/rank", "/ingest/jd", "/ingest/resume", "/audit", "/compliance",
+                   "/candidate_report", "/health"):
+            assert ep in paths, ep
+        assert "requestBody" in paths["/rank"]["post"]
+        assert paths["/rank"]["post"]["requestBody"]["content"]["application/json"]["example"]
+    finally:
+        srv.shutdown()
+
+
+def test_swagger_docs_page_serves():
+    import urllib.request
+    srv, port = _start_server()
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:{port}/docs", timeout=10) as r:
+            html = r.read().decode()
+        assert r.status == 200 and "swagger-ui" in html
     finally:
         srv.shutdown()

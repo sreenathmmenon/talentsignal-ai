@@ -70,8 +70,10 @@ _SHORT_SKILLS = frozenset({
 })
 
 _SENT_SPLIT = re.compile(r"(?<=[.!?;:\n])\s+|\n+")
-_YEARS_RE = re.compile(r"(\d{1,2})\s*[-–to]+\s*(\d{1,2})\s*\+?\s*years", re.IGNORECASE)
-_YEARS_MIN_RE = re.compile(r"(\d{1,2})\s*\+\s*years", re.IGNORECASE)
+# Accept "5-9 years", "5-9 yrs", "5-9y", "5 to 9 years" — integrators send terse
+# JDs, so match the common short forms, not just the fully-spelled word.
+_YEARS_RE = re.compile(r"(\d{1,2})\s*(?:[-–]|to)\s*(\d{1,2})\s*\+?\s*(?:years?|yrs?|y)\b", re.IGNORECASE)
+_YEARS_MIN_RE = re.compile(r"(\d{1,2})\s*\+\s*(?:years?|yrs?|y)\b", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
