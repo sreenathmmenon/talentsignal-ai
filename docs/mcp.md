@@ -4,15 +4,31 @@ Expose the candidate-intelligence engine as tools any agentic system can call �
 so an AI agent can rank candidates, parse resumes, structure JDs, and audit
 profiles as part of a larger workflow.
 
-## Tools
+## Tools (9)
 
 | Tool | What it does |
 |---|---|
-| `rank_candidates` | Rank candidates (records or resume text) against a JD → ranked, explainable shortlist |
+| `rank_candidates` | Rank candidates (records or résumé text) against a JD → ranked, explainable shortlist |
+| `compare_candidates` | Explain why one ranked candidate beats another — factor-by-factor scorecard |
+| `build_interview_kit` | Evidence-grounded interview questions + hire/no-hire rubric for a candidate |
+| `candidate_report` | Candidate-facing transparency report (what matched, with proof; what to improve) |
+| `compliance` | EEOC four-fifths adverse-impact check on a ranking (your own group labels) |
+| `audit_candidate` | Role-independent consistency / honeypot auditor (catches fabricated profiles) |
 | `ingest_jd` | Parse a JD into a structured weighted requirement model |
-| `screen_resume` | Parse one resume (text) into a structured candidate profile |
-| `audit_candidate` | Run the consistency / honeypot auditor on a candidate |
+| `screen_resume` | Parse one résumé (text) into a structured candidate profile |
 | `explain_ranking` | Rank, then return grounded reasoning for the top picks |
+
+## Prompts (one-click hiring workflows)
+
+Prompts chain the tools in a proven sequence, so a non-expert user gets an outcome,
+not a tool list. Invoke via `prompts/list` → `prompts/get`.
+
+| Prompt | Outcome |
+|---|---|
+| `shortlist_for_role` | Screen résumés against a role → ranked, explained shortlist (surfaces meaning-rescued fits) |
+| `fair_hiring_review` | Shortlist **plus** an adverse-impact compliance check — the review HR/legal needs |
+| `prep_interview` | Rank, then produce an interview kit for the top pick |
+| `explain_to_candidate` | A humane, transparent "why" report for a candidate |
 
 ## Run
 

@@ -123,6 +123,41 @@ TOOLS = [
             "required": ["jd", "candidates"],
         },
     },
+    {
+        "name": "compare_candidates",
+        "description": "Explain why one candidate ranks ahead of another with a "
+                       "factor-by-factor scorecard (skills, experience, seniority, "
+                       "availability, credibility). Use after rank_candidates when the "
+                       "user asks 'why them and not the other one?'. Ranks are 1-based "
+                       "positions in the shortlist produced from the same JD + candidates.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "jd": {"type": "string"},
+                "candidates": {"type": "array", "items": {"type": ["object", "string"]}},
+                "left_rank": {"type": "integer", "description": "1-based rank of the first candidate"},
+                "right_rank": {"type": "integer", "description": "1-based rank of the second"},
+            },
+            "required": ["jd", "candidates", "left_rank", "right_rank"],
+        },
+    },
+    {
+        "name": "build_interview_kit",
+        "description": "Generate an evidence-grounded interview kit for one ranked "
+                       "candidate: sharp questions drawn from their own work, a weak-area "
+                       "probe, a risk-validation question, and a hire/no-hire rubric. Use "
+                       "after rank_candidates to prepare the recruiter for a specific "
+                       "candidate. Every question is anchored in the résumé (no invention).",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "jd": {"type": "string"},
+                "candidates": {"type": "array", "items": {"type": ["object", "string"]}},
+                "rank": {"type": "integer", "default": 1, "description": "1-based rank of the candidate to prep for"},
+            },
+            "required": ["jd", "candidates"],
+        },
+    },
 ]
 
 
@@ -227,6 +262,55 @@ def tool_explain_ranking(args: dict) -> dict:
                               "score": c.score, "reasoning": c.reasoning} for c in res.ranked]}
 
 
+def _packets(jd, candidates):
+    """Rank in-memory candidates and return the full evidence packets that the
+    compare + interview-kit engines consume, plus the parsed job."""
+    from dataclasses import asdict
+    from talentsignal.api.facade import _resolve_job
+    from talentsignal.ranking import rank_records, rank_records_hybrid
+    cands = _coerce_candidates(candidates)
+    job = _resolve_job(jd, category="ai_ml_search_ranking", title="")
+    emb = _embedder() if len(cands) <= 200 else None
+    rows = (rank_records_hybrid(cands, job, top_n=min(50, len(cands)), live_embedder=emb)
+            if emb else rank_records(cands, job, top_n=min(50, len(cands))))
+    out = []
+    for row in rows:
+        ev, score = row["_evidence"], row["_score"]
+        out.append({"candidate_id": row["candidate_id"], "rank": row["rank"],
+                    "score": row["score"], "reasoning": row["reasoning"],
+                    "score_breakdown": asdict(score),
+                    "evidence": {"title": ev.title, "years": ev.years, "location": ev.location,
+                                 "career_retrieval_terms": ev.career_retrieval_terms,
+                                 "career_production_terms": ev.career_production_terms,
+                                 "vector_terms": ev.vector_terms, "production_terms": ev.production_terms,
+                                 "risk_flags": score.risk_flags, "confidence": score.confidence}})
+    return out, job
+
+
+def tool_compare_candidates(args: dict) -> dict:
+    """Explain WHY one ranked candidate sits ahead of another — a factor-by-factor
+    scorecard. The recruiter question 'why #2 over #5?', answered for an agent."""
+    from talentsignal.candidate_compare import compare_by_rank
+    packets, _ = _packets(args["jd"], args["candidates"])
+    cmp = compare_by_rank(packets, int(args["left_rank"]), int(args["right_rank"]))
+    if cmp is None:
+        return {"error": f"ranks {args['left_rank']}/{args['right_rank']} not in the shortlist of {len(packets)}"}
+    return cmp
+
+
+def tool_build_interview_kit(args: dict) -> dict:
+    """Generate an evidence-grounded interview kit for ONE ranked candidate: depth
+    questions tied to their strongest evidence, a weak-area probe, a risk question,
+    and a hire/no-hire rubric. No hallucination — anchored in their own profile."""
+    from talentsignal.interview_kit import build_interview_kit
+    packets, job = _packets(args["jd"], args["candidates"])
+    target = int(args.get("rank", 1))
+    packet = next((p for p in packets if p["rank"] == target), None)
+    if packet is None:
+        return {"error": f"rank {target} not in the shortlist of {len(packets)}"}
+    return build_interview_kit(packet, job)
+
+
 TOOL_FUNCS = {
     "rank_candidates": tool_rank_candidates,
     "ingest_jd": tool_ingest_jd,
@@ -235,7 +319,91 @@ TOOL_FUNCS = {
     "explain_ranking": tool_explain_ranking,
     "candidate_report": tool_candidate_report,
     "compliance": tool_compliance,
+    "compare_candidates": tool_compare_candidates,
+    "build_interview_kit": tool_build_interview_kit,
 }
+
+
+# --- MCP prompts: one-click hiring workflows an agent/user can invoke ----------
+# Prompts are reusable, parameterized instructions that guide the model to use the
+# tools above in a proven sequence — the feature that turns "9 tools" into "hire
+# faster, fairly, with proof" for a non-expert user.
+
+PROMPTS = [
+    {
+        "name": "shortlist_for_role",
+        "description": "Screen a batch of résumés against a role and return a ranked, "
+                       "explained shortlist — surfacing strong candidates a keyword filter misses.",
+        "arguments": [
+            {"name": "jd", "description": "The job description", "required": True},
+            {"name": "resumes", "description": "Résumé texts (paste or list)", "required": True},
+        ],
+    },
+    {
+        "name": "fair_hiring_review",
+        "description": "Produce a shortlist AND an adverse-impact (four-fifths) compliance "
+                       "check for it — the review legal/HR needs before automated screening.",
+        "arguments": [
+            {"name": "jd", "description": "The job description", "required": True},
+            {"name": "resumes", "description": "Résumé texts", "required": True},
+            {"name": "group_attributes", "description": "Your own protected-group labels per candidate", "required": False},
+        ],
+    },
+    {
+        "name": "prep_interview",
+        "description": "Rank the candidates, then build an evidence-grounded interview kit "
+                       "for the top pick (questions from their own work + a hire/no-hire rubric).",
+        "arguments": [
+            {"name": "jd", "description": "The job description", "required": True},
+            {"name": "resumes", "description": "Résumé texts", "required": True},
+        ],
+    },
+    {
+        "name": "explain_to_candidate",
+        "description": "Generate a transparent, candidate-facing report: what the engine "
+                       "used, what matched with proof, and what to improve — the humane "
+                       "answer to 'why was I not shortlisted?'.",
+        "arguments": [
+            {"name": "jd", "description": "The job description", "required": True},
+            {"name": "resume", "description": "The candidate's résumé", "required": True},
+        ],
+    },
+]
+
+_PROMPT_TEXT = {
+    "shortlist_for_role": (
+        "Use rank_candidates with this JD and these résumés, then present the ranked "
+        "shortlist. For each candidate give the score, the one-line reasoning, and flag "
+        "anyone marked 'rescued by meaning' (strong fit a keyword search would miss).\n\n"
+        "JD:\n{jd}\n\nRésumés:\n{resumes}"),
+    "fair_hiring_review": (
+        "First call rank_candidates on this JD and these résumés. Then call compliance "
+        "with the resulting ranked ids and the supplied group_attributes to run the "
+        "four-fifths adverse-impact check. Present the shortlist AND the compliance verdict; "
+        "if the impact ratio is below 0.8, call it out clearly.\n\n"
+        "JD:\n{jd}\n\nRésumés:\n{resumes}\n\nGroup attributes (optional):\n{group_attributes}"),
+    "prep_interview": (
+        "Call rank_candidates on this JD and these résumés, then call build_interview_kit "
+        "for rank 1. Present the top candidate, then their interview questions and the "
+        "hire/no-hire rubric.\n\nJD:\n{jd}\n\nRésumés:\n{resumes}"),
+    "explain_to_candidate": (
+        "Call candidate_report with this candidate and JD. Present, in a warm and honest "
+        "tone: what the engine used (only their own data), what matched with proof from "
+        "their words, what wasn't evidenced (so they can improve), and any concerns.\n\n"
+        "JD:\n{jd}\n\nRésumé:\n{resume}"),
+}
+
+
+def _get_prompt(name: str, arguments: dict) -> dict:
+    tmpl = _PROMPT_TEXT.get(name)
+    if tmpl is None:
+        raise KeyError(name)
+    args = {a["name"]: "" for p in PROMPTS if p["name"] == name for a in p["arguments"]}
+    args.update({k: str(v) for k, v in (arguments or {}).items()})
+    return {
+        "description": next(p["description"] for p in PROMPTS if p["name"] == name),
+        "messages": [{"role": "user", "content": {"type": "text", "text": tmpl.format(**args)}}],
+    }
 
 
 # --- JSON-RPC / MCP plumbing ---------------------------------------------------
@@ -252,13 +420,21 @@ def handle(request: dict) -> dict | None:
     if method == "initialize":
         return _result(req_id, {
             "protocolVersion": PROTOCOL_VERSION,
-            "capabilities": {"tools": {}},
+            "capabilities": {"tools": {}, "prompts": {}},
             "serverInfo": SERVER_INFO,
         })
     if method == "notifications/initialized":
         return None
     if method == "tools/list":
         return _result(req_id, {"tools": TOOLS})
+    if method == "prompts/list":
+        return _result(req_id, {"prompts": PROMPTS})
+    if method == "prompts/get":
+        params = request.get("params", {})
+        try:
+            return _result(req_id, _get_prompt(params.get("name", ""), params.get("arguments", {})))
+        except KeyError:
+            return _error(req_id, -32602, f"unknown prompt: {params.get('name')}")
     if method == "tools/call":
         params = request.get("params", {})
         name = params.get("name")
