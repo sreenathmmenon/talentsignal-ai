@@ -113,10 +113,46 @@ def _ingest_inputs(files, paste):
     return records
 
 
-def _candidate_view(rec, ranked):
+def _verdict(relevance: float, coverage: float, flagged: bool) -> dict:
+    """A one-line hiring verdict + why — the decision-useful header a recruiter reads
+    first (Strong / Worth a look / Weak fit), derived from role relevance + coverage."""
+    if flagged:
+        return {"label": "Needs review", "tone": "warn",
+                "why": "the profile has a consistency flag — verify before proceeding"}
+    if relevance >= 0.7 and coverage >= 0.6:
+        return {"label": "Strong match", "tone": "strong",
+                "why": "directly meets the core requirements with real evidence"}
+    if relevance >= 0.45:
+        return {"label": "Worth a look", "tone": "good",
+                "why": "solid partial fit — covers much of the role, verify the gaps"}
+    if relevance >= 0.25:
+        return {"label": "Stretch", "tone": "partial",
+                "why": "adjacent background; would need to grow into the must-haves"}
+    return {"label": "Weak fit", "tone": "weak",
+            "why": "surfaced as the best available, not a natural match for this role"}
+
+
+def _skills_match(matched, jd_requirements):
+    """Matched ✓ / Missing ✗ against the JD's must-haves — the scannable have-vs-gap
+    view. Matched = requirements this candidate evidenced; Missing = must-haves they
+    did not. Built from the engine's own requirement matches (no invention)."""
+    matched_reqs = {(m.get("req") or "").strip().lower() for m in (matched or [])}
+    must = [r for r in (jd_requirements or []) if r.get("kind") == "must_have"]
+    matched_list, missing_list = [], []
+    for r in must:
+        text = (r.get("text") or "").strip()
+        (matched_list if text.lower() in matched_reqs else missing_list).append(text)
+    # also surface any matched requirement that wasn't a must-have (nice extras)
+    return {"matched": matched_list[:8], "missing": missing_list[:8]}
+
+
+def _candidate_view(rec, ranked, jd_requirements=None):
     """Merge a RankedCandidate with its source record for a rich UI payload."""
     prof = rec.get("profile", {})
     f = ranked.factors
+    flagged = bool(ranked.risk_flags)
+    rel = f.role_relevance if f else 0
+    cov = f.requirement_coverage if f else 0
     return {
         "rank": ranked.rank,
         "candidate_id": ranked.candidate_id,
@@ -149,6 +185,12 @@ def _candidate_view(rec, ranked):
         "matched": [{"req": mm.requirement, "kw": list(mm.matched_keywords),
                      "evidence": getattr(mm, "evidence_span", "")}
                     for mm in (ranked.requirement_matches or [])[:4]],
+        # one-line hiring verdict + why (decision-useful header)
+        "verdict": _verdict(rel, cov, flagged),
+        # Matched ✓ / Missing ✗ against the JD's must-haves (scannable have-vs-gap)
+        "skills_match": _skills_match(
+            [{"req": mm.requirement} for mm in (ranked.requirement_matches or [])],
+            jd_requirements),
         "flags": [{"code": fl.code, "detail": fl.detail} for fl in (ranked.risk_flags or [])],
         "confidence": round(getattr(ranked, "confidence", 0), 2),
     }
@@ -181,7 +223,8 @@ def do_rank(body):
         "candidate_count": res.candidate_count,
         "elapsed": res.elapsed_seconds,
         "requirements": res.requirements,
-        "ranked": [_candidate_view(by_id.get(c.candidate_id, {}), c) for c in res.ranked],
+        "ranked": [_candidate_view(by_id.get(c.candidate_id, {}), c, res.requirements)
+                   for c in res.ranked],
     }
 
 

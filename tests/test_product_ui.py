@@ -73,6 +73,30 @@ def test_rank_endpoint_with_pasted_resumes():
         srv.shutdown()
 
 
+def test_studio_rank_has_verdict_and_skills_match():
+    """The canonical Studio rank payload carries the UI-polish fields: a one-line
+    verdict + a Matched/Missing skills view, grounded in the engine's own data."""
+    import importlib.util
+    ROOT = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location("studio", ROOT / "studio.py")
+    studio = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(studio)
+    out = studio.do_rank({
+        "jd": "Senior AI Engineer. Must have embeddings, retrieval, ranking, Python. 5-9 years.",
+        "paste": ("Asha\nML Engineer 7y. Built embeddings retrieval ranking in Python.\nSkills\nPython, Ranking, Embeddings\n\n"
+                  "Rahul\nBackend Engineer 6y java services.\nSkills\nJava, SQL"),
+        "files": [],
+    })
+    assert "error" not in out, out
+    for c in out["ranked"]:
+        assert c["verdict"]["label"] and c["verdict"]["tone"]
+        assert "matched" in c["skills_match"] and "missing" in c["skills_match"]
+    # the strong AI candidate should read as a match; the backend one should not
+    top = out["ranked"][0]
+    assert top["verdict"]["tone"] in ("strong", "good")
+    assert top["skills_match"]["matched"]
+
+
 def test_studio_transparency_endpoint():
     import importlib.util
     ROOT = Path(__file__).resolve().parents[1]

@@ -235,6 +235,25 @@ textarea:focus,select:focus,input:focus{outline:none; border-color:var(--violet)
 .rescue-callout b{color:var(--ink)}
 .result-tip{margin:0 0 14px;font-size:12.5px;color:var(--muted);line-height:1.5}
 .result-tip b{color:var(--ink-soft);font-weight:600}
+/* one-line hiring verdict + why (decision-useful header) */
+.verdict{display:flex;align-items:baseline;gap:10px;margin:10px 0 4px;padding:9px 13px;border-radius:var(--r-sm);
+  border:1px solid var(--line);background:var(--surface);font-size:13px;flex-wrap:wrap}
+.verdict b{font-weight:700;font-size:13.5px}
+.verdict span{color:var(--muted)}
+.verdict.strong{border-color:rgba(52,229,160,.4);background:var(--pos-soft)}.verdict.strong b{color:var(--pos)}
+.verdict.good{border-color:var(--line-glow)}.verdict.good b{color:var(--violet-bright)}
+.verdict.partial b{color:var(--cyan-bright)}
+.verdict.weak b{color:var(--muted)}
+.verdict.warn{border-color:rgba(255,180,84,.45);background:var(--warn-soft)}.verdict.warn b{color:var(--warn)}
+/* Matched ✓ / Missing ✗ skills panel */
+.skills-match{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 4px}
+.skm-col{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start}
+.skm-h{width:100%;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.skm-h.ok{color:var(--pos)}.skm-h.no{color:var(--neg)}
+.skm{font-size:12px;padding:3px 9px;border-radius:var(--r-pill);border:1px solid var(--line-strong);font-family:var(--mono)}
+.skm.ok{color:var(--pos);border-color:rgba(52,229,160,.35);background:var(--pos-soft)}
+.skm.no{color:var(--neg);border-color:rgba(255,92,124,.3);background:var(--neg-soft)}
+@media (max-width:600px){.skills-match{grid-template-columns:1fr}}
 /* reachability chip — availability read, orthogonal to fit */
 .reach{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;
   padding:3px 9px;border-radius:var(--r-pill);border:1px solid var(--line-strong);margin-left:6px}
@@ -477,6 +496,14 @@ const REACH_COPY={
 };
 function reachChip(r){const c=REACH_COPY[r];if(!c)return'';
   return `<span class="reach ${r}" title="${esc(c[1])}"><span class="rdot"></span>${esc(c[0])}</span>`;}
+function skillsMatchPanel(sm){
+  const matched=(sm.matched||[]), missing=(sm.missing||[]);
+  if(!matched.length && !missing.length) return '';
+  const chips=(arr,cls,sym)=>arr.map(s=>`<span class="skm ${cls}">${sym} ${esc(s)}</span>`).join('');
+  return `<div class="skills-match">
+    ${matched.length?`<div class="skm-col"><div class="skm-h ok">Has what the role needs</div>${chips(matched,'ok','✓')}</div>`:''}
+    ${missing.length?`<div class="skm-col"><div class="skm-h no">Gaps to check</div>${chips(missing,'no','✗')}</div>`:''}
+  </div>`;}
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 
 function switchView(v){
@@ -549,10 +576,14 @@ function renderRank(d){
     const fitChip=`<span class="fit ${fitClass}" title="How closely this person fits the role you described (${Math.round(rel*100)}%)">${esc(c.fit_label||'')}</span>`;
     const rescued=c.rescued?`<span class="rescued" title="Strong on what the work means, light on the exact keywords — a keyword search would have missed this person">✦ found by meaning</span>`:'';
     const reach=reachChip(c.reachability);
+    const v=c.verdict||{}; const verdictBar=v.label?`<div class="verdict ${esc(v.tone||'')}"><b>${esc(v.label)}</b><span>${esc(v.why||'')}</span></div>`:'';
+    const sm=c.skills_match||{}; const skillsPanel=skillsMatchPanel(sm);
     h+=`<div class="cand ${tierOf(c.rank,flagged)}">
       <div class="ch"><div class="rk num">#${c.rank}</div><div class="nm">${esc(c.title||c.name)} ${fitChip}${reach}${rescued}</div>${scoreChip(c.score)}</div>
       <div class="sub">${c.candidate_id} · <span class="num">${(c.years||0).toFixed?c.years.toFixed(1):c.years}</span> yrs · ${esc(c.location)||'—'} · fit to role <span class="num">${Math.round(rel*100)}%</span></div>
+      ${verdictBar}
       <div class="rsn">${esc(c.reasoning)}</div>
+      ${skillsPanel}
       <div class="facs">${fac('Skills',f.technical)}${fac('Experience',f.career)}${fac('Seniority',f.seniority)}${fac('Availability',f.behavioral)}${fac('Credibility',f.trust)}${fac('Meaning match',f.semantic)}</div>
       ${proofs}${tags?`<div class="tags">${tags}</div>`:''}${flags?`<div class="tags">${flags}</div>`:''}
       <div class="cand-actions">
