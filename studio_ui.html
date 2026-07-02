@@ -785,7 +785,7 @@ function renderTransparency(d){
 }
 
 async function loadChallenge(){
-  loading('Ranking 100,000 real candidates…','Working through the full dataset on a single laptop. The first run computes; after that it’s instant.');
+  loading('Ranking candidates by meaning…','');
   try{
     const r=await fetch('/api/challenge',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
     const d=await r.json();

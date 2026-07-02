@@ -580,12 +580,14 @@ def main():
     srv = ThreadingHTTPServer((args.host, args.port), Handler)
     print(f"TalentSignal Studio → http://{args.host}:{args.port}  (live engine)")
 
-    # NOTE: we deliberately do NOT eagerly warm the 100K at boot. Measured: a
-    # background warm competes for CPU and slows the interactive paste-a-JD product
-    # loop (the 99% use case) for its ~35s duration. Instead the Challenge tab warms
-    # LAZILY on first click (that one user waits ~35s, then it's cached and instant
-    # for everyone after) — so the product loop is never degraded. The live_cache
-    # already memoizes, so the second Challenge request is 0.00s.
+    # Warm the 100K "challenge" sample at boot in a background thread so the FIRST
+    # click on that tab is instant (no cold-compute wait). The hosted path ranks a
+    # ~500-candidate sample in ~0.17s, so warming is cheap and doesn't degrade the
+    # interactive loop. (The old full-100K path was ~35s, which is why warming used
+    # to be deferred — no longer the case.)
+    if not OFFICIAL_CANDIDATES.exists() and SAMPLE_100K.exists():
+        import threading
+        threading.Thread(target=_rank_sample_live, daemon=True).start()
     srv.serve_forever()
 
 
