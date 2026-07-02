@@ -11,6 +11,11 @@ Use it three ways, all over one engine:
 
 Built for the Redrob *Intelligent Candidate Discovery & Ranking Challenge* — the challenge JD/dataset is proof-case #1, and the submission is a valid top-100 CSV produced by this engine — but the system is the general product the challenge's job is hiring someone to build.
 
+**Live now (all three surfaces deployed):**
+- Studio UI → https://talentsignal-production.up.railway.app
+- REST API + interactive Swagger docs → https://talentsignal-api-production.up.railway.app/docs
+- MCP server → `python mcp_server.py` (9 tools + 4 hiring-workflow prompts; connects to Claude Desktop)
+
 ### Verify the headline claims yourself (~1 min)
 
 ```bash
@@ -25,7 +30,7 @@ Reproduces, on the organizers' own 100K, the three core claims with their source
 1. **Reasons beyond keywords.** Hybrid retrieval (sentence-embeddings + lexical) over the JD's *own* requirements means a candidate who "built the recommendation engine serving the homepage" matches "shipped a ranking system" with zero shared keywords.
 2. **Rejects fakes.** A role-independent consistency auditor vetoes internally-impossible honeypots (8 years at a company younger than that, expert skill with 0 months) by their contradictions, not their keywords.
 3. **Weighs hireability.** Schema-driven behavioral signals down-weight stale, unresponsive candidates — and adapt to whatever signal fields a dataset has.
-4. **Proves itself.** A first-class evaluation suite (NDCG@10/@50, MAP, P@10 over labeled data across many JDs) measures every change — not guesswork. On labeled multi-JD eval: **spine** scores composite **0.95**, **hybrid 0.97**; both reach **0%** honeypots in the top-10 and **10/10** zero-keyword paraphrase fits. All numbers are sourced in [`outputs/eval/METRICS.md`](outputs/eval/METRICS.md).
+4. **Proves itself.** A first-class evaluation suite — a **test harness across 6 roles** (AI/Search, Backend, Data, Design, Product, Sales) with labeled candidates in **7 archetypes** (strong · zero-keyword paraphrase · adjacent · weak · irrelevant · honeypot · behavioral-twin) — measures every change with NDCG@10/@50, MAP, P@10, honeypot-rate and cross-JD generality. Iterating against these suites is *how* we drove honeypots to **0%** in the top-10 and fixed cross-role generality. On labeled multi-JD eval: **spine** composite **0.95**, **hybrid 0.97**; both reach **0%** honeypots in the top-10 and **10/10** zero-keyword paraphrase fits. Backed by **237 automated tests + a CI quality gate**. All numbers sourced in [`outputs/eval/METRICS.md`](outputs/eval/METRICS.md).
 5. **JD-agnostic, by measurement.** Cross-JD top-10 overlap ~0.06 — it surfaces genuinely different people for different roles.
 6. **Extensible.** A signal-plugin framework means new intelligence (background verification, GitHub-repo analysis) is added without touching the core.
 
@@ -100,7 +105,7 @@ python3 scripts/demo_rank.py --jd demo/data/sales_jd.md \
 
 ## Status
 
-The engine and all four surfaces are implemented, tested (221 tests), and validated end-to-end:
+The engine and all four surfaces are implemented, tested (237 tests), and validated end-to-end:
 
 - **Engine**: JD ingestion, hybrid semantic matching, schema-driven signals, role-independent consistency auditor, unified scoring, grounded reasoning — with a labeled evaluation suite (hybrid composite 0.97 / spine 0.95, paraphrase 10/10, honeypots 0% in top-10, JD-agnostic ~0.06). See [`outputs/eval/METRICS.md`](outputs/eval/METRICS.md).
 - **Universal ingest**: PDF/DOCX/TXT/CSV/JSON/LinkedIn/paste → rankable; pluggable adapters.
@@ -263,7 +268,7 @@ Engine (`src/talentsignal/`):
 Support:
 - `job_specs/`: machine-readable JD scorecards. `demo/data/`: generated demo datasets.
 - `scripts/`: eval harness, data factory, demo, audits. `docs/`: methodology, MCP, architecture/defense.
-- `outputs/`: generated submission + `index/` (git-lfs embedding index). `tests/`: 221 tests.
+- `outputs/`: generated submission + `index/` (git-lfs embedding index). `tests/`: 237 tests.
 
 ## Key docs
 
