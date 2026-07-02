@@ -811,6 +811,7 @@ async function loadChallenge(){
         <div class="rsn">${esc(c.reasoning)}</div></div>`;
     });
     $('out').innerHTML=h;
+    $('empty').style.display='none';   // guarantee the loading spinner is gone
   }catch(e){errState(e.message)}
 }
 
